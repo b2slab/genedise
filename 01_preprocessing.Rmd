@@ -1,0 +1,174 @@
+---
+title: "Data preprocessing"
+author: "Sergio Picart-Armada"
+date: "September 18, 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Getting started
+
+```{r}
+library(STRINGdb)
+library(igraph)
+library(ggplot2)
+library(diffuStats)
+
+source("config.R")
+
+colname_symbol <- "gene_symbol"
+
+# compute largest connected component
+largest_cc <- function(g) {
+  gclust <- igraph::clusters(g)
+  
+  igraph::induced.subgraph(
+    g, which(gclust$membership == which.max(gclust$csize))
+  )
+}
+```
+
+# Reading STRING network and disease genes
+
+```{r}
+# read tabular file with gene-disease data
+df_raw_alzh <- read.table(
+  file = file_alzh, header = T, sep = "\t", 
+  stringsAsFactors = FALSE)
+colnames(df_raw_alzh)[1] <- colname_symbol
+sum(is.na(df_raw_alzh))
+
+# retrieve string db
+string_db <- do.call(
+  STRINGdb$new, params_string
+)
+
+# network object
+string_g <- string_db$get_graph()
+string_g
+```
+
+# Mapping genes to ENSEMBL
+
+```{r}
+# Map genes to STRING
+df_map <- string_db$map(
+  df_raw_alzh, 
+  my_data_frame_id_col_names = colname_symbol)
+
+nrow(na.omit(df_map))/nrow(df_map)
+
+# we only lose 3% of the ids
+df_map <- na.omit(df_map)
+
+# are ensembl ids unique?
+stopifnot(length(unique(df_map$STRING_id)) == nrow(df_map))
+```
+
+# Filtering network and assessing coverage
+
+```{r}
+# same filters as in takeda
+list.edge.filters <- list(
+  Net1 = "combined_score < 400 | experiments < 1", 
+  Net2 = "experiments < 600", 
+  Net3 = "experiments < 400 & database < 400", 
+  Net4 = "combined_score < 700 | (experiments < 1 & database < 1)", 
+  Net5 = "combined_score < 700 | (experiments < 1 & database < 1 & textmining < 900)", 
+  Net6 = "database < 400" 
+)
+
+df_coverage <- plyr::ldply(
+  list.edge.filters, 
+  function(quote.char) {
+    # browser()
+    # quote.char2 <- quote.char
+    g <- delete_edges(
+      string_g, 
+      E(string_g)[eval(parse(text = quote.char), envir = environment())]
+    ) %>% largest_cc
+    
+    data.frame(
+      filter = quote.char, 
+      nodes = vcount(g), 
+      edges = ecount(g), 
+      coverage = sum(df_map$STRING_id %in% V(g)$name), 
+      stringsAsFactors = FALSE
+    )
+  }, 
+  .id = "network"
+)
+
+df_coverage
+
+# Plot the coverage to decide
+ggplot(df_coverage, aes(x = nodes, y = coverage)) + 
+  geom_point() + 
+  geom_smooth(method = "lm")
+```
+
+# Save network
+
+```{r}
+# Pick network 4: equilibrium between mapped genes and simplicity
+choice_net <- "Net4"
+choice_filter <- list.edge.filters[choice_net]
+
+# delete edges not meeting the filter
+g_filter <- delete_edges(
+  string_g, 
+  E(string_g)[eval(parse(text = choice_filter), 
+                   envir = environment())]
+  ) %>% largest_cc
+
+E(g_filter)$weight <- E(g_filter)$combined_score
+g_filter$choice_filter <- choice_filter
+g_filter$params <- params_string
+
+# final graph
+g_filter
+stopifnot(is.simple(g_filter))
+stopifnot(is.connected(g_filter))
+
+# add the dataset that maps to the graph
+g_filter$dataset <- subset(df_map, STRING_id %in% V(g_filter)$name)
+
+# delete the edge attributes other than the weight
+attr_edge <- list.edge.attributes(g_filter)
+for (att in setdiff(attr_edge, "weight")) {
+  g_filter <- delete_edge_attr(g_filter, att)
+}
+
+# save the graph with the dataset
+save(g_filter, file = graph_alzh)
+```
+
+# Compute kernel (computationally intensive)
+
+```{r}
+if (!file.exists(file_kernel)) {
+  # Compute kernel
+  # last time: ~1000s
+  kernel_time <- system.time({
+    K <- diffuStats::regularisedLaplacianKernel(
+      graph = g_filter, normalized = FALSE
+    )
+  })
+  kernel_time
+  
+  # save it. Standard compression; tried xz but it is not 
+  # worth it and takes too long
+  save(K, file = paste0(dir_kernel, "/", choice_net, ".RData"))  
+}
+```
+
+# Reproducibility
+
+```{r}
+out <- capture.output(sessionInfo())
+writeLines(out, con = paste0(dir_metadata, "/01_sessionInfo.txt"))
+```
+

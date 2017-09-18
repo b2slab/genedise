@@ -1,0 +1,168 @@
+---
+title: "Data preprocessing"
+author: "Sergio Picart-Armada"
+date: "September 18, 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+```
+
+# Getting started
+
+```{r}
+library(caret)
+library(igraph)
+library(ggplot2)
+library(diffuStats)
+
+library(pROC)
+library(PRROC)
+
+source("config.R")
+
+# load dataset and kernel
+load(graph_alzh)
+load(paste0(dir_kernel, "Net4.RData"))
+
+# the dataset
+# x: training, y: response
+df_alzh <- g_filter$dataset
+n <- vcount(g_filter)
+x <- setNames(numeric(n), V(g_filter)$name)
+y <- setNames(numeric(n), V(g_filter)$name)
+x[df_alzh$STRING_id] <- df_alzh$association_score.datatypes.genetic_association
+y[df_alzh$STRING_id] <- df_alzh$known_drug_binary
+# binary version of x
+x_bin <- (x > 0)*1
+
+# check for NAs
+stopifnot(all(!is.na(x)))
+stopifnot(all(!is.na(y)))
+
+summary(x)
+summary(y)
+
+# cross-validation parameters
+k <- 3
+times <- 30
+```
+
+# Performance measures
+
+```{r}
+# performance measures
+funs <- list(
+  auroc = function(actual, predicted) {
+    pROC::auc(response = actual, predictor = predicted, 
+              direction = "<")
+  }, 
+  partial_auroc_0.9 = function(actual, predicted) {
+    pROC::auc(response = actual, predictor = predicted, 
+              direction = "<", partial.auc = c(1, .9))
+  }, 
+  partial_auroc_0.95 = function(actual, predicted) {
+    pROC::auc(response = actual, predictor = predicted, 
+              direction = "<", partial.auc = c(1, .95))
+  }, 
+  auprc = function(actual, predicted) {
+    PRROC::pr.curve(scores.class0 = predicted,
+                     weights.class0 = actual)$auc.integral
+  },
+  top_20_hits = function(actual, predicted) {
+    inds <- head(order(predicted, decreasing = TRUE), 20)
+    sum(actual[inds])
+  }, 
+  top_100_hits = function(actual, predicted) {
+    inds <- head(order(predicted, decreasing = TRUE), 100)
+    sum(actual[inds])
+  }
+) 
+```
+
+# Computing the diffusion scores through cross-validation
+
+```{r}
+# reproducibility
+set.seed(1)
+
+# split the dataset, stratified CV
+# this returns the index of the training instances
+list_split_cv <- caret::createMultiFolds(y = y, k = k, times = times)
+
+# diffusion scores
+# training uses the genetic scores
+list_perf <- plyr::llply(
+  list_split_cv, 
+  function(split_cv_train) {
+    # browser()
+    # compute scores
+    list_scores <- plyr::llply(
+      setNames(list_methods, list_methods),
+      function(method) {
+        diffuStats::diffuse(
+          K = K, scores = x_bin[split_cv_train], 
+          method = method, n.perm = 1e3) 
+      }
+    )
+    list_scores$genetic <- x
+    
+    # compute metrics 
+    df_metrics <- plyr::ldply(
+      list_scores, 
+      function(scores) {
+        perf_eval(
+          prediction = scores[-split_cv_train], 
+          validation = y[-split_cv_train], 
+          metric = funs
+        )
+      }, 
+      .id = "method"
+    ) 
+    
+    # return the scores
+    list(list_scores = list_scores, 
+         df_metrics = df_metrics)
+  }, 
+  .progress = "text"
+)
+```
+
+```{r}
+# aggregate performances into a single data frame
+df_perf <- plyr::ldply(
+  list_perf, function(x) x$df_metrics, .id = "split_cv"
+)
+df_perf
+
+# obtain data frame to plot
+df_plot <- reshape2::melt(df_perf, 
+                          id.vars = c("split_cv", "method"))
+
+# save variables for a posterior analysis
+save(list_split_cv, list_perf, df_perf, df_plot, x, y, x_bin, 
+     file = paste0(dir_performance, "/exploratory.RData"), 
+     compress = "xz")
+
+# plot the results
+g <- ggplot(df_plot, aes(x = method, y = value)) + 
+  geom_boxplot(aes(fill = method)) +
+  theme_bw() + 
+  facet_wrap(~variable, scales = "free") + 
+  xlab("Method") + 
+  ylab("Performance") + 
+  ggtitle(paste0(k, "-fold (repeated x", times, ") cross validation - ", 
+                 "measures computed per fold"))
+
+ggsave(paste0(dir_performance, "/exploratory.png"), plot = g)
+```
+
+
+# Reproducibility
+
+```{r}
+out <- capture.output(sessionInfo())
+writeLines(out, con = paste0(dir_metadata, "/02_sessionInfo.txt"))
+```
+

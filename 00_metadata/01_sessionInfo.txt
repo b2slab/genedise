@@ -1,0 +1,46 @@
+R version 3.4.0 (2017-04-21)
+Platform: x86_64-pc-linux-gnu (64-bit)
+Running under: Ubuntu 16.04.3 LTS
+
+Matrix products: default
+BLAS: /usr/lib/atlas-base/atlas/libblas.so.3.0
+LAPACK: /usr/lib/atlas-base/atlas/liblapack.so.3.0
+
+locale:
+ [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
+ [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    
+ [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   
+ [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 
+ [9] LC_ADDRESS=C               LC_TELEPHONE=C            
+[11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+[1] diffuStats_0.99.8 ggplot2_2.2.1     igraph_1.1.2      STRINGdb_1.16.0  
+
+loaded via a namespace (and not attached):
+ [1] Rcpp_0.12.12              compiler_3.4.0           
+ [3] RColorBrewer_1.1-2        plyr_1.8.4               
+ [5] bitops_1.0-6              tools_3.4.0              
+ [7] digest_0.6.12             bit_1.1-12               
+ [9] lattice_0.20-35           RSQLite_2.0              
+[11] memoise_1.1.0             tibble_1.3.4             
+[13] gtable_0.2.0              pkgconfig_2.0.1          
+[15] png_0.1-7                 rlang_0.1.2              
+[17] Matrix_1.2-10             DBI_0.7                  
+[19] expm_0.999-2              RcppArmadillo_0.7.960.1.2
+[21] proto_1.0.0               knitr_1.17               
+[23] Metrics_0.1.2             gtools_3.5.0             
+[25] caTools_1.17.1            bit64_0.9-7              
+[27] grid_3.4.0                sqldf_0.4-11             
+[29] plotrix_3.6-6             hash_2.2.6               
+[31] gsubfn_0.6-6              gdata_2.18.0             
+[33] blob_1.1.0                magrittr_1.5             
+[35] MASS_7.3-29               gplots_3.0.1             
+[37] scales_0.5.0              colorspace_1.3-2         
+[39] labeling_0.3              KernSmooth_2.23-15       
+[41] RcppParallel_4.3.20       lazyeval_0.2.0           
+[43] RCurl_1.95-4.8            munsell_0.4.3            
+[45] chron_2.3-50             
