@@ -1,7 +1,7 @@
 ---
 title: "Data preprocessing"
 author: "Sergio Picart-Armada"
-date: "September 18, 2017"
+date: "October 2, 2017"
 output: html_document
 ---
 
@@ -35,9 +35,11 @@ largest_cc <- function(g) {
 
 ```{r}
 # read tabular file with gene-disease data
+# IMPORTANT: keep quote = "" to disable quotation, as
+# gene names can have quotes that malform the object
 df_raw_alzh <- read.table(
   file = file_alzh, header = T, sep = "\t", 
-  stringsAsFactors = FALSE)
+  stringsAsFactors = FALSE, quote = "")
 colnames(df_raw_alzh)[1] <- colname_symbol
 sum(is.na(df_raw_alzh))
 
@@ -63,9 +65,26 @@ nrow(na.omit(df_map))/nrow(df_map)
 
 # we only lose 3% of the ids
 df_map <- na.omit(df_map)
+nrow(df_map)
 
 # are ensembl ids unique?
-stopifnot(length(unique(df_map$STRING_id)) == nrow(df_map))
+# stopifnot(length(unique(df_map$STRING_id)) == nrow(df_map))
+View(plyr::ddply(df_map, "STRING_id", function(df) if (nrow(df) > 1) df))
+
+df_map <- plyr::ddply(
+  df_map, "STRING_id", 
+  function(df) {
+    n <- nrow(df)
+    if (n == 1) return(df)
+    ord <- order(
+      df$known_drug_binary, # pick genes with drugs in case of ties
+      runif(n), # break ties at random
+      decreasing = TRUE)
+    df[ord[1], , drop = FALSE]
+  }, 
+  .progress = "text"
+)
+dim(df_map)
 ```
 
 # Filtering network and assessing coverage
@@ -106,7 +125,7 @@ df_coverage
 
 # Plot the coverage to decide
 ggplot(df_coverage, aes(x = nodes, y = coverage)) + 
-  geom_point() + 
+  geom_text(aes(label = network)) + 
   geom_smooth(method = "lm")
 ```
 

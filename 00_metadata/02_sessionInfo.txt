@@ -1,4 +1,4 @@
-R version 3.4.0 (2017-04-21)
+R version 3.4.2 (2017-09-28)
 Platform: x86_64-pc-linux-gnu (64-bit)
 Running under: Ubuntu 16.04.3 LTS
 
@@ -7,40 +7,36 @@ BLAS: /usr/lib/atlas-base/atlas/libblas.so.3.0
 LAPACK: /usr/lib/atlas-base/atlas/liblapack.so.3.0
 
 locale:
- [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
- [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    
- [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   
- [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 
- [9] LC_ADDRESS=C               LC_TELEPHONE=C            
-[11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
+ [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C               LC_TIME=en_US.UTF-8       
+ [4] LC_COLLATE=en_US.UTF-8     LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   
+ [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                  LC_ADDRESS=C              
+[10] LC_TELEPHONE=C             LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
 
 attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
-[1] PRROC_1.3         pROC_1.10.0       diffuStats_0.99.8 igraph_1.1.2     
-[5] caret_6.0-76      ggplot2_2.2.1     lattice_0.20-35  
+ [1] bindrcpp_0.2       PRROC_1.3          pROC_1.10.0        diffuStats_0.101.0 igraph_1.1.2      
+ [6] caret_6.0-77       ggplot2_2.2.1      lattice_0.20-35    dplyr_0.7.3        plyr_1.8.4        
 
 loaded via a namespace (and not attached):
- [1] Rcpp_0.12.12              compiler_3.4.0           
- [3] nloptr_1.0.4              plyr_1.8.4               
- [5] iterators_1.0.8           tools_3.4.0              
- [7] digest_0.6.12             lme4_1.1-13              
- [9] tibble_1.3.4              nlme_3.1-131             
-[11] gtable_0.2.0              mgcv_1.8-17              
-[13] pkgconfig_2.0.1           rlang_0.1.2              
-[15] Matrix_1.2-10             foreach_1.4.3            
-[17] parallel_3.4.0            expm_0.999-2             
-[19] SparseM_1.77              RcppArmadillo_0.7.960.1.2
-[21] stringr_1.2.0             knitr_1.17               
-[23] Metrics_0.1.2             MatrixModels_0.4-1       
-[25] stats4_3.4.0              grid_3.4.0               
-[27] nnet_7.3-12               minqa_1.2.4              
-[29] reshape2_1.4.2            car_2.1-5                
-[31] magrittr_1.5              scales_0.5.0             
-[33] codetools_0.2-15          ModelMetrics_1.1.0       
-[35] MASS_7.3-29               splines_3.4.0            
-[37] pbkrtest_0.4-7            colorspace_1.3-2         
-[39] labeling_0.3              quantreg_5.33            
-[41] stringi_1.1.5             lazyeval_0.2.0           
-[43] RcppParallel_4.3.20       munsell_0.4.3            
+ [1] reshape2_1.4.2            kernlab_0.9-25            purrr_0.2.3              
+ [4] splines_3.4.2             colorspace_1.3-2          expm_0.999-2             
+ [7] stats4_3.4.2              survival_2.41-3           prodlim_1.6.1            
+[10] rlang_0.1.2               ModelMetrics_1.1.0        glue_1.1.1               
+[13] withr_2.0.0               foreach_1.4.3             bindr_0.1                
+[16] dimRed_0.1.0              lava_1.5                  robustbase_0.92-7        
+[19] stringr_1.2.0             timeDate_3012.100         munsell_0.4.3            
+[22] gtable_0.2.0              recipes_0.1.0             codetools_0.2-15         
+[25] labeling_0.3              knitr_1.17                RcppArmadillo_0.7.900.2.0
+[28] class_7.3-14              DEoptimR_1.0-8            Rcpp_0.12.11             
+[31] scales_0.5.0              ipred_0.9-6               RcppParallel_4.3.20      
+[34] CVST_0.2-1                precrec_0.9.1             digest_0.6.12            
+[37] stringi_1.1.5             RcppRoll_0.2.2            ddalpha_1.2.1            
+[40] grid_3.4.2                tools_3.4.2               magrittr_1.5             
+[43] lazyeval_0.2.0            tibble_1.3.4              DRR_0.0.2                
+[46] pkgconfig_2.0.1           MASS_7.3-29               Matrix_1.2-11            
+[49] data.table_1.10.4         lubridate_1.6.0           gower_0.1.2              
+[52] assertthat_0.2.0          iterators_1.0.8           R6_2.2.2                 
+[55] rpart_4.1-11              nnet_7.3-12               nlme_3.1-131             
+[58] compiler_3.4.2           

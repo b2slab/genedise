@@ -1,7 +1,7 @@
 ---
 title: "Data preprocessing"
 author: "Sergio Picart-Armada"
-date: "September 18, 2017"
+date: "October 2, 2017"
 output: html_document
 ---
 
@@ -12,6 +12,9 @@ knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
 # Getting started
 
 ```{r}
+library(plyr)
+library(dplyr)
+
 library(caret)
 library(igraph)
 library(ggplot2)
@@ -44,9 +47,16 @@ stopifnot(all(!is.na(y)))
 summary(x)
 summary(y)
 
+# overlap
+nrow(df_alzh)
+sum(x_bin)
+sum(y)
+sum(x_bin*y)
+fisher.test(x = x_bin, y = y)
+
 # cross-validation parameters
 k <- 3
-times <- 30
+times <- 50
 ```
 
 # Performance measures
@@ -98,23 +108,36 @@ list_perf <- plyr::llply(
   function(split_cv_train) {
     # browser()
     # compute scores
+    mat_input <- cbind(
+      genetic_bin = x_bin[split_cv_train], 
+      # genetic_cont = x[split_cv_train], 
+      drug_bin = y[split_cv_train]
+    )
+    mat_val <- cbind(
+      genetic_bin = y[-split_cv_train], 
+      drug_bin = y[-split_cv_train]
+    )
+    
     list_scores <- plyr::llply(
       setNames(list_methods, list_methods),
       function(method) {
         diffuStats::diffuse(
-          K = K, scores = x_bin[split_cv_train], 
+          K = K, scores = mat_input, 
           method = method, n.perm = 1e3) 
       }
     )
-    list_scores$genetic <- x
+    list_scores$genetic <- cbind(
+      genetic_bin = x, 
+      drug_bin = x
+    )
     
     # compute metrics 
     df_metrics <- plyr::ldply(
       list_scores, 
       function(scores) {
         perf_eval(
-          prediction = scores[-split_cv_train], 
-          validation = y[-split_cv_train], 
+          prediction = scores[-split_cv_train, ], 
+          validation = mat_val, 
           metric = funs
         )
       }, 
@@ -132,30 +155,42 @@ list_perf <- plyr::llply(
 ```{r}
 # aggregate performances into a single data frame
 df_perf <- plyr::ldply(
-  list_perf, function(x) x$df_metrics, .id = "split_cv"
+  list_perf, 
+  function(x) 
+    x$df_metrics, 
+  .id = "split_cv"
 )
-df_perf
+df_perf$rep_cv <- gsub("(Fold\\d+\\.)(Rep.+)", "\\2", df_perf$split_cv)
+dim(df_perf)
+
+df_perf %<>% 
+  select(-split_cv) %>%
+  group_by(rep_cv, method, Column) %>%
+  summarise_all(funs(mean))
+  
+dim(df_perf)
 
 # obtain data frame to plot
-df_plot <- reshape2::melt(df_perf, 
-                          id.vars = c("split_cv", "method"))
+df_plot <- reshape2::melt(df_perf, id.vars = c("rep_cv", "method", "Column"))
 
 # save variables for a posterior analysis
-save(list_split_cv, list_perf, df_perf, df_plot, x, y, x_bin, 
+save(list_split_cv, df_perf, df_plot, x, y, x_bin, 
      file = paste0(dir_performance, "/exploratory.RData"), 
      compress = "xz")
 
 # plot the results
 g <- ggplot(df_plot, aes(x = method, y = value)) + 
-  geom_boxplot(aes(fill = method)) +
+  geom_boxplot(aes(fill = method), outlier.size = .3, lwd = .2) +
   theme_bw() + 
-  facet_wrap(~variable, scales = "free") + 
+  facet_grid(variable~Column, scales = "free") + 
   xlab("Method") + 
   ylab("Performance") + 
-  ggtitle(paste0(k, "-fold (repeated x", times, ") cross validation - ", 
-                 "measures computed per fold"))
+  ggtitle(paste0(k, "-fold (repeated x", times, ") CV"), 
+          subtitle = "Measures averaged per fold") + 
+  theme(aspect.ratio = 1)
 
-ggsave(paste0(dir_performance, "/exploratory.png"), plot = g)
+ggsave(paste0(dir_performance, "/exploratory.png"), 
+       plot = g, width = 14, height = 24, units = "cm")
 ```
 
 
