@@ -1,0 +1,275 @@
+---
+title: "Diffusion scores on several diseases"
+author: "Sergio Picart-Armada"
+date: "October 9, 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+```
+
+# Getting started
+
+```{r}
+library(plyr)
+library(dplyr)
+
+library(caret)
+library(igraph)
+library(ggplot2)
+library(diffuStats)
+
+library(EGAD)
+library(RANKS)
+library(COSNet)
+
+# have all config variables in a different env
+config <- new.env(parent = globalenv())
+source("03_config.R", local = config)
+
+# load dataset and kernel
+load(config$graph_4disease)
+load(config$file_kernel3)
+# adjacency matrix with 1's in the 
+A <- igraph::as_adj(g_filter, sparse = TRUE, attr = "weight") %>% as.matrix
+# diag(A) <- 1
+
+# the dataset
+# x: training, y: response
+df_disease <- mutate(
+  g_filter$dataset, 
+  known_gene_binary = (association_score.datatypes.genetic_association > 0.0)*1
+) %>% mutate(disease = as.factor(disease.efo_info.label)) %>% 
+  rename(drugs = known_drug_binary, genetic = known_gene_binary) %>% 
+  mutate(validation = drugs)
+n <- vcount(g_filter)
+
+df_input <- plyr::ddply(
+  reshape2::melt(df_disease, measure.vars = c("drugs", "genetic"), 
+                 variable.name = "input_type", value.name = "input"),
+  c("disease", "input_type"), 
+  function(disease) {
+    # browser()
+    nm <- V(g_filter)$name
+    x <- nm %in% (filter(disease, input == 1)$STRING_id)
+    val <- nm %in% (filter(disease, validation == 1)$STRING_id)
+    data.frame(
+      STRING_id = nm, 
+      score = x*1, 
+      validation = val*1
+    )
+  }
+)
+
+# Small tests
+# a <- subset(df_input, input_type == "drugs")
+# b <- subset(df_input, input_type == "genetic")
+# all(a$score == a$validation)
+# all(a$score == b$validation)
+
+df_descriptive <- plyr::ddply(
+  select(df_input, -validation) %>% 
+    reshape2::dcast(STRING_id+disease~input_type, fun.aggregate = NULL), 
+  "disease", 
+  function(df) {
+    tibble(
+      n_genetic = sum(df$genetic), 
+      n_drug = sum(df$drugs), 
+      overlap = sum(df$genetic*df$drugs), 
+      p_value = fisher.test(x = df$genetic, y = df$drugs)$p.value
+    ) 
+  }, 
+  .id = "disease")
+
+df_descriptive
+
+# check for NAs
+stopifnot(all(!is.na(df_input)))
+
+# group_by(df_input, disease, input_type) %>% 
+#   select(score) %>% 
+#   summarise_all(c("min", "mean", "max"))
+
+# cross-validation parameters
+k <- 3
+times <- 50
+```
+
+# Performance measures
+
+```{r}
+# performance measures
+top_k <- function(k) {
+  function(actual, predicted) {
+    inds <- head(order(predicted, decreasing = TRUE), k)
+    sum(actual[inds])
+  }
+}
+
+list_metrics <- list(
+  auroc = metric_fun(curve = "ROC"), 
+  partial_auroc_0.9 = metric_fun(curve = "ROC", c(0, .1)), 
+  partial_auroc_0.95 = metric_fun(curve = "ROC", c(0, .05)), 
+  auprc = metric_fun(curve = "PRC"),
+  top_20_hits = top_k(20), 
+  top_100_hits = top_k(100)
+) 
+```
+
+# Computing the diffusion scores through cross-validation
+
+```{r}
+# reproducibility
+set.seed(1)
+
+# This step is strugglish with 16GB RAM...
+# one repetition took around 20-25'
+df_perf <- plyr::ddply(
+  df_input, 
+  c("disease", "input_type"), 
+  function(df_in) {
+    # browser()
+    # Stratified split
+    x <- setNames(df_in$score, df_in$STRING_id)
+    y <- setNames(df_in$validation, df_in$STRING_id)
+    
+    # split the dataset, stratified CV on the validation labels
+    # this returns the index of the training instances
+    list_split_cv <- caret::createMultiFolds(y = y, k = k, times = times)
+    
+    # diffusion scores
+    # training uses the genetic scores
+    list_perf <- plyr::ldply(
+      list_split_cv, 
+      function(split_cv_train) {
+        # browser()
+        # train vectors, with three formats
+        # diffuStats + EGAD: positive 1, negative 0, unabelled NULL
+        vec_diffustats <- x[split_cv_train]
+        # COSnet: positive 1, negative -1, unlabelled 0
+        vec_cosnet <- ifelse(x == 1, 1, -1)
+        vec_cosnet[-split_cv_train] <- 0
+        # RANKS: which(1) - but only for training fold!
+        vec_ranks <- which(vec_cosnet == 1)
+        # EGAD: positive 1, negative/unlabelled 0
+        vec_egad <- ifelse(vec_cosnet == 1, 1, 0)
+        # debug
+        # table(vec_diffustats)
+        # table(vec_cosnet)
+        # length(vec_ranks)
+        # table(vec_egad)
+        
+        # validation labels
+        vec_val <- y[-split_cv_train]
+        # for safety, we will index all the results using the 
+        # names of the validation genes, making sure the order 
+        # is kept...
+        names_val <- names(vec_val)
+        
+        # diffuStats
+        list_scores <- plyr::llply(
+          setNames(config$list_methods, config$list_methods),
+          function(method) {
+            diffuStats::diffuse(
+              K = K, scores = vec_diffustats, 
+              method = method, n.perm = 1e3)[names_val] 
+          }
+        )
+        
+        # EGAD
+        list_scores$EGAD <- EGAD::predictions(
+          genes.labels = vec_egad, 
+          network = A
+        )[, 1]
+        list_scores$EGAD <- list_scores$EGAD[names_val]
+        
+        # RANKS (wsld + knn)
+        list_scores$wsld <- RANKS::WSLD.score(
+          RW = K, x = 1:nrow(K), x.pos = vec_ranks, d = config$wsld_d) %>% 
+          setNames(rownames(K))
+        list_scores$wsld <- list_scores$wsld[names_val]
+        list_scores$knn <- RANKS::KNN.score(
+          RW = K, x = 1:nrow(K), x.pos = vec_ranks, k = config$knn_k) %>% 
+          setNames(rownames(K))
+        list_scores$knn <- list_scores$knn[names_val]
+        
+        # COSNet
+        list_scores$COSNet <- COSNet::COSNet(
+          W = A, labeling = vec_cosnet, cost = config$cosnet_cost
+        )$scores
+        list_scores$COSNet <- list_scores$COSNet[names_val]
+        
+        # compute metrics 
+        df_metrics <- plyr::ldply(
+          list_scores, 
+          function(scores) {
+            perf_eval(
+              prediction = scores, 
+              validation = vec_val, 
+              metric = list_metrics
+            )
+          }, 
+          .id = "method"
+        ) 
+        # return the metrics
+        df_metrics
+      }, 
+      .id = "split_cv"
+    )
+  }, 
+  .progress = "text"
+)
+# for safety
+save(df_perf, file = paste0(config$dir_performance3, "/backup_perf.RData"))
+```
+
+```{r}
+# column for repetition only
+df_perf$rep_cv <- gsub("(Fold\\d+\\.)(Rep.+)", "\\2", df_perf$split_cv)
+dim(df_perf)
+
+df_perf_means <- df_perf %>% 
+  select(-split_cv) %>%
+  group_by(rep_cv, method, input_type, disease) %>%
+  summarise_all(funs(mean))
+  
+dim(df_perf_means)
+
+# obtain data frame to plot
+df_plot <- reshape2::melt(
+  df_perf_means, 
+  id.vars = c("rep_cv", "method", "input_type", "disease"))
+
+# save variables for a posterior analysis
+save(df_perf, df_perf_means, df_plot, 
+     file = paste0(config$dir_performance3, "/4diseases.RData"))
+write.csv(
+  x = df_perf_means, 
+  file = paste0(config$dir_performance3, "/4diseases.csv"), 
+  row.names = FALSE)
+
+# plot the results
+g <- ggplot(df_plot, aes(x = method, y = value)) + 
+  geom_boxplot(aes(fill = method), outlier.size = .3, lwd = .2) +
+  theme_bw() + 
+  facet_grid(variable~input_type + disease, scales = "free") + 
+  xlab("Method") + 
+  ylab("Performance") + 
+  ggtitle(paste0(k, "-fold (repeated x", times, ") CV"), 
+          subtitle = "Measures averaged per fold") + 
+  theme(aspect.ratio = 1, 
+        axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))
+
+ggsave(paste0(config$dir_performance3, "/4diseases.png"), 
+       plot = g, width = 30, height = 24, units = "cm")
+```
+
+
+# Reproducibility
+
+```{r}
+out <- capture.output(sessionInfo())
+writeLines(out, con = paste0(config$dir_metadata, "/03_sessionInfo_diseaes.txt"))
+```
+

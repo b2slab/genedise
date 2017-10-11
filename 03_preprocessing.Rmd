@@ -1,0 +1,193 @@
+---
+title: "Data preprocessing"
+author: "Sergio Picart-Armada"
+date: "October 2, 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Getting started
+
+```{r}
+library(STRINGdb)
+library(igraph)
+library(ggplot2)
+library(diffuStats)
+
+# have all config variables in a different env
+config <- new.env(parent = globalenv())
+source("03_config.R", local = config)
+```
+
+# Reading STRING network and disease genes
+
+```{r}
+# read tabular file with gene-disease data
+# IMPORTANT: keep quote = "" to disable quotation, as
+# gene names can have quotes that malform the object
+df_disease <- read.table(
+  file = config$file_4diseases, header = T, sep = "\t", 
+  stringsAsFactors = FALSE, quote = "")
+sum(is.na(df_disease))
+
+# retrieve string db
+string_db <- do.call(
+  STRINGdb$new, config$params_string
+)
+
+# network object
+string_g <- string_db$get_graph()
+string_g
+```
+
+# Mapping genes to ENSEMBL
+
+```{r}
+# Map genes to STRING
+df_map <- string_db$map(
+  df_disease, 
+  my_data_frame_id_col_names = config$colname_symbol)
+
+nrow(na.omit(df_map))/nrow(df_map)
+
+# we only lose 3% of the ids
+df_map <- na.omit(df_map)
+nrow(df_map)
+
+# are ensembl ids unique?
+# stopifnot(length(unique(df_map$STRING_id)) == nrow(df_map))
+col_split <- c("STRING_id", "disease.id")
+df_collisions <- plyr::ddply(df_map, col_split, function(df) if (nrow(df) > 1) df)
+
+df_collisions
+
+# fix collisions, if any
+if (nrow(df_collisions)) {
+  df_map <- plyr::ddply(
+    df_map, col_split, 
+    function(df) {
+      n <- nrow(df)
+      if (n == 1) return(df)
+      ord <- order(
+        df$known_drug_binary, # pick genes with drugs in case of ties
+        runif(n), # break ties at random
+        decreasing = TRUE)
+      df[ord[1], , drop = FALSE]
+    }, 
+    .progress = "text"
+  )
+}
+
+dim(df_map)
+```
+
+# Filtering network and assessing coverage
+
+```{r}
+# same filters as in takeda
+list.edge.filters <- list(
+  Net1 = "combined_score < 400 | experiments < 1", 
+  Net2 = "experiments < 600", 
+  Net3 = "experiments < 400 & database < 400", 
+  Net4 = "combined_score < 700 | (experiments < 1 & database < 1)", 
+  Net5 = "combined_score < 700 | (experiments < 1 & database < 1 & textmining < 900)", 
+  Net6 = "database < 400" 
+)
+
+df_coverage <- plyr::ldply(
+  list.edge.filters, 
+  function(quote.char) {
+    # browser()
+    # quote.char2 <- quote.char
+    g <- delete_edges(
+      string_g, 
+      E(string_g)[eval(parse(text = quote.char), envir = environment())]
+    ) %>% largest_cc
+    
+    data.frame(
+      filter = quote.char, 
+      nodes = vcount(g), 
+      edges = ecount(g), 
+      coverage = sum(df_map$STRING_id %in% V(g)$name), 
+      stringsAsFactors = FALSE
+    )
+  }, 
+  .id = "network"
+)
+
+df_coverage
+
+# Plot the coverage to decide
+ggplot(df_coverage, aes(x = nodes, y = coverage)) + 
+  geom_text(aes(label = network)) + 
+  geom_smooth(method = "lm") + 
+  theme_bw() + 
+  ggtitle("Coverage of input genes in the network")
+ggsave(filename = paste0(config$dir_data3, "/coverage.png"))
+```
+
+# Save network
+
+```{r}
+# Pick network 4: equilibrium between mapped genes and simplicity
+choice_net <- "Net4"
+choice_filter <- list.edge.filters[choice_net]
+
+# delete edges not meeting the filter
+g_filter <- delete_edges(
+  string_g, 
+  E(string_g)[eval(parse(text = choice_filter), 
+                   envir = environment())]
+  ) %>% largest_cc
+
+E(g_filter)$weight <- E(g_filter)$combined_score/max(E(g_filter)$combined_score)
+g_filter$choice_filter <- choice_filter
+g_filter$config <- config
+
+# final graph
+g_filter
+stopifnot(is.simple(g_filter))
+stopifnot(is.connected(g_filter))
+
+# add the dataset that maps to the graph
+g_filter$dataset <- subset(df_map, STRING_id %in% V(g_filter)$name)
+
+# delete the edge attributes other than the weight
+attr_edge <- list.edge.attributes(g_filter)
+for (att in setdiff(attr_edge, "weight")) {
+  g_filter <- delete_edge_attr(g_filter, att)
+}
+
+# save the graph with the dataset
+save(g_filter, file = config$graph_4disease, compress = "xz")
+```
+
+# Compute kernel (computationally intensive)
+
+```{r}
+if (!file.exists(config$file_kernel3)) {
+  # Compute kernel
+  # last time: ~1000s
+  kernel_time <- system.time({
+    K <- diffuStats::regularisedLaplacianKernel(
+      graph = g_filter, normalized = FALSE
+    )
+  })
+  kernel_time
+  
+  # save it. Standard compression; tried xz but it is not 
+  # worth it and takes too long
+  save(K, file = config$file_kernel3)  
+}
+```
+
+# Reproducibility
+
+```{r}
+out <- capture.output(sessionInfo())
+writeLines(out, con = paste0(config$dir_metadata, "/03_sessionInfo_preprocessing.txt"))
+```
+
