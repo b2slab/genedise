@@ -15,8 +15,8 @@ attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
- [1] COSNet_1.10.0      RANKS_1.0          EGAD_1.4.1         diffuStats_0.101.1 igraph_1.1.2       caret_6.0-76      
- [7] ggplot2_2.2.1      lattice_0.20-35    dplyr_0.5.0        plyr_1.8.4        
+ [1] COSNet_1.10.0      RANKS_1.0          EGAD_1.4.1         diffuStats_0.101.1 igraph_1.1.2       caret_6.0-76       ggplot2_2.2.1     
+ [8] lattice_0.20-35    dplyr_0.5.0        plyr_1.8.4        
 
 loaded via a namespace (and not attached):
   [1] minqa_1.2.4                colorspace_1.3-2           hwriter_1.3.2              htmlTable_1.9             
@@ -41,7 +41,7 @@ loaded via a namespace (and not attached):
  [77] gridSVG_1.5-1              S4Vectors_0.14.7           foreach_1.4.3              checkmate_1.8.2           
  [81] caTools_1.17.1             BiocGenerics_0.22.1        GenomeInfoDb_1.2.5         rlang_0.1.1               
  [85] pkgconfig_2.0.1            bitops_1.0-6               labeling_0.3               htmlwidgets_0.9           
- [89] magrittr_1.5               R6_2.2.2                   IRanges_2.10.5             gplots_3.0.1              
+ [89] magrittr_1.5               R6_2.2.1                   IRanges_2.10.5             gplots_3.0.1              
  [93] Hmisc_4.0-3                DBI_0.6-1                  foreign_0.8-69             mgcv_1.8-22               
  [97] survival_2.41-3            RCurl_1.95-4.8             nnet_7.3-12                tibble_1.3.1              
 [101] car_2.1-4                  precrec_0.9.1              KernSmooth_2.23-15         grid_3.4.2                

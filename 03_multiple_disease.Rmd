@@ -265,6 +265,48 @@ ggsave(paste0(config$dir_performance3, "/4diseases.png"),
        plot = g, width = 30, height = 24, units = "cm")
 ```
 
+# Rank the methods according to their median value
+
+```{r}
+df_rank_median <- group_by(df_perf_means, method, input_type, disease) %>%
+  select(-rep_cv) %>% 
+  summarise_all(funs(median)) %>% 
+  group_by(input_type, disease) %>% 
+  mutate_if(is.numeric, function(col) rank(-col))
+  
+df_plot_rank <- reshape2::melt(
+  df_rank_median, id.vars = c("input_type", "disease", "method"), 
+  variable.name = "metric", value.name = "rank")
+
+g_list <- plyr::dlply(
+  df_plot_rank, 
+  "input_type", 
+  function(df_type) {
+    input_t <- df_type$input_type
+    g2 <- ggplot(df_type, 
+             aes(x = reorder(method, rank, FUN = median), 
+                 y = rank, 
+                 fill = method)) + 
+      geom_boxplot() + 
+      scale_fill_discrete(guide = FALSE) + 
+      xlab("Method") + 
+      ylab("Rank (lower is better)") + 
+      ggtitle(paste0("Input: ", input_t)) + 
+      theme_bw() + 
+      theme(aspect.ratio = 1, 
+            axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))
+  }
+)
+
+g_arr <- gridExtra::arrangeGrob(
+  grobs = g_list, nrow = 1, 
+  top = paste0(k, "-fold (repeated x", times, ") CV")) 
+g_arr_save <- gridExtra::grid.arrange(g_arr)
+
+ggsave(paste0(config$dir_performance3, "/4diseases_method_ranking.png"), 
+       plot = g_arr_save, width = 16, height = 12, units = "cm")
+```
+
 
 # Reproducibility
 
