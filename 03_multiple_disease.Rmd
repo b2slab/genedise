@@ -93,7 +93,7 @@ stopifnot(all(!is.na(df_input)))
 
 # cross-validation parameters
 k <- 3
-times <- 50
+times <- 30
 ```
 
 # Performance measures
