@@ -18,6 +18,7 @@ library(dplyr)
 library(caret)
 library(igraph)
 library(ggplot2)
+library(ggsci)
 library(diffuStats)
 
 library(EGAD)
@@ -54,10 +55,15 @@ df_input <- plyr::ddply(
     nm <- V(g_filter)$name
     x <- nm %in% (filter(disease, input == 1)$STRING_id)
     val <- nm %in% (filter(disease, validation == 1)$STRING_id)
+    
+    genetic_original <- setNames(numeric(length(nm)), nm)
+    genetic_original[disease$STRING_id] <- disease$association_score.datatypes.genetic_association
+    
     data.frame(
       STRING_id = nm, 
       score = x*1, 
-      validation = val*1
+      validation = val*1, 
+      genetic_original = genetic_original
     )
   }
 )
@@ -69,8 +75,8 @@ df_input <- plyr::ddply(
 # all(a$score == b$validation)
 
 df_descriptive <- plyr::ddply(
-  select(df_input, -validation) %>% 
-    reshape2::dcast(STRING_id+disease~input_type, fun.aggregate = NULL), 
+  select(df_input, -c(validation, genetic_original)) %>% 
+    reshape2::dcast(STRING_id+disease~input_type, fun.aggregate = NULL, value.var = "score"), 
   "disease", 
   function(df) {
     tibble(
@@ -82,6 +88,7 @@ df_descriptive <- plyr::ddply(
   }, 
   .id = "disease")
 
+write.csv(df_descriptive, file = config$file_descriptive, row.names = FALSE)
 df_descriptive
 
 # check for NAs
@@ -123,10 +130,14 @@ list_metrics <- list(
 # reproducibility
 set.seed(1)
 
+# A centrality measure
+pr <- page.rank(g_filter)$vector
+
 # This step is strugglish with 16GB RAM...
 # one repetition took around 20-25'
 df_perf <- plyr::ddply(
   df_input, 
+  # subset(df_input, input_type == "genetic"), 
   c("disease", "input_type"), 
   function(df_in) {
     # browser()
@@ -200,6 +211,20 @@ df_perf <- plyr::ddply(
         )$scores
         list_scores$COSNet <- list_scores$COSNet[names_val]
         
+        # references and baselines
+        list_scores$random <- setNames(
+          sample(length(names_val)), names_val
+        )
+        list_scores$randomraw <- diffuStats::diffuse(
+          K = K, 
+          scores = setNames(sample(vec_diffustats), 
+                            names(vec_diffustats)), 
+          method = "raw")[names_val] 
+        list_scores$pr <- pr[names_val]
+        list_scores$genetic <- setNames(
+          df_in$genetic_original[-split_cv_train], 
+          names_val)
+        
         # compute metrics 
         df_metrics <- plyr::ldply(
           list_scores, 
@@ -215,10 +240,10 @@ df_perf <- plyr::ddply(
         # return the metrics
         df_metrics
       }, 
-      .id = "split_cv"
+      .id = "split_cv", 
+      .progress = "text"
     )
-  }, 
-  .progress = "text"
+  }
 )
 # for safety
 save(df_perf, file = paste0(config$dir_performance3, "/backup_perf.RData"))
@@ -253,16 +278,40 @@ write.csv(
 g <- ggplot(df_plot, aes(x = method, y = value)) + 
   geom_boxplot(aes(fill = method), outlier.size = .3, lwd = .2) +
   theme_bw() + 
+  scale_fill_brewer(palette = "Set3", guide = FALSE) +
   facet_grid(variable~input_type + disease, scales = "free") + 
   xlab("Method") + 
   ylab("Performance") + 
   ggtitle(paste0(k, "-fold (repeated x", times, ") CV"), 
           subtitle = "Measures averaged per fold") + 
   theme(aspect.ratio = 1, 
-        axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))
+        axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1, size = 6.5))
 
 ggsave(paste0(config$dir_performance3, "/4diseases.png"), 
        plot = g, width = 30, height = 24, units = "cm")
+
+plyr::d_ply(
+  df_plot, 
+  "input_type", 
+  function(df_type) {
+    # browser()
+    input_t <- df_type$input_type[1] %>% as.character
+    gg <- ggplot(df_type, aes(x = method, y = value)) + 
+      geom_boxplot(aes(fill = method), outlier.size = .3, lwd = .2) +
+      scale_fill_brewer(palette = "Set3", guide = FALSE) + 
+      theme_bw() + 
+      facet_grid(variable~disease, scales = "free_y") + 
+      xlab("Method") + 
+      ylab("Performance") + 
+      ggtitle(paste0("Input: ", input_t, ", ", k, "-fold (repeated x", times, ") CV"), 
+              subtitle = "Measures averaged per fold") + 
+      theme(aspect.ratio = 1, 
+            axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1, size = 6.5))
+    
+    ggsave(filename = paste0(config$dir_performance3, "/4diseases_", input_t, ".png"), 
+           device = NULL, plot = gg, width = 15, height = 24, units = "cm")
+  }
+)
 ```
 
 # Rank the methods according to their median value
@@ -288,7 +337,7 @@ g_list <- plyr::dlply(
                  y = rank, 
                  fill = method)) + 
       geom_boxplot() + 
-      scale_fill_discrete(guide = FALSE) + 
+      scale_fill_brewer(palette = "Set3", guide = FALSE) + 
       xlab("Method") + 
       ylab("Rank (lower is better)") + 
       ggtitle(paste0("Input: ", input_t)) + 
@@ -312,6 +361,6 @@ ggsave(paste0(config$dir_performance3, "/4diseases_method_ranking.png"),
 
 ```{r}
 out <- capture.output(sessionInfo())
-writeLines(out, con = paste0(config$dir_metadata, "/03_sessionInfo_diseaes.txt"))
+writeLines(out, con = paste0(config$dir_metadata, "/03_sessionInfo_disease.txt"))
 ```
 

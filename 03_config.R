@@ -33,6 +33,7 @@ graph_alzh <- paste0(dir_data, "/graph_alzh.RData")
 # Section 5.2 gdocs
 dir_data3 <- "03_data"
 graph_4disease <- paste0(dir_data3, "/graph_4disease.RData")
+file_descriptive <- paste0(dir_data3, "/descriptive_diseases.csv")
 file_kernel3 <- paste0(dir_kernel, "/Net4_weightsIn01.RData")
 dir_performance3 <- "03_performance"
 #dir_scores <- "02_scores"

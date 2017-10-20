@@ -1,0 +1,5 @@
+"disease","n_genetic","n_drug","overlap","p_value"
+"Alzheimers disease",432,103,12,0.000387288955953427
+"asthma",378,80,10,0.00023349512966266
+"chronic obstructive pulmonary disease",280,116,7,0.020899001242837
+"rheumatoid arthritis",241,95,7,0.00334908839691964
