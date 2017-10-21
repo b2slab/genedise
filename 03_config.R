@@ -37,6 +37,8 @@ file_descriptive <- paste0(dir_data3, "/descriptive_diseases.csv")
 file_kernel3 <- paste0(dir_kernel, "/Net4_weightsIn01.RData")
 dir_performance3 <- "03_performance"
 #dir_scores <- "02_scores"
+# Analysis of the topology
+dir_topology <- "04_topology"
 
 #################################
 # Other params
