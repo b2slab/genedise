@@ -1,0 +1,7 @@
+"network","filter","nodes","edges","coverage_allrows","coverage_drug","coverage_genetic"
+"Net1","combined_score < 400 | experiments < 1",13307,103607,153747,5687,4593
+"Net2","experiments < 600",8854,37084,109535,3791,3115
+"Net3","experiments < 400 & database < 400",14149,284759,159554,6190,4750
+"Net4","combined_score < 700 | (experiments < 1 & database < 1)",11748,236963,144920,6121,4170
+"Net5","combined_score < 700 | (experiments < 1 & database < 1 & textmining < 900)",12022,240082,147635,6160,4266
+"Net6","database < 400",7564,205866,110293,5711,2881

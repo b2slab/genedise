@@ -1,0 +1,239 @@
+---
+title: "Analysis of positives"
+author: "Sergio Picart-Armada"
+date: "November 13, 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+```
+
+# Getting started
+
+```{r}
+library(plyr)
+library(dplyr)
+library(magrittr)
+
+library(caret)
+library(igraph)
+library(ggplot2)
+
+
+# have all config variables in a different env
+config <- new.env(parent = globalenv())
+source("03_config.R", local = config)
+
+# load dataset and kernel
+load(config$graph_alldisease)
+load(config$file_kernel3)
+
+df_disease <- mutate(g_filter$dataset, disease = as.factor(disease.efo_info.label)) %>% 
+  rename(drugs = known_drug_binary, genetic = known_gene_binary) %>% 
+  mutate(validation = drugs)
+n <- vcount(g_filter)
+
+df_input <- plyr::ddply(
+  reshape2::melt(df_disease, measure.vars = c("drugs", "genetic"), 
+                 variable.name = "input_type", value.name = "input"),
+  c("disease", "input_type"), 
+  function(disease) {
+    # browser()
+    nm <- V(g_filter)$name
+    x <- nm %in% (filter(disease, input == 1)$STRING_id)
+    val <- nm %in% (filter(disease, validation == 1)$STRING_id)
+    data.frame(
+      STRING_id = nm, 
+      score = x*1, 
+      validation = val*1
+    )
+  }, 
+  .progress = "text"
+)
+```
+
+# Diffusion scores for all the diseases
+
+```{r}
+# Ben's request: raw diffusion scores for all diseases
+# input format
+mat_feed <- reshape2::acast(
+  filter(df_input, input_type == "drugs"), 
+  STRING_id~disease, value.var = "score")
+
+# raw diffusion scores
+df_diffusion <- diffuStats::diffuse(
+  K = K, scores = mat_feed, method = "raw"
+)
+write.csv(
+  data.frame(STRING_id = rownames(df_diffusion), df_diffusion), 
+  file = paste0(config$dir_topology11, "/raw_diffusion_scores_alldiseases.csv"), 
+  row.names = FALSE)
+```
+
+
+# Properties of the network
+
+```{r}
+dists <- distances(g_filter, weights = NA)
+
+dist_distrib <- dists[lower.tri(dists, diag = FALSE)]
+dist_table <- table(dist_distrib)
+
+df_dist <- as.data.frame(dist_table)
+
+ggplot(df_dist, aes(x = dist_distrib, y = Freq)) + 
+  geom_bar(stat = "identity") + 
+  theme_bw() + 
+  xlab("Distance") + 
+  ylab("Frequency") + 
+  ggtitle("Distance distribution on the whole PPI")
+ggsave(filename = paste0(config$dir_topology11, "/distances_network.png"), 
+       width = 6, height = 4)
+```
+
+```{r}
+props <- data.frame(
+  STRING_id = V(g_filter)$name, 
+  degree = degree(g_filter), 
+  pagerank = page.rank(g_filter)$vector, 
+  betweenness = betweenness(g_filter, normalized = TRUE), 
+  row.names = NULL
+)
+write.csv(props, 
+          file = paste0(config$dir_topology11, "/network_properties.csv"), 
+          row.names = FALSE)
+
+df_props <- reshape2::melt(
+  props, id.var = "STRING_id", 
+  value.name = "centrality", variable.name = "centrality_measure")
+```
+
+```{r}
+# This dataset has TWO molten variables: (1) the centrality measure
+# and (2) the disease
+df_genes <- plyr::ddply(
+  df_disease, 
+  "disease", 
+  function(df_dis) {
+    # browser()
+    genes_dis <- filter(df_dis, drugs == 1)$STRING_id 
+    
+    # distance to disease set
+    # CAREFUL: STRING_id is a factor!!!
+    mat_dist <- dists[as.character(df_props$STRING_id), genes_dis]
+    # create NAs to avoid the 0's
+    mat_dist[mat_dist == 0] <- NA
+    # mat_K <- K[as.character(df_props$STRING_id), genes_dis]
+    
+    mutate(df_props, 
+           drugs = (STRING_id %in% genes_dis), 
+           dist = apply(mat_dist, 1, min, na.rm = TRUE), 
+           mean_dist = rowMeans(mat_dist, na.rm = TRUE) 
+           # mean_K = rowMeans(mat_K)
+           )
+  }, 
+  .progress = "text"
+) %>% mutate(drugs = as.factor(drugs))
+```
+
+```{r}
+# Here we want to keep both molten variables
+ggplot(df_genes, 
+       aes(x = disease, y = centrality, fill = drugs)) + 
+  geom_boxplot() + 
+  coord_flip() + 
+  facet_wrap(~centrality_measure, scales = "free_x") + 
+  scale_y_log10() +
+  theme_bw() + 
+  xlab("") + 
+  ylab("Centrality value") + 
+  ggtitle("Bias in centrality measures of disease genes") + 
+  theme(aspect.ratio = 1, 
+        axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))
+ggsave(filename = paste0(config$dir_topology, "/centralities.png"), 
+       width = 10, height = 4)
+```
+
+```{r}
+# Need to get rid of the "centrality" molten column
+# We just pick 1 level and subset, because the mean_dist 
+# will be the same in every centrality, i.e. is a property 
+# of the disease 
+ggplot(subset(df_genes, centrality_measure == "degree"), 
+       aes(x = disease, y = mean_dist, fill = drugs)) + 
+  geom_boxplot() + 
+  coord_flip() + 
+  theme_bw() + 
+  xlab("") + 
+  ylab("Mean distance to disease genes") + 
+  ggtitle("Distances to each disease gene set (drugs)") + 
+  theme(aspect.ratio = 1)
+ggsave(filename = paste0(config$dir_topology, "/distances_mean_disease.png"), 
+       width = 6, height = 4)
+
+ggplot(subset(df_genes, centrality_measure == "degree"), 
+       aes(x = dist, y = ..prop.., fill = drugs)) + 
+  stat_count() + 
+  theme_bw() + 
+  facet_grid(drugs~disease) + 
+  xlab("Distance to disease genes. Self-distances excluded when drugs=TRUE.") + 
+  ylab("Density") + 
+  ggtitle("Distances to each (drugs-derived) disease gene set", 
+          subtitle = "Note: distances from a disease gene are computed to the rest of disease genes") + 
+  theme(aspect.ratio = 1)
+ggsave(filename = paste0(config$dir_topology, "/distances_disease.png"), 
+       width = 10, height = 6)
+```
+
+# Modularity
+
+```{r}
+n_null <- 100
+df_modularity <- plyr::ddply(
+  df_disease, 
+  "disease", 
+  function(df_dis) {
+    # browser()
+    genes_dis <- filter(df_dis, drugs == 1)$STRING_id 
+    member <- ifelse(V(g_filter)$name %in% genes_dis, 1, 2)
+    
+    md <- igraph::modularity(g_filter, member)
+    md_null <- replicate(
+      n_null, 
+      igraph::modularity(g_filter, sample(member))
+    )
+    data.frame(
+      modularity = c(md, md_null), 
+      random = c(FALSE, rep(TRUE, n_null))
+    )
+  }
+)
+
+filter(df_modularity, !random)
+
+ggplot(data = filter(df_modularity, random), 
+       aes(x = disease, y = modularity, color = random)) + 
+  geom_jitter() + 
+  geom_point(data = filter(df_modularity, !random)) + 
+  coord_flip() + 
+  theme_bw() + 
+  xlab("") + 
+  ylab("Modularity") + 
+  ggtitle("Disease genes modularity against random sets") + 
+  theme(aspect.ratio = 1, 
+        axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))
+ggsave(filename = paste0(config$dir_topology, "/modularity.png"), 
+       width = 6, height = 4)
+```
+
+
+
+# Reproducibility
+
+```{r}
+out <- capture.output(sessionInfo())
+writeLines(out, con = paste0(config$dir_metadata, "/04_sessionInfo_disease.txt"))
+```
+

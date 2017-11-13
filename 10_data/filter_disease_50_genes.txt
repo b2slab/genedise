@@ -1,0 +1,22 @@
+allergy
+Alzheimers disease
+arthritis
+asthma
+bipolar disorder
+cardiac arrhythmia
+chronic obstructive pulmonary disease
+coronary heart disease
+drug dependence
+hypertension
+multiple sclerosis
+obesity
+Parkinson's disease
+psoriasis
+rheumatoid arthritis
+schizophrenia
+stroke
+systemic lupus erythematosus
+type I diabetes mellitus
+type II diabetes mellitus
+ulcerative colitis
+unipolar depression
