@@ -15,6 +15,7 @@ knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
 library(plyr)
 library(dplyr)
 library(magrittr)
+library(tidyr)
 
 library(caret)
 library(igraph)
@@ -62,6 +63,8 @@ mat_feed <- reshape2::acast(
   filter(df_input, input_type == "drugs"), 
   STRING_id~disease, value.var = "score")
 
+df_ndiseases <- rowSums(mat_feed)[V(g_filter)$name]
+
 # raw diffusion scores
 df_diffusion <- diffuStats::diffuse(
   K = K, scores = mat_feed, method = "raw"
@@ -70,8 +73,37 @@ write.csv(
   data.frame(STRING_id = rownames(df_diffusion), df_diffusion), 
   file = paste0(config$dir_topology11, "/raw_diffusion_scores_alldiseases.csv"), 
   row.names = FALSE)
+
+# Check
+plyr::ldply(
+  setNames(colnames(mat_feed), colnames(mat_feed)), 
+  function(dis) {
+    ind <- mat_feed[V(g_filter)$name, dis]
+    x <- df_diffusion[V(g_filter)$name, dis]
+    
+    data.frame(mean_disease = mean(x[ind == 1]), 
+               mean_nodisease = mean(x[ind == 0]))
+  }, 
+  .id = "disease"
+)
 ```
 
+# Number of disease genes
+
+```{r}
+df_plotndiseases <- data.frame(ID = names(df_ndiseases), 
+                               number_diseases = df_ndiseases, 
+                               row.names = NULL)
+ggplot(filter(df_plotndiseases, number_diseases > 0), 
+       aes(x = number_diseases, y = ..count..)) + 
+  geom_bar() + 
+  theme_bw() + 
+  xlab("Number of diseases") + 
+  ylab("Gene count") + 
+  ggtitle("Number of diseases genes are involved in")
+ggsave(filename = paste0(config$dir_topology11, "/count_diseases.png"), 
+       width = 6, height = 4)
+```
 
 # Properties of the network
 
@@ -101,14 +133,36 @@ props <- data.frame(
   betweenness = betweenness(g_filter, normalized = TRUE), 
   row.names = NULL
 )
+props$number_diseases <- df_ndiseases[as.character(props$STRING_id)]
 write.csv(props, 
           file = paste0(config$dir_topology11, "/network_properties.csv"), 
           row.names = FALSE)
-
-df_props <- reshape2::melt(
-  props, id.var = "STRING_id", 
-  value.name = "centrality", variable.name = "centrality_measure")
 ```
+
+# Bias in all disease genes 
+
+```{r}
+lim_disease <- 7
+df_props <- gather(props, key = centrality_measure, 
+                   value = centrality, degree:betweenness) %>% 
+  mutate(diseases = as.factor(ifelse(number_diseases < lim_disease, 
+                                     number_diseases, 
+                                     paste0(lim_disease, "+"))))
+
+# df_props$diseases <- df_props$STRING_id %in% filter(df_disease, drugs == 1)$STRING_id
+ggplot(df_props, aes(x = diseases, y = centrality)) + 
+  geom_boxplot() + 
+  facet_wrap(~centrality_measure, scales = "free_y") + 
+  scale_y_log10() + 
+  theme_bw() + 
+  xlab("Number of diseases involving the gene") + 
+  ylab("Centrality") + 
+  ggtitle("Topological measures of disease genes") + 
+  theme(aspect.ratio = 1)
+ggsave(filename = paste0(config$dir_topology11, "/centralities_alldiseases.png"), 
+       width = 10, height = 4)
+```
+
 
 ```{r}
 # This dataset has TWO molten variables: (1) the centrality measure
@@ -139,6 +193,7 @@ df_genes <- plyr::ddply(
 ```
 
 ```{r}
+# Plot the centralities by disease
 # Here we want to keep both molten variables
 ggplot(df_genes, 
        aes(x = disease, y = centrality, fill = drugs)) + 
@@ -149,12 +204,14 @@ ggplot(df_genes,
   theme_bw() + 
   xlab("") + 
   ylab("Centrality value") + 
-  ggtitle("Bias in centrality measures of disease genes") + 
-  theme(aspect.ratio = 1, 
+  ggtitle("Bias in topological measures by disease") + 
+  theme(aspect.ratio = 3, 
         axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))
-ggsave(filename = paste0(config$dir_topology, "/centralities.png"), 
-       width = 10, height = 4)
+ggsave(filename = paste0(config$dir_topology11, "/centralities_bydisease.png"), 
+       width = 10, height = 8)
 ```
+
+# Distances
 
 ```{r}
 # Need to get rid of the "centrality" molten column
@@ -162,29 +219,144 @@ ggsave(filename = paste0(config$dir_topology, "/centralities.png"),
 # will be the same in every centrality, i.e. is a property 
 # of the disease 
 ggplot(subset(df_genes, centrality_measure == "degree"), 
+       aes(x = dist, y = ..prop.., fill = drugs)) + 
+  stat_count() + 
+  # stat_count(position = "fill") +
+  theme_bw() + 
+  facet_grid(disease~drugs) + 
+  # facet_wrap(~disease) + 
+  # scale_x_discrete(drop = FALSE) +
+  # scale_fill_discrete(drop = FALSE) + 
+  # coord_flip() + 
+  xlab("Distance to disease genes. Self-distances excluded when drugs=TRUE.") + 
+  ylab("Density") + 
+  ggtitle("Distances to each (drugs-derived) disease gene set", 
+          subtitle = "Note: distances from a disease gene are computed to the rest of disease genes") + 
+  theme(aspect.ratio = 1)
+ggsave(filename = paste0(config$dir_topology11, "/distances_bydisease.png"), 
+       width = 6, height = 24)
+```
+
+```{r}
+ggplot(subset(df_genes, centrality_measure == "degree"), 
+       aes(x = dist, y = ..prop.., fill = drugs)) + 
+  stat_count() + 
+  theme_bw() + 
+  facet_wrap(~drugs) +
+  xlab("Distance to disease genes. Self-distances excluded when drugs=TRUE.") + 
+  ylab("Density") + 
+  ggtitle("Distances to each (drugs-derived) disease gene set", 
+          subtitle = "Note: distances from a disease gene are computed to the rest of disease genes") + 
+  theme(aspect.ratio = 1)
+ggsave(filename = paste0(config$dir_topology11, "/distances_alldiseases.png"), 
+       width = 6, height = 4)
+```
+
+```{r}
+ggplot(subset(df_genes, centrality_measure == "degree"), 
        aes(x = disease, y = mean_dist, fill = drugs)) + 
   geom_boxplot() + 
   coord_flip() + 
   theme_bw() + 
   xlab("") + 
   ylab("Mean distance to disease genes") + 
-  ggtitle("Distances to each disease gene set (drugs)") + 
+  ggtitle("Mean distances to each disease gene set (drugs)") + 
   theme(aspect.ratio = 1)
-ggsave(filename = paste0(config$dir_topology, "/distances_mean_disease.png"), 
-       width = 6, height = 4)
+ggsave(filename = paste0(config$dir_topology11, "/meandistances_bydisease.png"), 
+       width = 10, height = 8)
+```
 
+```{r}
 ggplot(subset(df_genes, centrality_measure == "degree"), 
-       aes(x = dist, y = ..prop.., fill = drugs)) + 
-  stat_count() + 
+       aes(x = drugs, y = mean_dist, fill = drugs)) + 
+  geom_boxplot() + 
   theme_bw() + 
-  facet_grid(drugs~disease) + 
-  xlab("Distance to disease genes. Self-distances excluded when drugs=TRUE.") + 
-  ylab("Density") + 
-  ggtitle("Distances to each (drugs-derived) disease gene set", 
-          subtitle = "Note: distances from a disease gene are computed to the rest of disease genes") + 
+  xlab("") + 
+  ylab("Mean distance to disease genes") + 
+  ggtitle("Mean distances to each disease gene set (drugs)") + 
   theme(aspect.ratio = 1)
-ggsave(filename = paste0(config$dir_topology, "/distances_disease.png"), 
-       width = 10, height = 6)
+ggsave(filename = paste0(config$dir_topology11, "/meandistances_alldiseases.png"), 
+       width = 6, height = 4)
+```
+
+```{r}
+qq <- (1:99)/100
+df_quant <- subset(df_genes, centrality_measure == "degree") %>% 
+  ddply(.variables = "drugs", function(df) {
+    ans <- quantile(df$mean_dist, probs = qq)
+    data.frame(q = qq, value = ans)
+  }) %>% 
+  spread(drugs, value, sep = "_")
+ggplot(df_quant, 
+       aes(x = drugs_TRUE, y = drugs_FALSE, color = q)) + 
+  geom_abline(intercept = 0, slope = 1, color = "gray90") + 
+  geom_point() + 
+  theme_bw() + 
+  xlab("Quantiles (drugs=TRUE)") + 
+  ylab("Quantiles (drugs=FALSE)") + 
+  ggtitle("Mean distance quantiles in drug and non-drug genes", 
+          subtitle = "Values are mean distances to disease genes") + 
+  theme(aspect.ratio = 1)
+ggsave(filename = paste0(config$dir_topology11, "/meandistances_quantiles_alldiseases.png"), 
+       width = 5, height = 4)
+```
+
+# Inter-disease distances
+
+```{r}
+list_diseases <- levels(df_genes$disease)
+df_interdisease <- plyr::ddply(
+  expand.grid(dis1 = list_diseases, dis2 = list_diseases), 
+  c("dis1", "dis2"), 
+  function(df_dis) {
+    # browser()
+    genes_dis1 <- filter(df_disease, 
+                         df_disease$disease == df_dis$dis1 & drugs == 1)$STRING_id 
+    genes_dis2 <- filter(df_disease, 
+                         df_disease$disease == df_dis$dis2 & drugs == 1)$STRING_id 
+    # distance to disease set
+    # CAREFUL: STRING_id is a factor!!!
+    mat_dist <- dists[as.character(genes_dis1), as.character(genes_dis2)]
+    
+    data.frame(
+      overlap = length(intersect(genes_dis1, genes_dis2)), 
+      dist = min(mat_dist), 
+      mean_dist = mean(mat_dist))
+  }, 
+  .progress = "text"
+) 
+```
+
+```{r}
+# df_plotinter <- gather(df_interdisease, measure, value, -dis1, -dis2)
+
+plyr::l_ply(
+  c("overlap", "dist", "mean_dist"), 
+  function(meas) {
+    # browser()
+    mat_tmp <- reshape2::acast(
+      df_interdisease, dis1~dis2, value.var = meas
+    )
+    clusters <- hclust(as.dist(mat_tmp), method = "ward.D2")
+    new_levels <- clusters$labels[clusters$order]
+    
+    df_interdisease$dis1 <- factor(df_interdisease$dis1, levels = new_levels)
+    df_interdisease$dis2 <- factor(df_interdisease$dis2, levels = new_levels)
+    
+    ggplot(df_interdisease, 
+          aes_string(x = "dis1", y = "dis2", fill = meas)) + 
+      geom_raster() + 
+      scale_fill_distiller(palette = "Spectral") + 
+      theme_bw() + 
+      xlab("") + 
+      ylab("") + 
+      ggtitle(paste0("Inter-disease ", meas)) + 
+      theme(aspect.ratio = 1, 
+            axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
+    ggsave(filename = paste0(config$dir_topology11, "/interdiseases_", meas, ".png"), 
+           width = 7, height = 6)
+  }
+)
 ```
 
 # Modularity
@@ -208,32 +380,46 @@ df_modularity <- plyr::ddply(
       modularity = c(md, md_null), 
       random = c(FALSE, rep(TRUE, n_null))
     )
-  }
+  }, 
+  .progress = "text"
 )
 
 filter(df_modularity, !random)
 
 ggplot(data = filter(df_modularity, random), 
-       aes(x = disease, y = modularity, color = random)) + 
+       aes(x = disease, y = modularity, color = random, pch = random)) + 
   geom_jitter() + 
   geom_point(data = filter(df_modularity, !random)) + 
-  coord_flip() + 
+  # coord_flip() + 
   theme_bw() + 
   xlab("") + 
   ylab("Modularity") + 
   ggtitle("Disease genes modularity against random sets") + 
-  theme(aspect.ratio = 1, 
+  theme(aspect.ratio = 1/3, 
         axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))
-ggsave(filename = paste0(config$dir_topology, "/modularity.png"), 
-       width = 6, height = 4)
+ggsave(filename = paste0(config$dir_topology11, "/modularity_bydisease.png"), 
+       width = 10, height = 5)
 ```
 
+```{r}
+ggplot(data = df_modularity, 
+       aes(x = random, y = modularity, fill = random)) + 
+  geom_boxplot() +  
+  # coord_flip() + 
+  theme_bw() + 
+  xlab("Randomised") + 
+  ylab("Modularity") + 
+  ggtitle("Disease genes modularity") + 
+  theme(aspect.ratio = 1)
+ggsave(filename = paste0(config$dir_topology11, "/modularity_alldiseases.png"), 
+       width = 5, height = 4)
+```
 
 
 # Reproducibility
 
 ```{r}
 out <- capture.output(sessionInfo())
-writeLines(out, con = paste0(config$dir_metadata, "/04_sessionInfo_disease.txt"))
+writeLines(out, con = paste0(config$dir_metadata, "/11_sessionInfo_disease.txt"))
 ```
 
