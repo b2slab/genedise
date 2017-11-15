@@ -180,9 +180,10 @@ for (att in setdiff(attr_edge, "weight")) {
 ```{r}
 # add the dataset that maps to the graph
 # also remove genes with no association... we have to save space
-df_dataset <- filter(
-  df_map, 
-  STRING_id %in% V(g_filter)$name & known_drug_binary + known_gene_binary != 0)
+# df_dataset <- filter(
+#   df_map, 
+#   STRING_id %in% V(g_filter)$name & known_drug_binary + known_gene_binary != 0)
+df_dataset <- filter(df_map, STRING_id %in% V(g_filter)$name)
 
 col_disease <- "disease.efo_info.label"
 

@@ -7,31 +7,26 @@ BLAS: /usr/lib/openblas-base/libblas.so.3
 LAPACK: /usr/lib/lapack/liblapack.so.3.0
 
 locale:
- [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C               LC_TIME=en_US.UTF-8       
- [4] LC_COLLATE=en_US.UTF-8     LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   
- [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                  LC_ADDRESS=C              
-[10] LC_TELEPHONE=C             LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
+ [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C               LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    
+ [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8    LC_PAPER=en_US.UTF-8       LC_NAME=C                 
+ [9] LC_ADDRESS=C               LC_TELEPHONE=C             LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
 
 attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
-[1] tidyr_0.6.3        dplyr_0.5.0        plyr_1.8.4         diffuStats_0.101.1 ggplot2_2.2.1     
-[6] igraph_1.1.2       STRINGdb_1.16.0   
+[1] tidyr_0.6.3        dplyr_0.5.0        plyr_1.8.4         diffuStats_0.101.1 ggplot2_2.2.1      igraph_1.1.2      
+[7] STRINGdb_1.16.0   
 
 loaded via a namespace (and not attached):
- [1] Rcpp_0.12.13              compiler_3.4.2            RColorBrewer_1.1-2       
- [4] bitops_1.0-6              tools_3.4.2               digest_0.6.12            
- [7] lattice_0.20-35           RSQLite_1.1-2             memoise_1.1.0            
-[10] tibble_1.3.1              gtable_0.2.0              pkgconfig_2.0.1          
-[13] png_0.1-7                 rlang_0.1.1               Matrix_1.2-11            
-[16] DBI_0.6-1                 expm_0.999-2              RcppArmadillo_0.8.100.1.0
-[19] proto_1.0.0               knitr_1.16                gtools_3.5.0             
-[22] caTools_1.17.1            grid_3.4.2                data.table_1.10.4        
-[25] R6_2.2.2                  sqldf_0.4-10              plotrix_3.6-5            
-[28] hash_2.2.6                gsubfn_0.6-6              gdata_2.17.0             
-[31] magrittr_1.5              precrec_0.9.1             gplots_3.0.1             
-[34] scales_0.4.1              MASS_7.3-47               assertthat_0.2.0         
-[37] colorspace_1.3-2          labeling_0.3              KernSmooth_2.23-15       
-[40] RcppParallel_4.3.20       RCurl_1.95-4.8            lazyeval_0.2.0           
-[43] munsell_0.4.3             chron_2.3-50             
+ [1] Rcpp_0.12.13              compiler_3.4.2            RColorBrewer_1.1-2        bitops_1.0-6             
+ [5] tools_3.4.2               digest_0.6.12             lattice_0.20-35           RSQLite_1.1-2            
+ [9] memoise_1.1.0             tibble_1.3.1              gtable_0.2.0              pkgconfig_2.0.1          
+[13] png_0.1-7                 rlang_0.1.1               Matrix_1.2-11             DBI_0.6-1                
+[17] expm_0.999-2              RcppArmadillo_0.8.100.1.0 proto_1.0.0               knitr_1.16               
+[21] gtools_3.5.0              caTools_1.17.1            grid_3.4.2                data.table_1.10.4        
+[25] R6_2.2.2                  sqldf_0.4-10              plotrix_3.6-5             hash_2.2.6               
+[29] gsubfn_0.6-6              gdata_2.17.0              magrittr_1.5              precrec_0.9.1            
+[33] gplots_3.0.1              scales_0.4.1              MASS_7.3-47               assertthat_0.2.0         
+[37] colorspace_1.3-2          labeling_0.3              KernSmooth_2.23-15        RcppParallel_4.3.20      
+[41] RCurl_1.95-4.8            lazyeval_0.2.0            munsell_0.4.3             chron_2.3-50             
