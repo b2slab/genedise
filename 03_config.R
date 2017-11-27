@@ -52,11 +52,18 @@ file_kernel3 <- paste0(dir_kernel, "/Net4_weightsIn01.RData")
 graph_alldisease <- paste0(dir_data10, "/graph_alldisease.RData")
 
 dir_performance3 <- "03_performance"
+dir_performance12 <- "12_performance"
+file_csv_perf12 <- paste0(dir_performance12, "/performance_sink.tsv")
 #dir_scores <- "02_scores"
 # Analysis of the topology
 dir_topology <- "04_topology"
 
 dir_topology11 <- "11_topology"
+
+# MashUp features
+file_mashup_names <- "05_mashup/node_names.txt"
+file_mashup_features <- "05_mashup/string10_features.csv"
+
 #################################
 # Other params
 #################################
