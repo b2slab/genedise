@@ -20,11 +20,13 @@ library(tidyr)
 library(caret)
 library(igraph)
 library(ggplot2)
-
+library(ggdendro)
 
 # have all config variables in a different env
 config <- new.env(parent = globalenv())
 source("03_config.R", local = config)
+# Custom UPGMA function for clustering
+source("11_upgma.R")
 
 # load dataset and kernel
 load(config$graph_alldisease)
@@ -329,15 +331,34 @@ df_interdisease <- plyr::ddply(
 
 ```{r}
 # df_plotinter <- gather(df_interdisease, measure, value, -dis1, -dis2)
+set.seed(1)
 
-plyr::l_ply(
-  c("overlap", "dist", "mean_dist"), 
+# number of genes per disease
+v_size <- filter(df_interdisease, dis1 == dis2) 
+v_size <- setNames(v_size$overlap, as.character(v_size$dis1))
+
+# measures
+v_meas <- c("overlap", "dist", "mean_dist")
+
+list_clusters <- plyr::llply(
+  setNames(v_meas, v_meas), 
   function(meas) {
     # browser()
     mat_tmp <- reshape2::acast(
       df_interdisease, dis1~dis2, value.var = meas
     )
-    clusters <- hclust(as.dist(mat_tmp), method = "ward.D2")
+    
+    if (meas %in% c("dist", "overlap")) {
+      clusters <- hclust(as.dist(mat_tmp), method = "ward.D2")
+    } else {
+      # mean distance: use or upgma
+      clusters <- upgma(mat_tmp, 
+                        rows_n = v_size[rownames(mat_tmp)])
+      ggdendro::ggdendrogram(clusters, rotate = TRUE)
+      
+      ggsave(filename = paste0(config$dir_topology11, "/interdiseases_", meas, "_dendo.png"), 
+           width = 7, height = 6)
+    }
     new_levels <- clusters$labels[clusters$order]
     
     df_interdisease$dis1 <- factor(df_interdisease$dis1, levels = new_levels)
@@ -355,8 +376,12 @@ plyr::l_ply(
             axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
     ggsave(filename = paste0(config$dir_topology11, "/interdiseases_", meas, ".png"), 
            width = 7, height = 6)
+    
+    clusters
   }
 )
+
+save(list_clusters, file = paste0(config$dir_topology11, "/interdiseases_clusters.RData"))
 ```
 
 # Modularity

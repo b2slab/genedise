@@ -16,8 +16,8 @@ attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
-[1] igraph_1.1.2    caret_6.0-76    ggplot2_2.2.1   lattice_0.20-35 tidyr_0.6.3     magrittr_1.5   
-[7] dplyr_0.5.0     plyr_1.8.4     
+[1] ggdendro_0.1-20 igraph_1.1.2    caret_6.0-76    ggplot2_2.2.1   lattice_0.20-35
+[6] tidyr_0.6.3     magrittr_1.5    dplyr_0.5.0     plyr_1.8.4     
 
 loaded via a namespace (and not attached):
  [1] Rcpp_0.12.13              RColorBrewer_1.1-2        compiler_3.4.2           
