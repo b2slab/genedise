@@ -605,10 +605,14 @@ df_predict <- plyr::ddply(
     list_scores <- c(list_scores, list_mashup)
     
     # COSNet: neural net
-    list_scores$COSNet <- COSNet::COSNet(
+    scores_COSNet <- COSNet::COSNet(
       W = A, labeling = vec_cosnet, cost = config$cosnet_cost
     )$scores
-    list_scores$COSNet <- list_scores$COSNet[names_train]
+    list_scores$COSNet <- ifelse(
+      names_train %in% names(scores_COSNet), 
+      scores_COSNet[names_train], 
+      Inf
+    ) %>% setNames(names_train)
     
     # return as a long data frame
     plyr::ldply(
@@ -620,6 +624,9 @@ df_predict <- plyr::ddply(
   }, 
   .progress = "text"
 )
+save(df_predict, 
+     file = paste0(config$dir_performance12, "/all_predictions.RData"), 
+     compress = "xz")
 ```
 
 
@@ -826,6 +833,6 @@ list_mod_counts <- plyr::dlply(
 
 ```{r}
 out <- capture.output(sessionInfo())
-writeLines(out, con = paste0(config$dir_metadata, "/03_sessionInfo_disease.txt"))
+writeLines(out, con = paste0(config$dir_metadata, "/12_sessionInfo_disease.txt"))
 ```
 

@@ -1,0 +1,65 @@
+R version 3.4.2 (2017-09-28)
+Platform: x86_64-pc-linux-gnu (64-bit)
+Running under: Ubuntu 14.04.5 LTS
+
+Matrix products: default
+BLAS: /usr/lib/openblas-base/libblas.so.3
+LAPACK: /usr/lib/lapack/liblapack.so.3.0
+
+locale:
+ [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C               LC_TIME=en_US.UTF-8       
+ [4] LC_COLLATE=en_US.UTF-8     LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   
+ [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                  LC_ADDRESS=C              
+[10] LC_TELEPHONE=C             LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+ [1] TH.data_1.0-8      MASS_7.3-47        survival_2.41-3    mvtnorm_1.0-6     
+ [5] emmeans_0.9.1      lsmeans_2.27-61    COSNet_1.10.0      RANKS_1.0         
+ [9] EGAD_1.4.1         diffuStats_0.101.1 ggsci_2.7          igraph_1.1.2      
+[13] parallelMap_1.3    mlr_2.11           ParamHelpers_1.10  caret_6.0-76      
+[17] ggplot2_2.2.1      lattice_0.20-35    kernlab_0.9-25     magrittr_1.5      
+[21] tidyr_0.6.3        dplyr_0.5.0        plyr_1.8.4        
+
+loaded via a namespace (and not attached):
+  [1] minqa_1.2.4                colorspace_1.3-2           hwriter_1.3.2             
+  [4] estimability_1.2           htmlTable_1.9              XVector_0.16.0            
+  [7] PerfMeas_1.2.1             RcppArmadillo_0.8.100.1.0  GenomicRanges_1.28.2      
+ [10] base64enc_0.1-3            base64_2.0                 MatrixModels_0.4-1        
+ [13] affyio_1.46.0              AnnotationDbi_1.38.1       codetools_0.2-15          
+ [16] splines_3.4.2              impute_1.50.1              knitr_1.16                
+ [19] Formula_1.2-1              jsonlite_1.5               nloptr_1.0.4              
+ [22] Cairo_1.5-9                pbkrtest_0.4-7             annotate_1.54.0           
+ [25] vsn_3.44.0                 cluster_2.0.6              graph_1.54.0              
+ [28] compiler_3.4.2             httr_1.3.1                 backports_1.0.5           
+ [31] assertthat_0.2.0           Matrix_1.2-11              lazyeval_0.2.0            
+ [34] limma_3.32.2               BeadDataPackR_1.28.0       SVGAnnotation_0.93-1      
+ [37] acepack_1.4.1              htmltools_0.3.6            quantreg_5.33             
+ [40] tools_3.4.2                coda_0.19-1                gtable_0.2.0              
+ [43] affy_1.54.0                reshape2_1.4.2             Rcpp_0.12.13              
+ [46] Biobase_2.36.2             arrayQualityMetrics_3.32.0 Biostrings_2.44.2         
+ [49] gdata_2.17.0               preprocessCore_1.38.1      nlme_3.1-131              
+ [52] setRNG_2013.9-1            iterators_1.0.8            stringr_1.2.0             
+ [55] lme4_1.1-13                affyPLM_1.52.1             gtools_3.5.0              
+ [58] XML_3.98-1.9               zlibbioc_1.22.0            zoo_1.8-0                 
+ [61] scales_0.4.1               BiocInstaller_1.26.1       RBGL_1.52.0               
+ [64] parallel_3.4.2             sandwich_2.3-4             beadarray_2.26.1          
+ [67] GEOquery_2.42.0            expm_0.999-2               SparseM_1.77              
+ [70] RColorBrewer_1.1-2         BBmisc_1.11                memoise_1.1.0             
+ [73] gridExtra_2.2.1            rpart_4.1-11               latticeExtra_0.6-28       
+ [76] stringi_1.1.5              RSQLite_1.1-2              gcrma_2.48.0              
+ [79] genefilter_1.58.1          gridSVG_1.5-1              S4Vectors_0.14.7          
+ [82] foreach_1.4.3              checkmate_1.8.2            caTools_1.17.1            
+ [85] BiocGenerics_0.22.1        GenomeInfoDb_1.2.5         rlang_0.1.1               
+ [88] pkgconfig_2.0.1            bitops_1.0-6               htmlwidgets_0.9           
+ [91] R6_2.2.1                   gplots_3.0.1               IRanges_2.10.5            
+ [94] Hmisc_4.0-3                multcomp_1.4-8             DBI_0.6-1                 
+ [97] foreign_0.8-69             mgcv_1.8-22                RCurl_1.95-4.8            
+[100] nnet_7.3-12                tibble_1.3.1               car_2.1-4                 
+[103] precrec_0.9.1              KernSmooth_2.23-15         grid_3.4.2                
+[106] data.table_1.10.4          NetPreProc_1.1             ModelMetrics_1.1.0        
+[109] digest_0.6.12              xtable_1.8-2               illuminaio_0.18.0         
+[112] openssl_0.9.7              RcppParallel_4.3.20        stats4_3.4.2              
+[115] munsell_0.4.3             
