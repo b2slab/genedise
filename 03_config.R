@@ -14,6 +14,7 @@ dir_raw <- "00_rawdata"
 file_alzh <- paste0(dir_raw, "/ben_15092017_ot_ad.txt")
 file_4diseases <- paste0(dir_raw, "/four_disease_associations_ot_public_20171005.txt")
 file_alldiseases <- paste0(dir_raw, "/17.06_ot_commondisease_associations_filtered.csv")
+file_complexes <- paste0(dir_raw, "/OT-000-20-2_out.rda")
 
 # Thresholds
 # (Ben. Subject: Genetics OT score, 2 nov)
@@ -59,6 +60,7 @@ file_csv_perf12 <- paste0(dir_performance12, "/performance_sink.tsv")
 dir_topology <- "04_topology"
 
 dir_topology11 <- "11_topology"
+dir_complexes <- "13_complexes"
 
 # MashUp features
 file_mashup_names <- "05_mashup/node_names.txt"

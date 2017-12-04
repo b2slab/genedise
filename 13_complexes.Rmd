@@ -1,0 +1,277 @@
+---
+title: "Analysis of the complex data"
+author: "Sergio Picart-Armada"
+date: "December 4, 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+```
+
+# Getting started
+
+```{r}
+library(plyr)
+library(dplyr)
+library(magrittr)
+library(tidyr)
+
+library(caret)
+library(igraph)
+library(ggplot2)
+library(ggdendro)
+
+# have all config variables in a different env
+config <- new.env(parent = globalenv())
+source("03_config.R", local = config)
+
+# load dataset and kernel
+load(config$graph_alldisease)
+load(config$file_complexes)
+# load(config$file_kernel3)
+
+df_disease <- mutate(g_filter$dataset, disease = as.factor(disease.efo_info.label)) %>% 
+  rename(drugs = known_drug_binary, genetic = known_gene_binary) %>% 
+  mutate(validation = drugs)
+n <- vcount(g_filter)
+
+df_input <- plyr::ddply(
+  reshape2::melt(df_disease, measure.vars = c("drugs", "genetic"), 
+                 variable.name = "input_type", value.name = "input"),
+  c("disease", "input_type"), 
+  function(disease) {
+    # browser()
+    nm <- V(g_filter)$name
+    x <- nm %in% (filter(disease, input == 1)$STRING_id)
+    val <- nm %in% (filter(disease, validation == 1)$STRING_id)
+    data.frame(
+      STRING_id = nm, 
+      score = x*1, 
+      validation = val*1
+    )
+  }, 
+  .progress = "text"
+)
+```
+
+# Preprocess the complex data
+
+
+```{r}
+# the list in David's file is called "a" and we want the gene-complex mapping
+# it is stored in a$all$genes.for.complexes
+# (current criteria is in favour of using "all")
+list_complex_raw <- a$all$genes.for.complexes
+
+# as a list
+list_complex <- plyr::llply(
+  list_complex_raw, 
+  function(prot) {
+    intersect(paste0("9606.", as.character(prot)), V(g_filter)$name)
+  } 
+)
+
+# as a data frame
+df_complex <- plyr::ldply(
+  list_complex, 
+  function(prot) data.frame(STRING_id = prot), 
+  .id = "complex_id"
+)
+write.table(
+  df_complex, 
+  paste0(config$dir_complexes, "/map_complex_to_protein.csv"), 
+  sep = "\t", quote = FALSE, 
+  row.names = FALSE)
+```
+
+# Descriptive statistics on complexes
+
+```{r}
+df_stats_complex <- plyr::ldply(
+  list_complex_raw, 
+  function(proteins) {
+    prot <- intersect(paste0("9606.", as.character(proteins)), V(g_filter)$name)
+    
+    n_before <- length(proteins)
+    n_after <- length(prot)
+    
+    df_complex_disease <- filter(
+      df_input, (input_type == "drugs") & (STRING_id %in% prot) & (validation == 1L))
+    
+    n_disease <- length(unique(df_complex_disease$disease))
+    drug_genes <- unique(df_complex_disease$STRING_id)
+    n_drug_genes <- length(drug_genes)
+    
+    data.frame(
+      n_before = n_before, 
+      n_after = n_after, 
+      proportion_mapping = n_after/n_before, 
+      n_disease = n_disease, 
+      n_drug_genes = n_drug_genes, 
+      n_diff = n_before - n_after,
+      n_nodrug = n_after - n_drug_genes
+    )
+  }, 
+  .id = "complex_id",
+  .progress = "text"
+)
+write.csv(df_stats_complex, 
+          paste0(config$dir_complexes, "/descriptive_by_complex.csv"), 
+          row.names = FALSE)
+```
+
+## Mapping to network
+
+```{r}
+ggplot(gather(df_stats_complex, when, n, n_before, n_after, factor_key = TRUE)) + 
+  geom_histogram(aes(x = n), position = "dodge") + 
+  facet_wrap(~when) + 
+  theme_bw() +
+  ggtitle("Proteins mapping to the network") + 
+  xlab("Number of proteins in complex") + 
+  ylab("Number of complexes") + 
+  theme(aspect.ratio = 1)
+ggsave(paste0(config$dir_complexes, "/plot_protein_mapping_effect.png"), width = 6, height = 4)
+```
+
+```{r}
+ggplot(df_stats_complex, aes(x = proportion_mapping)) + 
+  geom_histogram(bins = 10) + 
+  theme_bw() +
+  xlab("Fraction of proteins mapping to network") + 
+  ylab("Number of complexes")
+ggsave(paste0(config$dir_complexes, "/plot_protein_mapping_fraction.png"), width = 6, height = 4)
+```
+
+## Complexes and diseases
+
+```{r}
+ggplot(df_stats_complex, aes(x = n_disease)) + 
+  geom_bar(stat = "count") + 
+  theme_bw() +
+  xlab("Diseases per complex") + 
+  ylab("Number of complexes")
+ggsave(paste0(config$dir_complexes, "/plot_diseases_per_complex.png"), width = 6, height = 4)
+```
+
+```{r}
+ggplot(df_stats_complex, aes(x = n_nodrug/n_after)) + 
+  geom_histogram(bins = 10) + 
+  theme_bw() +
+  xlab("Proportion of drug-genes") + 
+  ylab("Number of complexes")
+ggsave(paste0(config$dir_complexes, "/plot_drug_genes_fraction.png"), width = 6, height = 4)
+```
+
+```{r}
+# in terms of disease
+df_stats_disease <- plyr::ddply(
+  df_input, 
+  "disease", 
+  function(df) {
+    # browser()
+    # find disease genes
+    gene_disease <- filter(df, validation == 1L)$STRING_id %>% as.character %>% unique
+    # find their associated complexes
+    df_compl <- filter(df_complex, STRING_id %in% gene_disease)
+    # genes in complexes and in the disease
+    gene_compl <- df_compl$STRING_id %>% unique
+    # identifiers of the complexes
+    id_compl <- df_compl$complex_id %>% as.character %>% unique
+    # find the other genes in the complexes
+    df_whole_compl <- filter(df_complex, complex_id %in% id_compl) %>% 
+      mutate(complex_id = droplevels(complex_id))
+    gene_whole_compl <- df_whole_compl$STRING_id %>% as.character %>% unique
+    
+    data.frame(
+      n_genes = length(gene_disease), 
+      n_complex_genes = length(gene_compl), 
+      proportion_complex_genes = length(gene_compl)/length(gene_disease), 
+      n_complexes = length(id_compl), 
+      n_genes_union_complexes = length(gene_whole_compl), 
+      proportion_union_in_disease = length(gene_compl)/length(gene_whole_compl)
+    )
+  }
+)
+write.csv(df_stats_disease, 
+          paste0(config$dir_complexes, "/descriptive_by_disease.csv"), 
+          row.names = FALSE)
+```
+
+## Intersection
+
+```{r}
+union_complex <- list_complex %>% unlist %>% unique
+union_disease <- filter(df_input, validation == 1L)$STRING_id %>% unique %>% as.character 
+
+id_disease <- V(g_filter)$name %in% union_disease
+id_complex <- V(g_filter)$name %in% union_complex
+
+test_overlap <- fisher.test(
+  x = id_disease, 
+  y = id_complex
+)
+writeLines(
+  capture.output(print(test_overlap)), 
+  paste0(config$dir_complexes, "/test_overlap_disease_complex.txt")
+)
+```
+
+## Cross validation viability
+
+```{r, eval=FALSE}
+# under construction
+df_cv <- plyr::ddply(
+  df_input, 
+  "disease", 
+  function(df) {
+    browser()
+    # find disease genes
+    gene_disease <- filter(df, validation == 1L)$STRING_id %>% as.character %>% unique
+    # find their associated complexes
+    df_compl <- filter(df_complex, STRING_id %in% gene_disease)
+    # genes in complexes and in the disease
+    gene_compl <- df_compl$STRING_id %>% unique
+    # identifiers of the complexes
+    id_compl <- df_compl$complex_id %>% as.character %>% unique
+    # find the other genes in the complexes
+    df_whole_compl <- filter(df_complex, complex_id %in% id_compl) %>% 
+      mutate(complex_id = droplevels(complex_id))
+    gene_whole_compl <- df_whole_compl$STRING_id %>% as.character %>% unique
+    
+    # merge the complexes until no more merging is needed
+    # then... how many complexes do we have?
+    # can we run CV on that?
+    # 
+    # Compute binary matrix of complexes
+    mat_complex <- plyr::daply(
+      df_whole_compl, "complex_id", 
+      function(df_c) V(g_filter)$name %in% as.character(df_c$STRING_id))
+    # compute overlap between complexes
+    mat_overlap <- tcrossprod(mat_complex)
+    # find connected components 
+    # I define a graph with these edges
+    # we simplify it (no loops)
+    g <- graph_from_adjacency_matrix(mat_overlap) %>% simplify
+    g_components <- clusters(g)
+    
+    data.frame(
+      n_genes = length(gene_disease), 
+      n_complex_genes = length(gene_compl), 
+      proportion_complex_genes = length(gene_compl)/length(gene_disease), 
+      n_complexes = length(id_compl), 
+      n_genes_union_complexes = length(gene_whole_compl), 
+      proportion_union_in_disease = length(gene_compl)/length(gene_whole_compl)
+    )
+  }
+)
+```
+
+# Reproducibility
+
+```{r}
+out <- capture.output(sessionInfo())
+writeLines(out, con = paste0(config$dir_metadata, "/13_sessionInfo_disease.txt"))
+```
+
