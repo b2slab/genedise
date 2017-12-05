@@ -221,12 +221,18 @@ writeLines(
 ## Cross validation viability
 
 ```{r, eval=FALSE}
-# under construction
+# cross validation parameters
+k_cv <- 3
+rep_cv <- 20
+
+set.seed(1)
+
+# Build the folds and compute statistics on them
 df_cv <- plyr::ddply(
   df_input, 
   "disease", 
   function(df) {
-    browser()
+    # browser()
     # find disease genes
     gene_disease <- filter(df, validation == 1L)$STRING_id %>% as.character %>% unique
     # find their associated complexes
@@ -235,37 +241,123 @@ df_cv <- plyr::ddply(
     gene_compl <- df_compl$STRING_id %>% unique
     # identifiers of the complexes
     id_compl <- df_compl$complex_id %>% as.character %>% unique
-    # find the other genes in the complexes
-    df_whole_compl <- filter(df_complex, complex_id %in% id_compl) %>% 
-      mutate(complex_id = droplevels(complex_id))
-    gene_whole_compl <- df_whole_compl$STRING_id %>% as.character %>% unique
+    # have the complexes as a list
+    list_whole_compl <- list_complex[id_compl]
+    gene_whole_compl <- list_whole_compl %>% unlist %>% unique
     
-    # merge the complexes until no more merging is needed
-    # then... how many complexes do we have?
-    # can we run CV on that?
-    # 
-    # Compute binary matrix of complexes
-    mat_complex <- plyr::daply(
-      df_whole_compl, "complex_id", 
-      function(df_c) V(g_filter)$name %in% as.character(df_c$STRING_id))
-    # compute overlap between complexes
-    mat_overlap <- tcrossprod(mat_complex)
-    # find connected components 
-    # I define a graph with these edges
-    # we simplify it (no loops)
-    g <- graph_from_adjacency_matrix(mat_overlap) %>% simplify
+    # # merge the complexes until no more merging is needed
+    # # then... how many complexes do we have?
+    # # can we run CV on that?
+    # # 
+    # # Compute binary matrix of complexes
+    # mat_complex <- plyr::daply(
+    #   df_whole_compl, "complex_id", 
+    #   function(df_c) V(g_filter)$name %in% as.character(df_c$STRING_id))
+    # # compute overlap between complexes
+    # mat_overlap <- tcrossprod(mat_complex)
+    # # find connected components 
+    # # I define a graph with these edges
+    # # we simplify it (no loops)
+    # g <- graph_from_adjacency_matrix(mat_overlap) %>% simplify
+    # g_components <- clusters(g)
+    
+    # union of disease genes and complex genes for that disease
+    gene_union <- union(gene_whole_compl, gene_disease)
+    n <- length(gene_union)
+    # First, an empty graph
+    g <- graph.empty(n)
+    V(g)$name <- gene_union
+    # Modify its adjacency matrix by adding edges between all the 
+    # genes in a complex
+    mat_adj <- get.adjacency(g)
+    for (com in list_whole_compl) {
+      mat_adj[com, com] <- 1
+    }
+    # Redefine the graph with the right adjacency
+    g <- graph_from_adjacency_matrix(mat_adj, mode = "undirected")
     g_components <- clusters(g)
     
-    data.frame(
-      n_genes = length(gene_disease), 
-      n_complex_genes = length(gene_compl), 
-      proportion_complex_genes = length(gene_compl)/length(gene_disease), 
-      n_complexes = length(id_compl), 
-      n_genes_union_complexes = length(gene_whole_compl), 
-      proportion_union_in_disease = length(gene_compl)/length(gene_whole_compl)
+    # Get the labels for each gene
+    labels_gene <- g_components$membership
+    labels <- 1:(g_components$no)
+    # Number of genes in each component
+    labels_size <- g_components$csize
+    # Compute the number of disease genes per component
+    # (because some of them might not be fully made of disease genes...)
+    labels_positives <- sapply(
+      labels, 
+      function(lab) {
+        genes <- names(labels_gene)[labels_gene == lab]
+        length(intersect(genes, gene_disease))
+      }
     )
+    stopifnot(all(labels_size >= labels_positives))
+    
+    # emulate the cross validation
+    df_ans <- plyr::ldply(
+      paste0("Rep", 1:rep_cv), 
+      function(rep_number) {
+        # browser()
+        # shuffle the components
+        shuffle_labels <- sample(labels)
+        # cumulative number of disease genes in this ordering
+        shuffle_sum <- labels_positives[shuffle_labels]
+        shuffle_cumsum <- cumsum(shuffle_sum)
+        
+        # Total number of disease genes
+        total_sum <- length(gene_disease)
+        stopifnot(total_sum == tail(shuffle_cumsum, 1))
+        
+        # Theoretical endpoints
+        endpoints <- ((1:k_cv - 1)/k_cv)*total_sum
+        # Find the closest cuts
+        cuts <- sapply(endpoints, function(x) which.min(abs(shuffle_cumsum - x)))
+        # In which cut is each position?
+        folds <- sapply(seq_along(shuffle_sum), function(x) sum(x >= cuts)) %>% 
+          paste0("Fold", .)
+        
+        # sums of positives by fold
+        split_fold <- split(shuffle_sum, f = folds) %>% 
+          ldply(function(fold) data.frame(rep = rep_number, positives = sum(fold)), .id = "fold") %>% 
+          mutate(proportion = positives/total_sum)
+        
+        split_fold
+      }
+    )
+    
+    df_ans
+  }, 
+  .progress = "text"
+)
+```
+
+```{r}
+# Table with summary of the methods
+df_stats_cv <- plyr::ddply(
+  df_cv, "disease", function(df) {
+    data.frame( 
+      under_10_percent = mean(df$proportion < .1), 
+      over_50_percent = mean(df$proportion > .5))
   }
 )
+write.csv(df_stats_cv, 
+          paste0(config$dir_complexes, "/descriptive_cv_folds.csv"), 
+          row.names = FALSE)
+```
+
+```{r}
+ggplot(df_cv, aes(x = disease, y = proportion)) + 
+  geom_hline(yintercept = 1/k_cv, color = "#EE9E9E") + 
+  geom_boxplot() + 
+  # scale_x_reverse()+ 
+  xlab("") + 
+  ylab("Proportion of drug genes in fold") + 
+  ggtitle(paste0("Balance of the k-fold cross-validation folds"), 
+          subtitle = paste0("k=", k_cv, " folds, ", rep_cv, " repetitions of k-fold cross-validation")) + 
+  coord_flip() + 
+  theme_bw() + 
+  theme(aspect.ratio = 1)
+ggsave(paste0(config$dir_complexes, "/plot_cv_balance_by_disease.png"), width = 8, height = 6)
 ```
 
 # Reproducibility
