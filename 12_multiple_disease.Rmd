@@ -118,7 +118,7 @@ write.csv(df_ndisease,
 # all(a$score == b$validation)
 
 # select streams other than drug and overall
-df_streams <- select(
+df_streams <- dplyr::select(
   df_disease, disease, STRING_id, 
   contains("association_score"), -contains("drug"), 
   -contains("overall")) %>% 
@@ -141,7 +141,7 @@ df_streams <- select(
 
 ```{r}
 df_descriptive <- plyr::ddply(
-  select(df_input, -validation) %>% 
+  dplyr::select(df_input, -validation) %>% 
     reshape2::dcast(STRING_id+disease~input_type, fun.aggregate = NULL, value.var = "score"), 
   "disease", 
   function(df) {
@@ -522,24 +522,22 @@ df_perf <- plyr::ddply(
 # Prediction on the whole dataset
 
 ```{r, eval=FALSE}
-set.seed(1)
-
 # We have estimated the performance already.
 # This gives the actual predictions using current disease data
+# Now this predicts based on drugs and genetic scores
 df_predict <- plyr::ddply(
-  # df_input, 
-  subset(df_input, input_type == "drugs"),
-  c("disease"), 
+  df_input,
+  # subset(df_input, input_type == "drugs"),
+  c("input_type", "disease"), 
   function(df_in) {
+    set.seed(1)
     # browser()
-    name_disease <- as.character(df_in$disease[1])
-    
+
     # x: input
     x <- setNames(df_in$score, df_in$STRING_id)
     
     # browser()
-    ######## define training and validation ########
-    # train vectors, with three formats
+    ######## define input vector in all formats ########
     # diffuStats + EGAD: positive 1, negative 0, unabelled NULL
     vec_diffustats <- x
     # COSnet: positive 1, negative -1, unlabelled 0
@@ -556,8 +554,7 @@ df_predict <- plyr::ddply(
     # table(vec_egad)
     
     # for safety, we will index all the results using the 
-    # names of the validation genes, making sure the order 
-    # is kept...
+    # names...
     names_train <- names(vec_diffustats)
 
     ######## diffusion-based approaches ########
