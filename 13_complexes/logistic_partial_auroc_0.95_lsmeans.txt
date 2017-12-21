@@ -1,0 +1,146 @@
+cv_scheme = classic, disease = allergy:
+ method                                                prob           SE df  asymp.LCL  asymp.UCL
+ pr                                              0.06911331 0.0028397307 NA 0.06375077 0.07489084
+ randomraw                                       0.02630455 0.0017736339 NA 0.02304299 0.03001358
+ random                                          0.03144289 0.0019366416 NA 0.02786097 0.03546853
+ EGAD                                            0.24904497 0.0049616799 NA 0.23944766 0.25889601
+ association_score.datatypes.affected_pathway    0.03205761 0.0019551668 NA 0.02843925 0.03611922
+ association_score.datatypes.animal_model        0.09844038 0.0033551324 NA 0.09205728 0.10521478
+ association_score.datatypes.genetic_association 0.06610074 0.0027798226 NA 0.06085662 0.07176223
+ association_score.datatypes.literature          0.30894845 0.0053112418 NA 0.29863671 0.31945407
+ association_score.datatypes.rna_expression      0.04367810 0.0022749375 NA 0.03943025 0.04836053
+ association_score.datatypes.somatic_mutation    0.03205761 0.0019551668 NA 0.02843925 0.03611922
+ ppr                                             0.38402533 0.0055781738 NA 0.37315253 0.39501530
+ raw                                             0.35553089 0.0054980013 NA 0.34482968 0.36637847
+ gm                                              0.08253069 0.0030893898 NA 0.07667423 0.08879146
+ mc                                              0.33931862 0.0054409996 NA 0.32873733 0.35006288
+ z                                               0.35086617 0.0054824579 NA 0.34019779 0.36168571
+ knn                                             0.31506163 0.0053398194 NA 0.30469083 0.32562012
+ wsld                                            0.30980602 0.0053153267 NA 0.29948584 0.32031920
+ COSNet                                          0.24309998 0.0049197041 NA 0.23358777 0.25287174
+ bagsvm                                          0.34749796 0.0054708054 NA 0.33685412 0.35829641
+ rf                                              0.44881065 0.0056688283 NA 0.43772730 0.45994508
+ svm                                             0.35968619 0.0055112688 NA 0.34895688 0.37055763
+
+cv_scheme = blocked_cv, disease = allergy:
+ method                                                prob           SE df  asymp.LCL  asymp.UCL
+ pr                                              0.03582167 0.0015715631 NA 0.03286578 0.03903267
+ randomraw                                       0.01333828 0.0009232095 NA 0.01164480 0.01527422
+ random                                          0.01598536 0.0010156743 NA 0.01411193 0.01810293
+ EGAD                                            0.14233315 0.0034757543 NA 0.13565580 0.14928240
+ association_score.datatypes.affected_pathway    0.01630296 0.0010263102 NA 0.01440883 0.01844143
+ association_score.datatypes.animal_model        0.05180821 0.0019333296 NA 0.04814733 0.05573115
+ association_score.datatypes.genetic_association 0.03420692 0.0015319369 NA 0.03132822 0.03733993
+ association_score.datatypes.literature          0.18281766 0.0040100420 NA 0.17508887 0.19080869
+ association_score.datatypes.rna_expression      0.02234442 0.0012144313 NA 0.02008406 0.02485273
+ association_score.datatypes.somatic_mutation    0.01630296 0.0010263102 NA 0.01440883 0.01844143
+ ppr                                             0.23779069 0.0046246415 NA 0.22884572 0.24697332
+ raw                                             0.21633597 0.0043990205 NA 0.20783846 0.22508218
+ gm                                              0.04307501 0.0017418618 NA 0.03978733 0.04662118
+ mc                                              0.20445733 0.0042663813 NA 0.19622231 0.21294640
+ z                                               0.21289425 0.0043611650 NA 0.20447170 0.22156711
+ knn                                             0.18711084 0.0040624444 NA 0.17927867 0.19520379
+ wsld                                            0.18341804 0.0040174172 NA 0.17567470 0.19142342
+ COSNet                                          0.13846580 0.0034206749 NA 0.13189660 0.14530741
+ bagsvm                                          0.21042118 0.0043336751 NA 0.20205304 0.21904076
+ rf                                              0.28950068 0.0050979380 NA 0.27961197 0.29959368
+ svm                                             0.21941830 0.0044325286 NA 0.21085442 0.22822941
+
+cv_scheme = pick_one, disease = allergy:
+ method                                                prob           SE df  asymp.LCL  asymp.UCL
+ pr                                              0.04079828 0.0017192092 NA 0.03755878 0.04430433
+ randomraw                                       0.01524070 0.0010376954 NA 0.01333496 0.01741399
+ random                                          0.01825835 0.0011377264 NA 0.01615708 0.02062716
+ EGAD                                            0.15965684 0.0034776092 NA 0.15295812 0.16659124
+ association_score.datatypes.affected_pathway    0.01862026 0.0011491736 NA 0.01649661 0.02101145
+ association_score.datatypes.animal_model        0.05887018 0.0020794473 NA 0.05492436 0.06308055
+ association_score.datatypes.genetic_association 0.03896826 0.0016788954 NA 0.03580775 0.04239546
+ association_score.datatypes.literature          0.20389738 0.0039174353 NA 0.19632679 0.21168301
+ association_score.datatypes.rna_expression      0.02549819 0.0013495875 NA 0.02298249 0.02828128
+ association_score.datatypes.somatic_mutation    0.01862026 0.0011491736 NA 0.01649661 0.02101145
+ ppr                                             0.26316775 0.0043969378 NA 0.25464106 0.27187581
+ raw                                             0.24014476 0.0042242791 NA 0.23196319 0.24852152
+ gm                                              0.04900809 0.0018905195 NA 0.04543282 0.05284914
+ mc                                              0.22733807 0.0041209285 NA 0.21936260 0.23551603
+ z                                               0.23643855 0.0041949198 NA 0.22831556 0.24475887
+ knn                                             0.20855925 0.0039594330 NA 0.20090519 0.21642594
+ wsld                                            0.20454966 0.0039233584 NA 0.19696731 0.21234672
+ COSNet                                          0.15540408 0.0034310549 NA 0.14879742 0.16224816
+ bagsvm                                          0.23377321 0.0041735307 NA 0.22569288 0.24205240
+ rf                                              0.31809320 0.0047451511 NA 0.30886625 0.32746519
+ svm                                             0.24346093 0.0042501745 NA 0.23522767 0.25188745
+
+cv_scheme = classic, disease = chronic obstructive pulmonary disease:
+ method                                                prob           SE df  asymp.LCL  asymp.UCL
+ pr                                              0.08882289 0.0035588582 NA 0.08209041 0.09604975
+ randomraw                                       0.03425527 0.0022870268 NA 0.03004492 0.03903189
+ random                                          0.04088150 0.0024885473 NA 0.03627316 0.04604733
+ EGAD                                            0.30334599 0.0055722087 NA 0.29253692 0.31437697
+ association_score.datatypes.affected_pathway    0.04167280 0.0025113093 NA 0.03701947 0.04688257
+ association_score.datatypes.animal_model        0.12538688 0.0041259888 NA 0.11752094 0.13369953
+ association_score.datatypes.genetic_association 0.08502968 0.0034906485 NA 0.07843311 0.09212560
+ association_score.datatypes.literature          0.36987746 0.0057672654 NA 0.35864690 0.38125063
+ association_score.datatypes.rna_expression      0.05657497 0.0028993294 NA 0.05115346 0.06253321
+ association_score.datatypes.somatic_mutation    0.04167280 0.0025113093 NA 0.03701947 0.04688257
+ ppr                                             0.45011652 0.0058157638 NA 0.43874597 0.46153943
+ raw                                             0.42006237 0.0058202469 NA 0.40869951 0.43151061
+ gm                                              0.10563243 0.0038381563 NA 0.09834255 0.11339473
+ mc                                              0.40274641 0.0058106630 NA 0.39141202 0.41418563
+ z                                               0.41509632 0.0058184187 NA 0.40373980 0.42654376
+ knn                                             0.37653933 0.0057787794 NA 0.36528237 0.38793118
+ wsld                                            0.37081339 0.0057689677 NA 0.35957896 0.38218936
+ COSNet                                          0.29661676 0.0055439327 NA 0.28586714 0.30759649
+ bagsvm                                          0.41150239 0.0058166354 NA 0.40015138 0.42294836
+ rf                                              0.51669882 0.0057131910 NA 0.50549466 0.52788621
+ svm                                             0.42447514 0.0058212551 NA 0.41310785 0.43592289
+
+cv_scheme = blocked_cv, disease = chronic obstructive pulmonary disease:
+ method                                                prob           SE df  asymp.LCL  asymp.UCL
+ pr                                              0.04651158 0.0020435936 NA 0.04266632 0.05068505
+ randomraw                                       0.01744005 0.0012083777 NA 0.01522306 0.01997335
+ random                                          0.02088393 0.0013284804 NA 0.01843300 0.02365290
+ EGAD                                            0.17891029 0.0043322697 NA 0.17057619 0.18755949
+ association_score.datatypes.affected_pathway    0.02129676 0.0013422781 NA 0.01881894 0.02409280
+ association_score.datatypes.animal_model        0.06693763 0.0025005307 NA 0.06220011 0.07200829
+ association_score.datatypes.genetic_association 0.04443717 0.0019930883 NA 0.04069045 0.04851143
+ association_score.datatypes.literature          0.22704447 0.0049061937 NA 0.21757254 0.23680396
+ association_score.datatypes.rna_expression      0.02913398 0.0015856625 NA 0.02618184 0.03240791
+ association_score.datatypes.somatic_mutation    0.02129676 0.0013422781 NA 0.01881894 0.02409280
+ ppr                                             0.29058739 0.0055111120 NA 0.27990547 0.30150629
+ raw                                             0.26603170 0.0052970366 NA 0.25577965 0.27654197
+ gm                                              0.05580420 0.0022596655 NA 0.05153716 0.06040202
+ mc                                              0.25230287 0.0051666519 NA 0.24231167 0.26256329
+ z                                               0.26206375 0.0052601491 NA 0.25188557 0.27250341
+ knn                                             0.23208129 0.0049602952 NA 0.22250167 0.24194500
+ wsld                                            0.22774962 0.0049138336 NA 0.21826249 0.23752383
+ COSNet                                          0.17425101 0.0042709916 NA 0.16603798 0.18278125
+ bagsvm                                          0.25920761 0.0052331976 NA 0.24908336 0.26959563
+ rf                                              0.34852867 0.0059217626 NA 0.33701389 0.36022311
+ svm                                             0.26957852 0.0053294646 NA 0.25926149 0.28015083
+
+cv_scheme = pick_one, disease = chronic obstructive pulmonary disease:
+ method                                                prob           SE df  asymp.LCL  asymp.UCL
+ pr                                              0.05289184 0.0021900281 NA 0.04876028 0.05735238
+ randomraw                                       0.01991570 0.0013467178 NA 0.01744063 0.02273388
+ random                                          0.02383659 0.0014732154 NA 0.02111353 0.02690119
+ EGAD                                            0.19964955 0.0041025005 NA 0.19173016 0.20781194
+ association_score.datatypes.affected_pathway    0.02430633 0.0014876377 NA 0.02155499 0.02739902
+ association_score.datatypes.animal_model        0.07589682 0.0026157535 NA 0.07092634 0.08118519
+ association_score.datatypes.genetic_association 0.05054796 0.0021414568 NA 0.04651199 0.05491396
+ association_score.datatypes.literature          0.25165334 0.0045031898 NA 0.24293037 0.26058171
+ association_score.datatypes.rna_expression      0.03321349 0.0017382377 NA 0.02997027 0.03679436
+ association_score.datatypes.somatic_mutation    0.02430633 0.0014876377 NA 0.02155499 0.02739902
+ ppr                                             0.31923902 0.0048890608 NA 0.30973393 0.32889681
+ raw                                             0.29326304 0.0047573433 NA 0.28402628 0.30267319
+ gm                                              0.06337446 0.0023943812 NA 0.05884043 0.06823253
+ mc                                              0.27866246 0.0046743972 NA 0.26959386 0.28791585
+ z                                               0.28904888 0.0047340746 NA 0.27985935 0.29841512
+ knn                                             0.25705453 0.0045393288 NA 0.24825875 0.26605165
+ wsld                                            0.25240995 0.0045083109 NA 0.24367667 0.26134807
+ COSNet                                          0.19457816 0.0040579115 NA 0.18674785 0.20265498
+ bagsvm                                          0.28601263 0.0047169736 NA 0.27685779 0.29534656
+ rf                                              0.37983441 0.0051218482 NA 0.36984842 0.38992318
+ svm                                             0.29702599 0.0047776659 NA 0.28774795 0.30647447
+
+Confidence level used: 0.95 
+Intervals are back-transformed from the logit scale 

@@ -1,0 +1,1060 @@
+---
+title: "Diffusion scores on several diseases"
+author: "Sergio Picart-Armada"
+date: "October 9, 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+```
+
+# Getting started
+
+```{r}
+# Data handling
+library(plyr)
+library(dplyr)
+library(tidyr)
+library(magrittr)
+
+# ML libraries
+library(kernlab)
+library(caret)
+library(mlr)
+library(parallelMap)
+parallelStartSocket(12)
+
+library(igraph)
+library(ggplot2)
+library(ggsci)
+library(diffuStats)
+
+library(EGAD)
+library(RANKS)
+library(COSNet)
+
+library(multcomp)
+
+# have all config variables in a different env
+config <- new.env(parent = globalenv())
+source("03_config.R", local = config)
+
+# load dataset and kernel
+load(config$graph_alldisease)
+load(config$file_kernel3)
+# adjacency matrix with 1's in the 
+A <- igraph::as_adj(g_filter, sparse = TRUE, attr = "weight") %>% as.matrix
+# diag(A) <- 1
+
+# Load MashUp features
+nm_mashup <- readLines(config$file_mashup_names)
+df_mashup <- data.table::fread(config$file_mashup_features) %>% 
+  t %>% 
+  as.data.frame %>% 
+  set_rownames(nm_mashup)
+
+# the dataset
+# x: training, y: response
+df_disease <- mutate(
+  g_filter$dataset, 
+  disease = as.factor(disease.efo_info.label)) %>% 
+  rename(drugs = known_drug_binary, genetic = known_gene_binary) %>% 
+  mutate(validation = drugs)
+n <- vcount(g_filter)
+```
+
+# Reference streams
+
+```{r}
+# data frame with input scores
+df_input <- plyr::ddply(
+  reshape2::melt(df_disease, measure.vars = c("drugs", "genetic"), 
+                 variable.name = "input_type", value.name = "input"),
+  c("disease", "input_type"), 
+  function(disease) {
+    # browser()
+    nm <- V(g_filter)$name
+    x <- nm %in% (filter(disease, input == 1)$STRING_id)
+    val <- nm %in% (filter(disease, validation == 1)$STRING_id)
+    
+    # genetic_original <- setNames(numeric(length(nm)), nm)
+    # genetic_original[as.character(disease$STRING_id)] <- 
+    #   disease$association_score.datatypes.genetic_association
+    
+    data.frame(
+      STRING_id = nm, 
+      score = x*1, 
+      validation = val*1
+      # genetic_original = genetic_original
+    )
+  }, 
+  .progress = "text"
+)
+
+# Save the drugs data as a long data frame
+df_drugs <- filter(df_input, input_type == "drugs") %>%
+  dplyr::select(disease, STRING_id, validation) %>% 
+  rename(drugs = validation)
+# pairs disease-gene
+write.csv(filter(df_drugs, drugs == 1L) %>% 
+            dplyr::select(-drugs), 
+          file = paste0(config$dir_data10, "/disease_drugs.csv"), 
+          row.names = FALSE)
+# genes in several diseases
+df_ndisease <- plyr::ddply(
+  df_drugs, "STRING_id", 
+  function(df) c(n_disease = sum(df$drugs))) %>% 
+  dplyr::filter(n_disease >= 10) %>%
+  dplyr::arrange(desc(n_disease))
+write.csv(df_ndisease, 
+          file = paste0(config$dir_data10, "/disease_count_genes.csv"), 
+          row.names = FALSE)
+
+# Small tests
+# a <- subset(df_input, input_type == "drugs")
+# b <- subset(df_input, input_type == "genetic")
+# all(a$score == a$validation)
+# all(a$score == b$validation)
+
+# select streams other than drug and overall
+df_streams <- dplyr::select(
+  df_disease, disease, STRING_id, 
+  contains("association_score"), -contains("drug"), 
+  -contains("overall")) %>% 
+  gather(key = stream, value = score, 
+         contains("association_score"), factor_key = TRUE) %>%
+  ddply(
+    c("disease", "stream"), 
+    function(df_dis) {
+      nm <- V(g_filter)$name
+      x <- nm %in% df_dis$STRING_id
+      
+      original <- setNames(numeric(length(nm)), nm)
+      original[as.character(df_dis$STRING_id)] <- df_dis$score
+      
+      data.frame(STRING_id = nm, score = original)
+    }, 
+    .progress = "text"
+)
+```
+
+```{r}
+df_descriptive <- plyr::ddply(
+  dplyr::select(df_input, -validation) %>% 
+    reshape2::dcast(STRING_id+disease~input_type, fun.aggregate = NULL, value.var = "score"), 
+  "disease", 
+  function(df) {
+    tibble(
+      n_genetic = sum(df$genetic), 
+      n_drug = sum(df$drugs), 
+      overlap = sum(df$genetic*df$drugs), 
+      p_value = fisher.test(x = df$genetic, y = df$drugs)$p.value
+    ) 
+  }, 
+  .id = "disease") %>% 
+  mutate(fdr = p.adjust(p_value, method = "fdr"))
+
+write.csv(df_descriptive, 
+          file = paste0(config$dir_data10, "/descriptive_diseases.csv"), 
+          row.names = FALSE)
+df_descriptive
+
+# check for NAs
+stopifnot(all(!is.na(df_input)))
+
+# group_by(df_input, disease, input_type) %>% 
+#   select(score) %>% 
+#   summarise_all(c("min", "mean", "max"))
+
+# cross-validation parameters
+k <- 3
+times <- 25
+```
+
+# Performance measures
+
+```{r}
+# performance measures
+top_k <- function(k) {
+  function(actual, predicted) {
+    inds <- head(order(predicted, decreasing = TRUE), k)
+    sum(actual[inds])
+  }
+}
+
+list_metrics <- list(
+  auroc = metric_fun(curve = "ROC"), 
+  partial_auroc_0.9 = metric_fun(curve = "ROC", c(0, .1)), 
+  partial_auroc_0.95 = metric_fun(curve = "ROC", c(0, .05)), 
+  auprc = metric_fun(curve = "PRC"),
+  top_20_hits = top_k(20), 
+  top_100_hits = top_k(100)
+) 
+```
+
+# Defining functions for ML-based methods
+
+```{r}
+# C-SVM Bagging wrapper 
+# Assumption: number of positives << number of negatives 
+# Aggregation is at the level of "decision" values!
+# Because if it is on the predicted class, it 
+# does not work well, i.e. too many times the SVM 
+# predicts only positives (or negatives), although the
+# raking of the "decision" values can be meaningful
+# (bootstrap is on the negatives!)
+# ind_train, ind_test: numeric or character vectors with the 
+# ids of the training and the testing samples
+# ytrain binary vector with training labels (+:1, -:0)
+# K graph kernel matrix
+# B number of bootstrapping iterations
+# ... further arguments for ksvm
+bag_svm <- function(ind_train, ind_test, K, ytrain, B = 30, ...) {
+  stopifnot(length(ind_train) == length(ytrain))
+  
+  # SVM bagging
+  ind_pos <- which(ytrain == 1L)
+  ind_neg <- which(ytrain == 0L)
+  npos <- length(ind_pos)
+  nneg <- length(ind_neg)
+  
+  yt <- as.factor(ytrain)
+  mat_bag <- plyr::ldply(
+    1:B, 
+    function(rep) {
+      # browser()
+      ind_bag_neg <- sample(ind_neg, npos, replace = TRUE)
+      ind_bag_all <- c(ind_pos, ind_bag_neg)
+      # this one can contain names:
+      ind_bag_orig <- ind_train[ind_bag_all]
+      
+      # train svms
+      svm_mod <- ksvm(
+        as.kernelMatrix(K[ind_bag_orig, ind_bag_orig]), 
+        yt[ind_bag_all], 
+        kernel = "matrix", 
+        ...
+      )
+      # find support vectors
+      svm_vec <- ind_bag_orig[SVindex(svm_mod)]
+      
+      # predict using precomputed kernel
+      predict(svm_mod, 
+              as.kernelMatrix(K[ind_test, svm_vec]), 
+              type = "decision") %>% as.vector
+    }, 
+    .progress = "text"
+    # this last line will work if ind_test are rownames and if they are 
+    # numeric values
+  ) %>% colMeans %>% setNames(rownames(K[ind_test, 1, drop = FALSE]))
+}
+
+# nu-SVM RBF and random forest wrapper, with data downsampling
+# Assumption: number of positives << number of negatives 
+# ind_train, ind_test: numeric or character vectors with the 
+# ids of the training and the testing samples
+# ytrain binary vector with training labels (+:1, -:0)
+# df_features MashUp features as a data frame
+mlr_svm_rf <- function(ind_train, ind_test, df_features, ytrain) {
+  # levels are 0, 1 (in this order)
+  yclass <- as.factor(ytrain)
+  mean_y <- mean(ytrain)
+  # how many more negatives are there?
+  ratio <- (1 - mean_y)/mean_y
+  
+  # create task
+  # shared by all learners
+  # positives are coded as "1" and negatives as "0"
+  tsk <- makeClassifTask(
+    id = "diffu", 
+    data = data.frame(class = yclass, df_features[ind_train, ]), 
+    target = "class", 
+    positive = "1")
+  tsk <- undersample(tsk, 1/ratio)
+
+  ###### SVM LEARNER ###### 
+  num_ps <- makeParamSet(
+    # makeNumericParam("C", lower = -5, upper = 5, trafo = function(x) 10^x),
+    makeNumericParam("nu", lower = .1, upper = .9),
+    makeNumericParam("sigma", lower = -6, upper = 2, trafo = function(x) 10^x)
+  )
+  ctrl <- makeTuneControlGrid(resolution = 5L, tune.threshold = FALSE)
+  
+  # define learner
+  lrn <- makeLearner("classif.ksvm", predict.type = "prob")
+  rdesc <- makeResampleDesc("CV", iters = 3L, stratify = TRUE)
+  
+  # Grid search in parallel
+  res <- tuneParams(
+    lrn, 
+    task = tsk, 
+    resampling = rdesc,
+    par.set = num_ps, 
+    measures = list(auc),
+    control = ctrl)
+  
+  # Fit optimal params
+  lrn.optim <- setHyperPars(lrn, par.vals = res$x)
+  m <- train(lrn.optim, tsk)
+  m
+  
+  # predict
+  pred_svm <- predict(m, newdata = df_features[ind_test, ])
+  
+  ###### RandomForest LEARNER ###### 
+  num_ps <- makeParamSet(
+    makeIntegerParam("ntree", lower = 10, upper = 500), 
+    # makeIntegerParam("mtry", lower = 10, upper = 50), 
+    makeIntegerParam("nodesize", lower = 1, upper = 5)
+  )
+  ctrl <- makeTuneControlGrid(resolution = 3L, tune.threshold = TRUE)
+  
+  # define learner
+  lrn <- makeLearner("classif.randomForest", predict.type = "prob")
+  rdesc <- makeResampleDesc("CV", iters = 3L, stratify = TRUE)
+  
+  # Grid search in parallel
+  res <- tuneParams(
+    lrn, 
+    task = tsk, 
+    resampling = rdesc,
+    par.set = num_ps, 
+    measures = list(auc),
+    control = ctrl)
+  
+  # Fit optimal params
+  lrn.optim <- setHyperPars(lrn, par.vals = res$x)
+  m <- train(lrn.optim, tsk)
+  m
+  
+  # Test set
+  pred_rf <- predict(m, newdata = df_features[ind_test, ])
+  
+  list(
+    svm = setNames(pred_svm$data$prob.1, rownames(pred_svm$data)), 
+    rf = setNames(pred_rf$data$prob.1, rownames(pred_rf$data))
+  )
+}
+```
+
+
+# Computing the diffusion scores through cross-validation
+
+```{r}
+# reproducibility
+set.seed(1)
+
+# A centrality measure
+pr <- page.rank(g_filter)$vector
+```
+
+# Complex-aware cross validation
+
+## Scheme 1 and 2
+
+```{r}
+# reproducibility
+set.seed(1)
+
+# Load complex data
+df_complex <- read.table(
+  "13_complexes/map_complex_to_protein.csv", 
+  header = TRUE
+) %>% filter(STRING_id %in% V(g_filter)$name)
+
+list_complex <- plyr::dlply(
+  df_complex, "complex_id", 
+  function(comp) as.character(unique(comp$STRING_id))
+)
+
+# Pilot on two diseases: allergy and COPD
+# Only try the new validation methods!
+df_cv_scheme_1 <- plyr::ddply(
+  filter(df_input, disease %in% c("allergy", "chronic obstructive pulmonary disease")), 
+  # subset(df_input, input_type == "genetic"), 
+  c("disease", "input_type"), 
+  function(df_in) {
+    # browser()
+    name_disease <- as.character(df_in$disease[1])
+    name_input_type <- as.character(df_in$input_type[1])
+    
+    df_streams_disease <- filter(df_streams, disease == name_disease)
+    
+    # Stratified split
+    # x: input
+    # y: validation
+    # Both are named vectors
+    x <- setNames(df_in$score, df_in$STRING_id)
+    y <- setNames(df_in$validation, df_in$STRING_id)
+    
+    # split the dataset, stratified CV on the validation labels
+    # this returns the index of the training instances
+    
+    # First complex-aware approach: create "balanced" folds
+    # 
+    # First step: find complexes relevant to the disease
+    gene_disease <- names(y)[y == 1L] %>% unique
+    # find their associated complexes
+    df_compl <- filter(df_complex, STRING_id %in% gene_disease)
+    # genes in complexes and in the disease
+    gene_compl <- df_compl$STRING_id %>% unique
+    # identifiers of the complexes
+    id_compl <- df_compl$complex_id %>% as.character %>% unique
+    # have the complexes as a list
+    list_whole_compl <- list_complex[id_compl]
+    gene_whole_compl <- list_whole_compl %>% unlist %>% unique
+    
+    # Second step: generate graph with genes as nodes for merging complexes
+    # 
+    # union of disease genes and complex genes for that disease
+    gene_union <- union(gene_whole_compl, gene_disease)
+    n <- length(gene_union)
+    # First, an empty graph
+    g <- graph.empty(n)
+    V(g)$name <- gene_union
+    # Modify its adjacency matrix by adding edges between all the 
+    # genes in a complex
+    mat_adj <- get.adjacency(g)
+    for (com in list_whole_compl) {
+      mat_adj[com, com] <- 1
+    }
+    # Redefine the graph with the right adjacency
+    g <- graph_from_adjacency_matrix(mat_adj, mode = "undirected")
+    g_components <- clusters(g)
+    
+    # Get the labels for each gene
+    labels_gene <- g_components$membership
+    labels <- 1:(g_components$no)
+    # Number of genes in each component
+    labels_size <- g_components$csize
+    # Compute the number of disease genes per component
+    # (because some of them might not be fully made of disease genes...)
+    labels_positives <- sapply(
+      labels, 
+      function(lab) {
+        genes <- names(labels_gene)[labels_gene == lab]
+        length(intersect(genes, gene_disease))
+      }
+    )
+    stopifnot(all(labels_size >= labels_positives))
+    
+    # ids of the rest of vertices
+    genes_outside <- V(g_filter)[!(name %in% V(g)$name)] %>% as.numeric
+    
+    
+    # browser()
+    # all the splits in a list
+    # Format: list$RepX$FoldY
+    set.seed(1)
+    list_cv_method1 <- plyr::llply(
+      setNames(paste0("Rep", 1:times), paste0("Rep", 1:times)), 
+      function(rep_number) {
+        # browser()
+        # shuffle the components
+        shuffle_labels <- sample(labels)
+        # cumulative number of disease genes in this ordering
+        shuffle_sum <- labels_positives[shuffle_labels]
+        shuffle_cumsum <- cumsum(shuffle_sum)
+        
+        # Total number of disease genes
+        total_sum <- length(gene_disease)
+        stopifnot(total_sum == tail(shuffle_cumsum, 1))
+        
+        # Theoretical endpoints
+        endpoints <- ((1:k - 1)/k)*total_sum
+        # Find the closest cuts
+        cuts <- sapply(endpoints, function(x) which.min(abs(shuffle_cumsum - x)))
+        # In which cut is each position?
+        # This leaves the positives (and maybe some negatives) with a defined fold
+        folds_inside <- sapply(seq_along(shuffle_sum), function(x) sum(x >= cuts)) %>% 
+          paste0("Fold", .) %>% 
+          split(x = shuffle_labels, f = .) %>% 
+          llply(function(labels_fold) {
+            # get the ids of the nodes in each fold
+            genes_fold <- V(g)[labels_gene %in% labels_fold]$name
+            V(g_filter)[name %in% genes_fold] %>% as.numeric
+          })
+        
+        # Assuming that the number of negatives in the complexes is small.. 
+        # the negatives will be equally split among folds
+        folds_outside <- caret::createFolds(genes_outside, k = k) %>% 
+          llply(function(ids_fold) {
+            genes_outside[ids_fold]
+          })
+
+        # Merge both lists and take the complementary, 
+        # as each fold contains the training data.
+        lapply(
+          setNames(names(folds_inside), names(folds_inside)), 
+          function(fold)
+            setdiff(
+              1:vcount(g_filter), 
+              c(folds_inside[[fold]], folds_outside[[fold]])
+            )
+        )
+      }
+    ) %>% unlist(recursive = FALSE, use.names = TRUE)
+    
+    # diffusion scores
+    list_perf <- plyr::ldply(
+      setNames(names(list_cv_method1), names(list_cv_method1)), 
+      function(split_cv_name) {
+        # browser()
+        ######## define training and validation ########
+        split_cv_train <- list_cv_method1[[split_cv_name]]
+        # train vectors, with three formats
+        # diffuStats + EGAD: positive 1, negative 0, unabelled NULL
+        vec_diffustats <- x[split_cv_train]
+        
+        # Check that positives exist
+        if (sum(vec_diffustats) == 0) {
+          warning("Repetition ", split_cv_name, " contains 0 positives. Skipping...")
+          return(invisible())
+        }
+        
+        # COSnet: positive 1, negative -1, unlabelled 0
+        vec_cosnet <- ifelse(x == 1, 1, -1)
+        vec_cosnet[-split_cv_train] <- 0
+        # RANKS: which(1) - but only for training fold!
+        vec_ranks <- which(vec_cosnet == 1)
+        # EGAD: positive 1, negative/unlabelled 0
+        vec_egad <- ifelse(vec_cosnet == 1, 1, 0)
+        # debug
+        # table(vec_diffustats)
+        # table(vec_cosnet)
+        # length(vec_ranks)
+        # table(vec_egad)
+        
+        # validation labels
+        vec_val <- y[-split_cv_train]
+        # for safety, we will index all the results using the 
+        # names of the validation genes, making sure the order 
+        # is kept...
+        names_train <- names(vec_diffustats)
+        names_val <- names(vec_val)
+
+        # counts
+        n_positive_train <- sum(vec_diffustats)
+        n_positive_val <- sum(vec_val)
+        n_negative_val <- sum(!vec_val)
+        
+        ######## diffusion-based approaches ########
+        # diffuStats
+        list_scores <- plyr::llply(
+          setNames(config$list_methods, config$list_methods),
+          function(method) {
+            diffuStats::diffuse(
+              K = K, scores = vec_diffustats, 
+              method = method, n.perm = 1e3)[names_val] 
+          }
+        )
+        
+        # personalized PageRank
+        list_scores$ppr <- page.rank(
+          g_filter, personalized = vec_egad)$vector[names_val]
+        
+        # EGAD (gba)
+        list_scores$EGAD <- EGAD::predictions(
+          genes.labels = vec_egad, 
+          network = A
+        )[, 1]
+        list_scores$EGAD <- list_scores$EGAD[names_val]
+        
+        # RANKS (wsld + knn) kernelized scores
+        list_scores$wsld <- RANKS::WSLD.score(
+          RW = K, x = 1:nrow(K), x.pos = vec_ranks, d = config$wsld_d) %>% 
+          setNames(rownames(K))
+        list_scores$wsld <- list_scores$wsld[names_val]
+        list_scores$knn <- RANKS::KNN.score(
+          RW = K, x = 1:nrow(K), x.pos = vec_ranks, k = config$knn_k) %>% 
+          setNames(rownames(K))
+        list_scores$knn <- list_scores$knn[names_val]
+        
+        ######## other machine learning approaches ########
+        # based in prodige1: SVM
+        list_scores$bagsvm <- bag_svm(
+          ind_train = names_train, ind_test = names_val, 
+          K = K, ytrain = vec_diffustats, B = 30, 
+          C = 1, type = "C-svc", scaled = FALSE)
+        # based in MashUp: SVM and RandomForest
+        list_mashup <- mlr_svm_rf(
+          ind_train = names_train, ind_test = names_val, 
+          df_features = df_mashup, ytrain = vec_diffustats)
+        list_scores <- c(list_scores, list_mashup)
+        
+        # COSNet: neural net
+        list_scores$COSNet <- COSNet::COSNet(
+          W = A, labeling = vec_cosnet, cost = config$cosnet_cost
+        )$scores
+        list_scores$COSNet <- list_scores$COSNet[names_val]
+        
+        ######## reference scores ########
+        # random
+        list_scores$random <- setNames(
+          sample(length(names_val)), names_val
+        )
+        # network properties that ignore input
+        list_scores$randomraw <- diffuStats::diffuse(
+          K = K, 
+          scores = setNames(sample(vec_diffustats), 
+                            names(vec_diffustats)), 
+          method = "raw")[names_val] 
+        list_scores$pr <- pr[names_val]
+        
+        # reference: other data streams
+        list_streams <- plyr::dlply(
+          df_streams_disease, 
+          "stream", 
+          function(df) {
+            stream_scores <- setNames(df$score, df$STRING_id)
+            stream_scores[names_val]
+          }
+        )
+        
+        ######## performance metrics ########
+        # compute metrics 
+        df_metrics <- plyr::ldply(
+          c(list_scores, list_streams), 
+          function(scores) {
+            perf_eval(
+              prediction = scores, 
+              validation = vec_val, 
+              metric = list_metrics
+            )
+          }, 
+          .id = "method"
+        ) 
+        
+        # Append to file, so that we can keep track on how the file grows 
+        # and how advanced the process is
+        data.frame(
+          # split_cv = split_cv_name, 
+          n_positive_train = n_positive_train, 
+          n_positive_val = n_positive_val, 
+          n_negative_val = n_negative_val,
+          df_metrics
+        )
+      }, 
+      .id = "split_cv" 
+    )
+  }, 
+  .progress = "text"
+)
+
+save(df_cv_scheme_1, file = paste0(config$dir_complexes, "/pilot_metrics_method1.RData"), compress = "xz")
+
+# Scheme 2
+
+# reproducibility
+set.seed(1)
+
+# Pilot on two diseases: allergy and COPD
+# Only try the new validation methods!
+df_cv_scheme_2 <- plyr::ddply(
+  filter(df_input, disease %in% c("allergy", "chronic obstructive pulmonary disease")), 
+  # subset(df_input, input_type == "genetic"), 
+  c("disease", "input_type"), 
+  function(df_in) {
+    # browser()
+    name_disease <- as.character(df_in$disease[1])
+    name_input_type <- as.character(df_in$input_type[1])
+    
+    df_streams_disease <- filter(df_streams, disease == name_disease)
+    
+    # Stratified split
+    # x: input
+    # y: validation
+    # Both are named vectors
+    x <- setNames(df_in$score, df_in$STRING_id)
+    y <- setNames(df_in$validation, df_in$STRING_id)
+    
+    # split the dataset, stratified CV on the validation labels
+    # this returns the index of the training instances
+    
+    # First complex-aware approach: create "balanced" folds
+    # 
+    # First step: find complexes relevant to the disease
+    gene_disease <- names(y)[y == 1L] %>% unique
+    # find their associated complexes
+    df_compl <- filter(df_complex, STRING_id %in% gene_disease)
+    # genes in complexes and in the disease
+    gene_compl <- df_compl$STRING_id %>% unique
+    # identifiers of the complexes
+    id_compl <- df_compl$complex_id %>% as.character %>% unique
+    # have the complexes as a list
+    list_whole_compl <- list_complex[id_compl]
+    gene_whole_compl <- list_whole_compl %>% unlist %>% unique
+    
+    # Second step: generate graph with genes as nodes for merging complexes
+    # 
+    # union of disease genes and complex genes for that disease
+    gene_union <- union(gene_whole_compl, gene_disease)
+    n <- length(gene_union)
+    # First, an empty graph
+    g <- graph.empty(n)
+    V(g)$name <- gene_union
+    # Modify its adjacency matrix by adding edges between all the 
+    # genes in a complex
+    mat_adj <- get.adjacency(g)
+    for (com in list_whole_compl) {
+      mat_adj[com, com] <- 1
+    }
+    # Redefine the graph with the right adjacency
+    g <- graph_from_adjacency_matrix(mat_adj, mode = "undirected")
+    g_components <- clusters(g)
+    
+    # Get the labels for each gene
+    labels_gene <- g_components$membership
+    labels <- 1:(g_components$no)
+    # Number of genes in each component
+    labels_size <- g_components$csize
+    # Compute the number of disease genes per component
+    # (because some of them might not be fully made of disease genes...)
+    labels_positives <- sapply(
+      labels, 
+      function(lab) {
+        genes <- names(labels_gene)[labels_gene == lab]
+        length(intersect(genes, gene_disease))
+      }
+    )
+    stopifnot(all(labels_size >= labels_positives))
+    
+    # ids of the rest of vertices 
+    genes_outside <- V(g_filter)[!(name %in% V(g)$name)] %>% as.numeric
+    
+    
+    # browser()
+    # all the splits in a list
+    # Format: list$RepX$FoldY
+    set.seed(1)
+    list_cv_method2 <- plyr::llply(
+      setNames(paste0("Rep", 1:times), paste0("Rep", 1:times)), 
+      function(rep_number) {
+        # for each merged complex, pick one representative
+        # the rest of genes belong to "excluded"
+        
+        # representatives (by string id)
+        list_repr <- lapply(
+          labels, 
+          function(lab) {
+            # find genes and permute them
+            genes <- names(labels_gene)[labels_gene == lab]
+            genes_disease <- intersect(genes, gene_disease) %>% sample
+            
+            # pick the first gene as representative and the rest as excluded
+            genes_disease[1]
+          }
+        ) %>% unlist
+        
+        # new vector of labels
+        y_new <- setNames(V(g_filter)$name %in% list_repr, names(V(g_filter)))*1L
+        
+        # list of excluded genes
+        list_excluded <- setdiff(V(g)$name, list_repr)
+        
+          
+        # browser()
+        # stratified partition of the new training vector
+        folds <- caret::createFolds(as.factor(y), k = k, returnTrain = TRUE) 
+        
+        # return 
+        list_folds <- lapply(
+          setNames(names(folds), names(folds)), 
+          function(fold) {
+            list(
+              y_new = y_new,
+              train = folds[[fold]], 
+              excluded = list_excluded)
+          }
+        )
+        
+        list_folds
+      }
+    ) %>% unlist(recursive = FALSE, use.names = TRUE)
+    
+    # diffusion scores
+    list_perf <- plyr::ldply(
+      setNames(names(list_cv_method2), names(list_cv_method2)), 
+      function(split_cv_name) {
+        # browser()
+        ######## define training and validation ########
+        split_cv_data <- list_cv_method2[[split_cv_name]]
+        split_cv_train <- split_cv_data$train
+        
+        # Make sure we exclude other complex genes if input is drugs
+        # Modifying x here does not affect the original but a copy
+        # because we're in the ldply environment
+        if (name_input_type == "drugs") x[split_cv_data$excluded] <- 0L
+        # Always modify y
+        y <- split_cv_data$y_new
+        
+        # train vectors, with three formats
+        # diffuStats + EGAD: positive 1, negative 0, unabelled NULL
+        vec_diffustats <- x[split_cv_train]
+        
+        # Check that positives exist
+        if (sum(vec_diffustats) == 0) {
+          warning("Repetition ", split_cv_name, " contains 0 positives. Skipping...")
+          return(invisible())
+        }
+        
+        # COSnet: positive 1, negative -1, unlabelled 0
+        vec_cosnet <- ifelse(x == 1, 1, -1)
+        vec_cosnet[-split_cv_train] <- 0
+        # RANKS: which(1) - but only for training fold!
+        vec_ranks <- which(vec_cosnet == 1)
+        # EGAD: positive 1, negative/unlabelled 0
+        vec_egad <- ifelse(vec_cosnet == 1, 1, 0)
+        # debug
+        # table(vec_diffustats)
+        # table(vec_cosnet)
+        # length(vec_ranks)
+        # table(vec_egad)
+        
+        # validation labels
+        vec_val <- y[-split_cv_train]
+        # for safety, we will index all the results using the 
+        # names of the validation genes, making sure the order 
+        # is kept...
+        names_train <- names(vec_diffustats)
+        names_val <- names(vec_val)
+
+        # counts
+        n_positive_train <- sum(vec_diffustats)
+        n_positive_val <- sum(vec_val)
+        
+        ######## diffusion-based approaches ########
+        # diffuStats
+        list_scores <- plyr::llply(
+          setNames(config$list_methods, config$list_methods),
+          function(method) {
+            diffuStats::diffuse(
+              K = K, scores = vec_diffustats, 
+              method = method, n.perm = 1e3)[names_val] 
+          }
+        )
+        
+        # personalized PageRank
+        list_scores$ppr <- page.rank(
+          g_filter, personalized = vec_egad)$vector[names_val]
+        
+        # EGAD (gba)
+        list_scores$EGAD <- EGAD::predictions(
+          genes.labels = vec_egad, 
+          network = A
+        )[, 1]
+        list_scores$EGAD <- list_scores$EGAD[names_val]
+        
+        # RANKS (wsld + knn) kernelized scores
+        list_scores$wsld <- RANKS::WSLD.score(
+          RW = K, x = 1:nrow(K), x.pos = vec_ranks, d = config$wsld_d) %>% 
+          setNames(rownames(K))
+        list_scores$wsld <- list_scores$wsld[names_val]
+        list_scores$knn <- RANKS::KNN.score(
+          RW = K, x = 1:nrow(K), x.pos = vec_ranks, k = config$knn_k) %>% 
+          setNames(rownames(K))
+        list_scores$knn <- list_scores$knn[names_val]
+        
+        ######## other machine learning approaches ########
+        # based in prodige1: SVM
+        list_scores$bagsvm <- bag_svm(
+          ind_train = names_train, ind_test = names_val, 
+          K = K, ytrain = vec_diffustats, B = 30, 
+          C = 1, type = "C-svc", scaled = FALSE)
+        # based in MashUp: SVM and RandomForest
+        list_mashup <- mlr_svm_rf(
+          ind_train = names_train, ind_test = names_val, 
+          df_features = df_mashup, ytrain = vec_diffustats)
+        list_scores <- c(list_scores, list_mashup)
+        
+        # COSNet: neural net
+        list_scores$COSNet <- COSNet::COSNet(
+          W = A, labeling = vec_cosnet, cost = config$cosnet_cost
+        )$scores
+        list_scores$COSNet <- list_scores$COSNet[names_val]
+        
+        ######## reference scores ########
+        # random
+        list_scores$random <- setNames(
+          sample(length(names_val)), names_val
+        )
+        # network properties that ignore input
+        list_scores$randomraw <- diffuStats::diffuse(
+          K = K, 
+          scores = setNames(sample(vec_diffustats), 
+                            names(vec_diffustats)), 
+          method = "raw")[names_val] 
+        list_scores$pr <- pr[names_val]
+        
+        # reference: other data streams
+        list_streams <- plyr::dlply(
+          df_streams_disease, 
+          "stream", 
+          function(df) {
+            stream_scores <- setNames(df$score, df$STRING_id)
+            stream_scores[names_val]
+          }
+        )
+        
+        ######## performance metrics ########
+        # compute metrics 
+        df_metrics <- plyr::ldply(
+          c(list_scores, list_streams), 
+          function(scores) {
+            df_noexclude <- perf_eval(
+              prediction = scores, 
+              validation = vec_val, 
+              metric = list_metrics
+            ) %>% mutate(
+              excluded_remainder = TRUE, 
+              n_positive_val = sum(vec_val), 
+              n_negative_val = sum(!vec_val))
+            val_exclude <- vec_val[!(names(vec_val) %in% split_cv_data$excluded)]
+            df_exclude <- perf_eval(
+              prediction = scores, 
+              validation = val_exclude, 
+              metric = list_metrics
+            ) %>% mutate(
+              excluded_remainder = FALSE, 
+              n_positive_val = sum(val_exclude), 
+              n_negative_val = sum(!val_exclude))
+            
+            rbind(df_noexclude, df_exclude)
+          }, 
+          .id = "method"
+        ) %>% mutate(n_positive_train = sum(vec_diffustats)) 
+        
+        df_metrics
+      }, 
+      .id = "split_cv"
+    )
+  }, 
+  .progress = "text"
+)
+
+save(df_cv_scheme_2, file = paste0(config$dir_complexes, "/pilot_metrics_method2.RData"), compress = "xz")
+```
+
+# Models 
+
+```{r}
+# load original metrics
+load("12_performance/all_diseases.RData")
+
+var <- "drugs"
+diseases <- unique(df_cv_scheme_1$disease) %>% as.character
+# diseases <- "allergy"
+
+df_1 <- filter(df_cv_scheme_1, input_type == var & abs(n_positive_val/n_positive_train - .5) < .1 ) %>% 
+  dplyr::select(disease, method, split_cv, auroc:top_100_hits) %>% 
+  mutate(cv_scheme = "blocked_cv")
+
+df_2 <- filter(df_cv_scheme_2, input_type == var) %>% 
+  dplyr::select(disease, method, split_cv, auroc:top_100_hits) %>% 
+  mutate(cv_scheme = "pick_one")
+
+df_classic <- filter(df_perf, input_type == var & disease %in% unique(df_2$disease)) %>% 
+  dplyr::select(disease, method, split_cv, auroc:top_100_hits) %>% 
+  mutate(cv_scheme = "classic")
+
+df_mod <- rbind(df_classic, df_1, df_2)
+
+levels_plot <- c(
+  "pr", 
+  "randomraw", 
+  "random", 
+  "EGAD", 
+  "association_score.datatypes.affected_pathway", 
+  "association_score.datatypes.animal_model", 
+  "association_score.datatypes.genetic_association", 
+  "association_score.datatypes.literature", 
+  "association_score.datatypes.rna_expression", 
+  "association_score.datatypes.somatic_mutation", 
+  "ppr", 
+  "raw", 
+  "gm", 
+  "mc", 
+  "z", 
+  "knn", 
+  "wsld", 
+  "COSNet", 
+  "bagsvm", 
+  "rf", 
+  "svm")
+df_mod$method <- factor(df_mod$method, levels_plot)
+df_mod$cv_scheme <- factor(df_mod$cv_scheme, levels = c("classic", "blocked_cv", "pick_one"))
+
+df_plot <- reshape2::melt(
+  df_mod, 
+  id.vars = c("rep_cv", "method", "input_type", "disease"))
+
+```
+
+# Logistic models on AUROC and AUPRC
+
+```{r}
+old_maxpr <- getOption("max.print")
+old_width <- getOption("width")
+
+# WATCHOUT: is input_type genetic included or not?
+plyr::l_ply(
+  c("auroc", "partial_auroc_0.9", "partial_auroc_0.95", "auprc"), 
+  function(var) {
+    options(max.print = 2000, width = 1000)
+    
+    if(var == "partial_auroc_0.9") df_mod[[var]] <- df_mod[[var]]/.1
+    if(var == "partial_auroc_0.95") df_mod[[var]] <- df_mod[[var]]/.05
+    mod <- glm(as.formula(paste0(var, " ~ method + disease + cv_scheme")), 
+        data = df_mod, 
+        family = quasibinomial(link = "logit"))
+    writeLines(
+      capture.output(summary(mod)), 
+      con = paste0(config$dir_complexes, "/logistic_", var, ".txt")
+    )
+    
+    
+    writeLines(
+      capture.output(
+        lsmeans::lsmeans(mod, specs = "method", by = c("cv_scheme", "disease"), type = "response")
+      ), 
+      con = paste0(config$dir_complexes, "/logistic_", var, "_lsmeans.txt")
+    )
+  }, 
+  .progress = "text"
+)
+```
+
+```{r}
+plyr::l_ply(
+  c("top_20_hits", "top_100_hits"), 
+  function(var) {
+    options(max.print = 2000, width = 1000)
+
+    # model
+    mod <- glm(as.formula(paste0(var, " ~ method + disease + cv_scheme")), 
+        data = df_mod, 
+        family = quasipoisson(link = "log"))
+    writeLines(
+      capture.output(summary(mod)), 
+      con = paste0(config$dir_complexes, "/poisson_", var, ".txt")
+    )
+
+    writeLines(
+      capture.output(
+        lsmeans::lsmeans(mod, specs = "method", by = c("cv_scheme", "disease"), type = "response")
+      ), 
+      con = paste0(config$dir_complexes, "/poisson_", var, "_lsmeans.txt")
+    )
+  }, 
+  .progress = "text"
+)
+```
+
+# Reproducibility
+
+```{r}
+out <- capture.output(sessionInfo())
+writeLines(out, con = paste0(config$dir_metadata, "/13_sessionInfo_pilot"))
+```
+
