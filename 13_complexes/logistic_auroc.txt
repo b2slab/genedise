@@ -5,41 +5,42 @@ glm(formula = as.formula(paste0(var, " ~ method + disease + cv_scheme")),
 
 Deviance Residuals: 
      Min        1Q    Median        3Q       Max  
--1.41128  -0.06212   0.00834   0.08614   0.68878  
+-1.41215  -0.06228   0.00835   0.08615   0.68878  
 
 Coefficients:
                                                        Estimate Std. Error t value Pr(>|t|)    
-(Intercept)                                            1.217364   0.017505  69.544  < 2e-16 ***
-methodrandomraw                                       -0.329733   0.021888 -15.064  < 2e-16 ***
-methodrandom                                          -1.126237   0.021176 -53.185  < 2e-16 ***
+(Intercept)                                            1.217364   0.017506  69.542  < 2e-16 ***
+methodrandomraw                                       -0.329733   0.021889 -15.064  < 2e-16 ***
+methodrandom                                          -1.126237   0.021177 -53.183  < 2e-16 ***
 methodEGAD                                             0.341060   0.023837  14.308  < 2e-16 ***
-methodassociation_score.datatypes.affected_pathway    -1.111400   0.021176 -52.485  < 2e-16 ***
-methodassociation_score.datatypes.animal_model        -0.990949   0.021192 -46.760  < 2e-16 ***
-methodassociation_score.datatypes.genetic_association -1.051803   0.021180 -49.661  < 2e-16 ***
-methodassociation_score.datatypes.literature           0.030913   0.022755   1.358 0.174339    
-methodassociation_score.datatypes.rna_expression      -1.000267   0.021190 -47.206  < 2e-16 ***
-methodassociation_score.datatypes.somatic_mutation    -1.111400   0.021176 -52.485  < 2e-16 ***
-methodppr                                              0.897025   0.026744  33.542  < 2e-16 ***
-methodraw                                              0.909266   0.026824  33.898  < 2e-16 ***
-methodgm                                              -1.479823   0.021330 -69.377  < 2e-16 ***
-methodmc                                               0.925664   0.026933  34.369  < 2e-16 ***
-methodz                                                0.888345   0.026687  33.288  < 2e-16 ***
-methodknn                                              0.849785   0.026441  32.139  < 2e-16 ***
-methodwsld                                             0.856557   0.026483  32.343  < 2e-16 ***
-methodCOSNet                                          -0.125674   0.022331  -5.628 1.87e-08 ***
-methodbagsvm                                           0.885428   0.026668  33.202  < 2e-16 ***
-methodrf                                               0.679165   0.025438  26.699  < 2e-16 ***
-methodsvm                                              0.083152   0.022914   3.629 0.000286 ***
+methodassociation_score.datatypes.affected_pathway    -1.111401   0.021177 -52.483  < 2e-16 ***
+methodassociation_score.datatypes.animal_model        -0.990949   0.021193 -46.759  < 2e-16 ***
+methodassociation_score.datatypes.genetic_association -1.051804   0.021180 -49.659  < 2e-16 ***
+methodassociation_score.datatypes.literature           0.030913   0.022756   1.358 0.174355    
+methodassociation_score.datatypes.rna_expression      -1.000267   0.021190 -47.204  < 2e-16 ***
+methodassociation_score.datatypes.somatic_mutation    -1.111401   0.021177 -52.483  < 2e-16 ***
+methodppr                                              0.897025   0.026745  33.540  < 2e-16 ***
+methodraw                                              0.909266   0.026825  33.896  < 2e-16 ***
+methodgm                                              -1.479823   0.021331 -69.374  < 2e-16 ***
+methodmc                                               0.925665   0.026934  34.368  < 2e-16 ***
+methodz                                                0.888345   0.026688  33.286  < 2e-16 ***
+methodknn                                              0.849785   0.026442  32.138  < 2e-16 ***
+methodwsld                                             0.856557   0.026484  32.342  < 2e-16 ***
+methodCOSNet                                          -0.125674   0.022332  -5.627 1.87e-08 ***
+methodbagsvm                                           0.885428   0.026669  33.200  < 2e-16 ***
+methodrf                                               0.679165   0.025439  26.698  < 2e-16 ***
+methodsvm                                              0.083152   0.022915   3.629 0.000286 ***
 diseasechronic obstructive pulmonary disease          -0.058204   0.007334  -7.936 2.28e-15 ***
-cv_schemeblocked_cv                                   -0.151427   0.011079 -13.668  < 2e-16 ***
-cv_schemepick_one                                     -0.095729   0.008460 -11.315  < 2e-16 ***
+cv_schemeblocked_cv                                   -0.151427   0.011080 -13.667  < 2e-16 ***
+cv_schemepick_one_reduced                             -0.093883   0.009745  -9.634  < 2e-16 ***
+cv_schemepick_one_all                                 -0.097574   0.009742 -10.016  < 2e-16 ***
 ---
 Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
-(Dispersion parameter for quasibinomial family taken to be 0.02617106)
+(Dispersion parameter for quasibinomial family taken to be 0.02617304)
 
     Null deviance: 1836.39  on 11486  degrees of freedom
-Residual deviance:  285.95  on 11463  degrees of freedom
+Residual deviance:  285.94  on 11462  degrees of freedom
 AIC: NA
 
 Number of Fisher Scoring iterations: 5

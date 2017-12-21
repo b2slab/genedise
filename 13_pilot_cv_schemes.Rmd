@@ -950,9 +950,11 @@ df_1 <- filter(df_cv_scheme_1, input_type == var & abs(n_positive_val/n_positive
   dplyr::select(disease, method, split_cv, auroc:top_100_hits) %>% 
   mutate(cv_scheme = "blocked_cv")
 
+# yes, excluded reminder is the other way around..
 df_2 <- filter(df_cv_scheme_2, input_type == var) %>% 
-  dplyr::select(disease, method, split_cv, auroc:top_100_hits) %>% 
-  mutate(cv_scheme = "pick_one")
+  mutate(cv_scheme = ifelse(!excluded_remainder, "pick_one_reduced", "pick_one_all")) %>%
+  dplyr::select(disease, method, split_cv, auroc:top_100_hits, cv_scheme)  
+  
 
 df_classic <- filter(df_perf, input_type == var & disease %in% unique(df_2$disease)) %>% 
   dplyr::select(disease, method, split_cv, auroc:top_100_hits) %>% 
@@ -982,12 +984,10 @@ levels_plot <- c(
   "bagsvm", 
   "rf", 
   "svm")
-df_mod$method <- factor(df_mod$method, levels_plot)
-df_mod$cv_scheme <- factor(df_mod$cv_scheme, levels = c("classic", "blocked_cv", "pick_one"))
 
-df_plot <- reshape2::melt(
-  df_mod, 
-  id.vars = c("rep_cv", "method", "input_type", "disease"))
+df_mod$method <- factor(df_mod$method, levels_plot)
+df_mod$cv_scheme <- factor(df_mod$cv_scheme, 
+                           levels = c("classic", "blocked_cv", "pick_one_reduced", "pick_one_all"))
 
 ```
 
