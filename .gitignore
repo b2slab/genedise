@@ -26,5 +26,5 @@ vignettes/*.pdf
 .Rproj.user
 packrat/lib*/
 packrat/bundles/*
-packrat/src/*
+#packrat/src/*
 
