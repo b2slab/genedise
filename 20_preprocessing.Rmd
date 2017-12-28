@@ -1,0 +1,335 @@
+---
+title: "Data preprocessing"
+author: "Sergio Picart-Armada"
+date: "December 28, 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+# Show the code, but suppress messages and warnings
+# otherwise document gets too long
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+# Getting started
+
+```{r}
+library(STRINGdb)
+library(igraph)
+library(ggplot2)
+library(diffuStats)
+
+library(plyr)
+library(dplyr)
+library(tidyr)
+
+# have all config variables in a different env
+config <- new.env(parent = globalenv())
+source("20_config.R", local = config)
+```
+
+# Build STRING network
+
+## Read STRING and OpenTargets data
+
+```{r}
+# read tabular file with gene-disease data
+# IMPORTANT: keep quote = "" to disable quotation, as
+# gene names can have quotes that malform the object
+df_disease <- read.table(
+  file = config$file_alldiseases, header = T, sep = "\t", 
+  stringsAsFactors = FALSE, quote = "") 
+df_disease$known_gene_binary <- (df_disease[[config$col_genetic]] >= config$threshold_genetic)*1
+
+paste("Number of NAs:", sum(is.na(df_disease)))
+
+# retrieve string db
+string_db <- do.call(
+  STRINGdb$new, config$params_string
+)
+
+# network object
+string_g <- string_db$get_graph()
+summary(string_g)
+```
+
+## Map genes from OpenTargets to ENSEMBL
+
+```{r}
+# Map genes to STRING
+df_map <- string_db$map(
+  df_disease, 
+  my_data_frame_id_col_names = config$colname_symbol)
+
+paste("Fraction of data rows correctly mapped:", 
+      nrow(na.omit(df_map))/nrow(df_map))
+
+# we only lose 3% of the ids
+df_map <- na.omit(df_map)
+paste("Number of rows after mapping:", nrow(df_map))
+
+# are ensembl ids unique, given a disease?
+col_split <- c("STRING_id", "disease.id")
+df_collisions <- plyr::ddply(df_map, col_split, function(df) if (nrow(df) > 1) df)
+
+# View genes that collide
+# In the last run, this data frame was empty: no collisions
+df_collisions
+
+# fix collisions, if any
+if (nrow(df_collisions)) {
+  df_map <- plyr::ddply(
+    df_map, col_split, 
+    function(df) {
+      n <- nrow(df)
+      if (n == 1) return(df)
+      ord <- order(
+        df$known_drug_binary, # pick genes with drugs in case of ties
+        runif(n), # break ties at random
+        decreasing = TRUE)
+      df[ord[1], , drop = FALSE]
+    }, 
+    .progress = "text"
+  )
+}
+
+paste("Final dimensions:", paste(dim(df_map), collapse = " by "))
+```
+
+## Filter network and assess coverage
+
+```{r}
+# same filters as in takeda
+# These filters specify which edges will drop
+list.edge.filters <- list(
+  Net1 = "combined_score < 400 | experiments < 1", 
+  Net2 = "experiments < 600", 
+  Net3 = "experiments < 400 & database < 400", 
+  Net4 = "combined_score < 700 | (experiments < 1 & database < 1)", 
+  Net5 = "combined_score < 700 | (experiments < 1 & database < 1 & textmining < 900)", 
+  Net6 = "database < 400" 
+)
+
+# Build all the networks, take their largest connected component 
+# and count how many genes actually map to them
+df_coverage <- plyr::ldply(
+  list.edge.filters, 
+  function(quote.char) {
+    # browser()
+    
+    # network and largest cc
+    g <- delete_edges(
+      string_g, 
+      E(string_g)[eval(parse(text = quote.char), envir = environment())]
+    ) %>% largest_cc
+    
+    # number of rows of mapped data that also map to the graphs
+    rows_mapped <- df_map$STRING_id %in% V(g)$name
+    
+    data.frame(
+      filter = quote.char, 
+      nodes = vcount(g), 
+      edges = ecount(g), 
+      coverage_allrows = sum(rows_mapped), 
+      coverage_drug = sum(df_map$known_drug_binary*rows_mapped), 
+      coverage_genetic = sum(df_map$known_gene_binary*rows_mapped), 
+      stringsAsFactors = FALSE
+    )
+  }, 
+  .id = "network", 
+  .progress = "text"
+)
+
+write.csv(df_coverage, 
+          file = paste0(config$dir_data, "/networks_coverage.csv"), 
+          row.names = FALSE)
+
+df_coverage
+```
+
+```{r}
+# Plot the coverage to decide
+df_plotcoverage <- tidyr::gather(
+  df_coverage, key = "coverage_type", value = coverage_value, 
+  contains("coverage"))
+ggplot(df_plotcoverage, aes(x = nodes, y = coverage_value)) + 
+  geom_smooth(method = "lm") + 
+  geom_text(aes(label = network), vjust = "inward") + 
+  facet_wrap(~coverage_type, scales = "free_y") + 
+  scale_x_continuous(expand = c(.15, .15)) + 
+  theme_bw() + 
+  theme(aspect.ratio = 1) + 
+  ggtitle("Coverage of input genes in the network")
+ggsave(filename = paste0(config$dir_data, "/networks_coverage.png"), 
+       width = 9, height = 4)
+```
+
+# Save network
+
+## Choose filter based on coverage
+
+```{r}
+# Pick network 4: equilibrium between mapped genes and simplicity
+choice_net <- "Net4"
+choice_filter <- list.edge.filters[choice_net]
+
+# delete edges not meeting the filter
+g_filter <- delete_edges(
+  string_g, 
+  E(string_g)[eval(parse(text = choice_filter), 
+                   envir = environment())]
+  ) %>% largest_cc
+
+# Edge weights should lie between 0 and 1
+E(g_filter)$weight <- E(g_filter)$combined_score/max(E(g_filter)$combined_score)
+
+# Save metadata to the graph object
+g_filter$choice_filter <- choice_filter
+g_filter$config <- config
+
+# final graph
+summary(g_filter)
+stopifnot(is.simple(g_filter))
+stopifnot(is.connected(g_filter))
+
+# delete the edge attributes other than the weight
+# to save space
+attr_edge <- list.edge.attributes(g_filter)
+for (att in setdiff(attr_edge, "weight")) {
+  g_filter <- delete_edge_attr(g_filter, att)
+}
+```
+
+## Clean OpenTargets dataset
+
+```{r}
+# add the dataset that maps to the graph
+df_dataset <- filter(df_map, STRING_id %in% V(g_filter)$name)
+
+col_disease <- "disease.efo_info.label"
+
+df_count <- plyr::ddply(
+  df_dataset, 
+  col_disease, 
+  function(df) {
+    data.frame(
+      drug = sum(df$known_drug_binary), 
+      genetic = sum(df$known_gene_binary)
+    )
+  })
+write.csv(
+  df_count, 
+  file = paste0(config$dir_data, "/diseases_mapped_genes.csv"), 
+  row.names = FALSE)
+```
+
+## Filter diseases by a minimum of drugs and genetic genes
+
+```{r}
+# range to sweep
+thresholds_nmin <- 1:50
+# numbes to output disease lists 
+thresholds_txt <- c(5, 10, 20, 50)
+
+df_filterdisease <- plyr::ldply(
+  thresholds_nmin, 
+  function(threshold) {
+    df_filt <- filter(df_count, drug >= threshold & genetic >= threshold)
+    df <- data.frame(
+      threshold = threshold, 
+      diseases = nrow(df_filt)
+    )
+    # write diseases passing the filter
+    if (threshold %in% thresholds_txt) {
+      writeLines(
+        df_filt$disease.efo_info.label, 
+        con = paste0(config$dir_data, "/diseases_over_", threshold, "_genes.txt")
+      )
+    }
+    df
+  }
+)
+ggplot(df_filterdisease, aes(x = threshold, y = diseases)) + 
+  geom_bar(stat = "identity") + 
+  xlab("Minimum associated genes") +
+  ylab("Diseases above threshold") + 
+  theme_bw() + 
+  theme(aspect.ratio = 1) + 
+  ggtitle("Number of diseases after imposing minimum genes", 
+          subtitle = "Threshold applies to both drugs and genetic associations")
+ggsave(filename = paste0(config$dir_data, "/diseases_thresholds_ngenes.png"), 
+       width = 5, height = 5)
+```
+
+## Load and map complex data
+
+```{r}
+# rda file from David
+load(config$file_complexes)
+
+# the list in David's file is called "a" and we want the gene-complex mapping
+# it is stored in a$all$genes.for.complexes
+# (current criteria is in favour of using "all")
+list_complex_raw <- a$all$genes.for.complexes
+
+# complex data as a list
+# genes are mapped to the network, only the intersection is kept
+list_complex <- plyr::llply(
+  list_complex_raw, 
+  function(prot) {
+    intersect(paste0("9606.", as.character(prot)), V(g_filter)$name)
+  } 
+)
+
+# as a data frame
+df_complex <- plyr::ldply(
+  list_complex, 
+  function(prot) data.frame(STRING_id = prot), 
+  .id = "complex_id"
+)
+```
+
+## Save the dataset and the network
+
+```{r}
+# filter diseases
+disease_filtered <- filter(
+  df_count, drug >= config$threshold_ngenes & 
+  genetic >= config$threshold_ngenes)$disease.efo_info.label
+
+# add OT and complex data to the network
+g_filter$dataset <- filter(df_dataset, disease.efo_info.label %in% disease_filtered)
+g_filter$list_complex <- list_complex
+g_filter$df_complex <- df_complex
+
+# save the graph with the dataset
+save(g_filter, file = config$graph_alldiseases, compress = "xz")
+```
+
+# Compute and save kernel (computationally intensive)
+
+```{r}
+if (!file.exists(config$file_kernel)) {
+  # Compute kernel
+  # last time: ~1000s
+  kernel_time <- system.time({
+    K <- diffuStats::regularisedLaplacianKernel(
+      graph = g_filter, 
+      normalized = config$kernel_normalised
+    )
+  })
+  kernel_time
+  
+  # save it. Standard compression; tried xz but it is not 
+  # worth it and takes too long
+  save(K, file = config$file_kernel)  
+}
+```
+
+# Reproducibility
+
+```{r}
+out <- capture.output(sessionInfo())
+writeLines(out, con = paste0(config$dir_metadata, "/20_sessionInfo_preprocessing.txt"))
+```
+
