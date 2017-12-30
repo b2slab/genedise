@@ -81,11 +81,9 @@ cosnet_cost <- 1e-4
 wsld_d <- 2
 knn_k <- 3
 
-# bagged svm
-bagsvm_B <- 30
-bagsvm_C <- 1
-bagsvm_type <- "C-svc"
-bagsvm_scaled <- FALSE
+# bagged svm and ML (svm, rf) parameters 
+# can be found in their function definitions 
+# in 22_performance.Rmd
 
 colname_symbol <- "target.id"
 
