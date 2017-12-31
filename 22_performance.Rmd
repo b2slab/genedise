@@ -375,7 +375,7 @@ pr <- page.rank(g_filter)$vector
 
 ## Precompute cross validation folds
 
-```{r}
+```{r, eval=FALSE}
 set.seed(1)
 
 # list with validation folds
@@ -586,9 +586,11 @@ list_cv_folds <- plyr::dlply(
 )
 ```
 
+
 ## Sanity check of folds
 
-```{r}
+
+```{r, eval=FALSE}
 df_stat_complex <- plyr::ldply(
   setNames(names(list_cv_folds), names(list_cv_folds)), 
   function(disease_name) {
@@ -691,7 +693,7 @@ dplyr::group_by(df_stat_complex, disease, cv_scheme) %>%
             npos_sd = sd(train_pos))
 ```
 
-```{r}
+```{r, eval=FALSE}
 # Save CV schemes and summary data
 save(list_cv_folds, 
      file = paste0(config$dir_performance, "/data_cv_splits.RData"), 
@@ -702,7 +704,21 @@ write.csv(df_stat_complex,
           row.names = FALSE)
 ```
 
+```{r}
+load(paste0(config$dir_performance, "/data_cv_splits.RData"))
+```
+
 # Heavy runs
+
+```{r, eval=FALSE}
+# DEBUG
+# 
+disease_name <- "allergy"
+cv_scheme <- "representative"
+split_cv_name <- "Rep01.Fold2"
+input_type <- "drugs"
+df_in <- filter(df_input, disease==disease_name&input_type=="drugs")
+```
 
 ```{r}
 # Run only the cv schemes defined for this hostname 
@@ -760,11 +776,11 @@ plyr::l_ply(
               # diffuStats + EGAD: positive 1, negative 0, unabelled NULL
               vec_diffustats <- x[split_cv$train]
               # COSnet: positive 1, negative -1, unlabelled 0
-              vec_cosnet <- ifelse(x == 1, 1, 0)
-              vec_cosnet[-split_cv$train] <- 0
+              # vec_cosnet <- ifelse(x == 1, 1, 0)
+              # vec_cosnet[-split_cv$train] <- 0
               # treat negatives as unlabelled (see commented lines below)
-              # vec_cosnet <- ifelse(x == 1, 1, -1)
-              # vec_cosnet[-split_cv_train] <- 0
+              vec_cosnet <- ifelse(x == 1, 1, -1)
+              vec_cosnet[-split_cv$train] <- 0
 
               # RANKS: which(1) - but only for training fold!
               vec_ranks <- which(vec_cosnet == 1)
@@ -777,8 +793,21 @@ plyr::l_ply(
               # table(vec_egad)
 
               # validation labels
-              if (is.null(split_cv$validation)) vec_val <- y[-split_cv$train]
-              else vec_val <- y[split_cv$validation]
+              if (is.null(split_cv$validation)) {
+                vec_val <- y[-split_cv$train]
+              } else {
+                vec_val <- y[split_cv$validation]
+              }
+                
+              # if train/val have no positives, just leave
+              if (sum(vec_diffustats) == 0 | sum(vec_val) == 0) {
+                warning("Repetition ", split_cv_name, " contains ", 
+                        sum(vec_diffustats), " positives in train and ", 
+                        sum(vec_val), " in validation for ", 
+                        name_disease, " with ", name_input_type, " input. Skipping...")
+                return(invisible())
+              }
+              
               # for safety, we will index all the results using the
               # names of the validation genes, making sure the order
               # is kept...
