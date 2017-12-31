@@ -58,6 +58,9 @@ dir_topology <- "24_topology"
 # MashUp features
 file_mashup_names <- "05_mashup/node_names.txt"
 
+# Preprocessed input RData file
+file_input <- paste0(dir_data, "/tables_input.RData")
+
 #################################
 # Other params
 #################################
