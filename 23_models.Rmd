@@ -79,10 +79,9 @@ df_models$method <- factor(df_models$method, levels_method)
 df_models$cv_scheme <- factor(df_models$cv_scheme, levels_cv_scheme)
 
 # temporary lines (because not everything is run)
-df_models <- filter(
-  df_models, 
-  as.character(disease) <= "type I diabetes mellitus")
-
+# df_models <- filter(
+#   df_models, 
+#   as.character(disease) <= "type I diabetes mellitus")
 # diseases <- unique(df_models$disease) %>% as.factor
 ```
 
@@ -168,6 +167,15 @@ plyr::a_ply(
     mod_glht <- multcomp::glht(
       mod, 
       linfct = multcomp::mcp(method = "Tukey"))
+    
+    # model diagnostic plots
+    png(filename = paste0(config$dir_models, "/", file_prefix, "_diagnostics.png"), 
+        width = 20, height = 20, units = "cm", res = 300)
+    layout(matrix(1:4, ncol = 2))
+    plot(mod, pch = ".", ask = FALSE)
+    layout(1)
+    dev.off()
+    
     mod_confint <- summary(mod_glht)
     writeLines(
       capture.output(print(mod_confint)), 
@@ -212,7 +220,8 @@ plyr::d_ply(
     scheme <- df$cv_scheme[1] %>% as.character
     file_prefix <- paste0("input_", input, ",scheme_", scheme)
     
-    df_plot <- tidyr::gather(df, metric, value, -cv_scheme, -disease, -input_type, -split_cv, -method)
+    df_plot <- tidyr::gather(df, metric, value, -cv_scheme, 
+                             -disease, -input_type, -split_cv, -method)
     # BIG boxplots
     gg <- ggplot(df_plot, aes(x = method, y = value)) + 
       geom_boxplot(aes(fill = method), outlier.size = .3, lwd = .2) +
@@ -222,7 +231,7 @@ plyr::d_ply(
       facet_grid(metric~disease, scales = "free_y") + 
       xlab("Method") + 
       ylab("Performance") + 
-      ggtitle(paste0("Input: ", input, ", ", config$cv_k, "-fold (repeated x", 
+      ggtitle(paste0("Input: ", input, ", ", config$k_cv, "-fold (repeated x", 
                      config$times_cv, ") using ", scheme, " CV"), 
               subtitle = "Measures averaged per fold") + 
       theme(aspect.ratio = 1, 
@@ -230,7 +239,7 @@ plyr::d_ply(
             legend.position = "none")
     
     ggsave(filename = paste0(config$dir_boxplots, "/", file_prefix, ".png"), 
-           device = NULL, plot = gg, width = 130, height = 50, units = "cm", 
+           device = NULL, plot = gg, width = 140, height = 50, units = "cm", 
            limitsize = FALSE)
   }, 
   .parallel = TRUE
