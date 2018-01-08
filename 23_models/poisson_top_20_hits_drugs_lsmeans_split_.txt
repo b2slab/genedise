@@ -1,0 +1,26 @@
+ method                                                rate          SE df  asymp.LCL  asymp.UCL
+ pr                                              0.29779051 0.014339953 NA 0.27097029 0.32726536
+ randomraw                                       0.07813537 0.007334707 NA 0.06500457 0.09391857
+ random                                          0.16342271 0.010614397 NA 0.14388860 0.18560875
+ EGAD                                            3.55229844 0.050493954 NA 3.45469799 3.65265626
+ association_score.datatypes.affected_pathway    0.24021709 0.012874999 NA 0.21626276 0.26682471
+ association_score.datatypes.animal_model        0.58869725 0.020197761 NA 0.55041203 0.62964549
+ association_score.datatypes.genetic_association 0.72449545 0.022425033 NA 0.68184984 0.76980828
+ association_score.datatypes.literature          1.35869716 0.030826781 NA 1.29960147 1.42048006
+ association_score.datatypes.rna_expression      0.34311618 0.015396733 NA 0.31422811 0.37466003
+ association_score.datatypes.somatic_mutation    0.23074071 0.012617762 NA 0.20728953 0.25684499
+ ppr                                             4.53328173 0.057366330 NA 4.42222867 4.64712360
+ raw                                             5.31982059 0.062424690 NA 5.19886668 5.44358854
+ gm                                              4.33222172 0.056014785 NA 4.22381419 4.44341162
+ mc                                              1.24641110 0.029505720 NA 1.18990202 1.30560382
+ z                                               5.10561882 0.061080254 NA 4.98729634 5.22674848
+ knn                                             4.48053588 0.057014307 NA 4.37017187 4.59368702
+ wsld                                            4.54535069 0.057446638 NA 4.43414044 4.65935015
+ COSNet                                          4.60399692 0.057835542 NA 4.49202543 4.71875949
+ bagsvm                                          5.33251535 0.062503653 NA 5.21140689 5.45643826
+ rf                                              6.72768760 0.070762079 NA 6.59041626 6.86781816
+ svm                                             5.45919477 0.063287389 NA 5.33655236 5.58465571
+
+Results are averaged over the levels of: disease, cv_scheme 
+Confidence level used: 0.95 
+Intervals are back-transformed from the log scale 
