@@ -48,7 +48,7 @@ config <- new.env(parent = globalenv())
 source("20_config.R", local = config)
 
 # Parallel backend
-parallelStartSocket(config$nslaves)
+# parallelStartMulticore(config$nslaves)
 
 # load network and kernel (heavy, 1Gb)
 load(config$graph_alldiseases)
@@ -67,9 +67,10 @@ df_mashup <- data.table::fread(config$file_mashup_features) %>%
   t %>% 
   as.data.frame %>% 
   set_rownames(nm_mashup)
+
+# A centrality measure
+pr <- page.rank(g_filter)$vector
 ```
-
-
 
 # Define functions
 
@@ -115,8 +116,10 @@ list_metrics <- list(
 # K graph kernel matrix
 # B number of bootstrapping iterations
 # ... further arguments for ksvm
-bag_svm <- function(ind_train, ind_test, K, ytrain, B = 30, ...) {
+bag_svm <- function(ind_train, ind_test, K, ytrain, B = 30, seeds, ...) {
   stopifnot(length(ind_train) == length(ytrain))
+  
+  set.seed(seeds)
   
   # SVM bagging
   ind_pos <- which(ytrain == 1L)
@@ -161,7 +164,7 @@ bag_svm <- function(ind_train, ind_test, K, ytrain, B = 30, ...) {
 # ids of the training and the testing samples
 # ytrain binary vector with training labels (+:1, -:0)
 # df_features MashUp features as a data frame
-mlr_svm_rf <- function(ind_train, ind_test, df_features, ytrain) {
+mlr_svm_rf <- function(ind_train, ind_test, df_features, ytrain, seeds) {
   # levels are 0, 1 (in this order)
   yclass <- as.factor(ytrain)
   mean_y <- mean(ytrain)
@@ -171,6 +174,9 @@ mlr_svm_rf <- function(ind_train, ind_test, df_features, ytrain) {
   # create task
   # shared by all learners
   # positives are coded as "1" and negatives as "0"
+  set.seed(seeds)
+  set.seed(seeds, kind = "L'Ecuyer")
+  
   tsk <- makeClassifTask(
     id = "diffu", 
     data = data.frame(class = yclass, df_features[ind_train, ]), 
@@ -179,6 +185,7 @@ mlr_svm_rf <- function(ind_train, ind_test, df_features, ytrain) {
   tsk <- undersample(tsk, 1/ratio)
 
   ###### SVM LEARNER ###### 
+  # set.seed(seeds)
   num_ps <- makeParamSet(
     # makeNumericParam("C", lower = -5, upper = 5, trafo = function(x) 10^x),
     makeNumericParam("nu", lower = .1, upper = .9),
@@ -208,6 +215,8 @@ mlr_svm_rf <- function(ind_train, ind_test, df_features, ytrain) {
   pred_svm <- predict(m, newdata = df_features[ind_test, ])
   
   ###### RandomForest LEARNER ###### 
+  # set.seed(seeds)
+  # set.seed(seeds, kind = "L'Ecuyer")
   num_ps <- makeParamSet(
     makeIntegerParam("ntree", lower = 10, upper = 500), 
     # makeIntegerParam("mtry", lower = 10, upper = 50), 
@@ -243,17 +252,6 @@ mlr_svm_rf <- function(ind_train, ind_test, df_features, ytrain) {
 }
 ```
 
-## PageRank as a baseline centrality measure
-
-```{r}
-# reproducibility
-set.seed(1)
-
-# A centrality measure
-pr <- page.rank(g_filter)$vector
-```
-
-
 # Heavy runs
 
 ```{r}
@@ -261,12 +259,10 @@ pr <- page.rank(g_filter)$vector
 # (see the 20_config file)
 # 
 # This is the core of the whole analysis
+seed.index <- 1L
 plyr::l_ply(
   config$cv_jobs, 
   function(cv_scheme) {
-    # reproducibility
-    set.seed(1)
-    
     file_name <- paste0(config$dir_performance, 
                         "/metrics_cvscheme_", cv_scheme, ".csv")
     file_time <- paste0(config$dir_performance, 
@@ -304,6 +300,10 @@ plyr::l_ply(
             names(list_cv),
             function(split_cv_name) {
               # browser()
+              # Increase in 1 the seed. Make sure we are not overflowing: modulus a big number
+              seed.index <<- as.integer((seed.index + 1L) %% 100000L)
+              message("Current seed: ", seed.index)
+              
               ######## define training and validation ########
               # the next line contains the indices of the training instances
               split_cv <- list_cv[[split_cv_name]]
@@ -352,6 +352,7 @@ plyr::l_ply(
 
               ######## diffusion-based approaches ########
               # diffuStats
+              # set.seed(seed.index) # probably not necessary
               list_scores <- plyr::llply(
                 setNames(config$list_methods, config$list_methods),
                 function(method) {
@@ -366,6 +367,7 @@ plyr::l_ply(
                 g_filter, personalized = vec_egad)$vector[names_val]
 
               # EGAD (gba)
+              # set.seed(seed.index) # probably not necessary
               list_scores$EGAD <- EGAD::predictions(
                 genes.labels = vec_egad,
                 network = A
@@ -373,6 +375,7 @@ plyr::l_ply(
               list_scores$EGAD <- list_scores$EGAD[names_val]
 
               # RANKS (wsld + knn) kernelized scores
+              # set.seed(seed.index) # probably not necessary
               list_scores$wsld <- RANKS::WSLD.score(
                 RW = K, x = 1:nrow(K), x.pos = vec_ranks, d = config$wsld_d) %>%
                 setNames(rownames(K))
@@ -381,26 +384,10 @@ plyr::l_ply(
                 RW = K, x = 1:nrow(K), x.pos = vec_ranks, k = config$knn_k) %>%
                 setNames(rownames(K))
               list_scores$knn <- list_scores$knn[names_val]
-
-              ######## other machine learning approaches ########
-              # based in prodige1: SVM
-              list_scores$bagsvm <- bag_svm(
-                ind_train = names_train, ind_test = names_val,
-                K = K, ytrain = vec_diffustats, B = 30,
-                C = 1, type = "C-svc", scaled = FALSE)
-              # based in MashUp: SVM and RandomForest
-              list_mashup <- mlr_svm_rf(
-                ind_train = names_train, ind_test = names_val,
-                df_features = df_mashup, ytrain = vec_diffustats)
-              list_scores <- c(list_scores, list_mashup)
-
-              # COSNet: neural net
-              list_scores$COSNet <- COSNet::COSNet(
-                W = A, labeling = vec_cosnet, cost = config$cosnet_cost
-              )$scores
-              list_scores$COSNet <- list_scores$COSNet[names_val]
-
+              # browser()
+              
               ######## reference scores ########
+              set.seed(seed.index) # necessary
               # random
               list_scores$random <- setNames(
                 sample(length(names_val)), names_val
@@ -422,6 +409,35 @@ plyr::l_ply(
                   stream_scores[names_val]
                 }
               )
+              
+              ######## other machine learning approaches ########
+              # based in prodige1: SVM
+              list_scores$bagsvm <- bag_svm(
+                ind_train = names_train, ind_test = names_val,
+                K = K, ytrain = vec_diffustats, B = 30,
+                C = 1, type = "C-svc", scaled = FALSE, 
+                seeds = seed.index)
+              
+              # based in MashUp: SVM and RandomForest
+              parallelStartMulticore(config$nslaves)
+              # set.seed(seed.index, "L'Ecuyer") # necessary
+              list_mashup <- mlr_svm_rf(
+                ind_train = names_train, ind_test = names_val,
+                df_features = df_mashup, ytrain = vec_diffustats, 
+                seeds = seed.index)
+              list_scores <- c(list_scores, list_mashup)
+              parallelStop()
+              
+              # COSNet: neural net
+              # Setting seeds is pointless, they set an internal seed that 
+              # depends on the system time... This bit its NOT reproducible
+              # It is important to leave it last because it can break down 
+              # the reproducibility of the other methods..!
+              list_scores$COSNet <- COSNet::COSNet(
+                W = A, labeling = vec_cosnet, cost = config$cosnet_cost
+              )$scores
+              list_scores$COSNet <- list_scores$COSNet[names_val]
+              
               # browser()
               ######## performance metrics ########
               # compute metrics
@@ -447,6 +463,7 @@ plyr::l_ply(
               )
               write.table(df_append, file_name, sep = "\t",
                           append = TRUE, row.names = FALSE, col.names = FALSE)
+              # if (seed.index == 3) stop("Stop here now!")
             }
           )
         }
