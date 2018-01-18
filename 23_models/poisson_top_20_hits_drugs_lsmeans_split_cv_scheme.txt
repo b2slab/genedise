@@ -1,0 +1,75 @@
+cv_scheme = classic:
+ method                                                 rate          SE df   asymp.LCL   asymp.UCL
+ pr                                               0.56732237 0.024937954 NA  0.52049120  0.61836716
+ randomraw                                        0.14649772 0.012637488 NA  0.12370942  0.17348381
+ random                                           0.29356546 0.017908122 NA  0.26048327  0.33084918
+ EGAD                                             6.13309539 0.084814298 NA  5.96909501  6.30160166
+ association_score.datatypes.affected_pathway     0.42253475 0.021502340 NA  0.38242449  0.46685193
+ association_score.datatypes.animal_model         1.07094388 0.034371730 NA  1.00565165  1.14047523
+ association_score.datatypes.genetic_association  1.31904944 0.038205174 NA  1.24625447  1.39609645
+ association_score.datatypes.literature           2.45910946 0.052533985 NA  2.35827058  2.56426019
+ association_score.datatypes.rna_expression       0.61819755 0.026040240 NA  0.56920964  0.67140150
+ association_score.datatypes.somatic_mutation     0.40742895 0.021112472 NA  0.36808122  0.45098294
+ ppr                                              7.91458168 0.097350803 NA  7.72605918  8.10770428
+ raw                                              9.27467328 0.106205258 NA  9.06883335  9.48518526
+ gm                                               7.45613504 0.094239712 NA  7.27369764  7.64314830
+ mc                                               2.22796229 0.049933131 NA  2.13221352  2.32801075
+ z                                                8.98595308 0.104368039 NA  8.78370620  9.19285674
+ knn                                              7.79772552 0.096564495 NA  7.61074097  7.98930401
+ wsld                                             7.90873887 0.097311602 NA  7.72029305  8.10178449
+ COSNet                                           7.84290040 0.096868959 NA  7.65532035  8.03507678
+ bagsvm                                           9.30288977 0.106383685 NA  9.09670089  9.51375219
+ rf                                              11.91562232 0.122167343 NA 11.67856849 12.15748791
+ svm                                              9.65189064 0.108574712 NA  9.44141688  9.86705641
+
+cv_scheme = block:
+ method                                                 rate          SE df   asymp.LCL   asymp.UCL
+ pr                                               0.23292760 0.010309689 NA  0.21357264  0.25403659
+ randomraw                                        0.06014810 0.005197962 NA  0.05077636  0.07124957
+ random                                           0.12053023 0.007379054 NA  0.10690157  0.13589639
+ EGAD                                             2.51808718 0.037184509 NA  2.44625145  2.59203240
+ association_score.datatypes.affected_pathway     0.17348162 0.008873897 NA  0.15693253  0.19177587
+ association_score.datatypes.animal_model         0.43970131 0.014294685 NA  0.41255818  0.46863024
+ association_score.datatypes.genetic_association  0.54156691 0.015934832 NA  0.51121870  0.57371672
+ association_score.datatypes.literature           1.00964548 0.022193872 NA  0.96707002  1.05409532
+ association_score.datatypes.rna_expression       0.25381560 0.010771946 NA  0.23355721  0.27583118
+ association_score.datatypes.somatic_mutation     0.16727958 0.008711411 NA  0.15104799  0.18525542
+ ppr                                              3.24951845 0.043368329 NA  3.16562017  3.33564029
+ raw                                              3.80793619 0.047857611 NA  3.71528282  3.90290018
+ gm                                               3.06129236 0.041814735 NA  2.98042429  3.14435462
+ mc                                               0.91474255 0.021041502 NA  0.87441780  0.95692691
+ z                                                3.68939529 0.046917983 NA  3.59857428  3.78250844
+ knn                                              3.20154040 0.042974489 NA  3.11841027  3.28688660
+ wsld                                             3.24711955 0.043348674 NA  3.16325961  3.33320267
+ COSNet                                           3.22008801 0.043126897 NA  3.13666062  3.30573437
+ bagsvm                                           3.81952113 0.047949091 NA  3.72668938  3.91466532
+ rf                                               4.89224020 0.056195049 NA  4.78333048  5.00362963
+ svm                                              3.96281168 0.049075659 NA  3.86778311  4.06017504
+
+cv_scheme = representative:
+ method                                                 rate          SE df   asymp.LCL   asymp.UCL
+ pr                                               0.20984038 0.009299679 NA  0.19238253  0.22888246
+ randomraw                                        0.05418637 0.004684322 NA  0.04574094  0.06419113
+ random                                           0.10858357 0.006652099 NA  0.09629803  0.12243648
+ EGAD                                             2.26850051 0.033881264 NA  2.20305699  2.33588808
+ association_score.datatypes.affected_pathway     0.15628654 0.008001983 NA  0.14136421  0.17278408
+ association_score.datatypes.animal_model         0.39611918 0.012908298 NA  0.37161039  0.42224440
+ association_score.datatypes.genetic_association  0.48788811 0.014396861 NA  0.46047126  0.51693739
+ association_score.datatypes.literature           0.90957187 0.020097390 NA  0.87102245  0.94982740
+ association_score.datatypes.rna_expression       0.22865802 0.009717735 NA  0.21038328  0.24852017
+ association_score.datatypes.somatic_mutation     0.15069923 0.007855199 NA  0.13606366  0.16690907
+ ppr                                              2.92743410 0.039615080 NA  2.85081060  3.00611707
+ raw                                              3.43050283 0.043792080 NA  3.34573677  3.51741648
+ gm                                               2.75786451 0.038172269 NA  2.68405395  2.83370485
+ mc                                               0.82407549 0.019045394 NA  0.78758002  0.86226212
+ z                                                3.32371141 0.042916894 NA  3.24065131  3.40890040
+ knn                                              2.88421151 0.039249186 NA  2.80830135  2.96217357
+ wsld                                             2.92527297 0.039596818 NA  2.84868507  3.00391996
+ COSNet                                           2.90092073 0.039390769 NA  2.82473454  2.97916175
+ bagsvm                                           3.44093950 0.043877311 NA  3.35600731  3.52802111
+ rf                                               4.40733326 0.051576738 NA  4.30739521  4.50959003
+ svm                                              3.57002744 0.044927280 NA  3.48304868  3.65917824
+
+Results are averaged over the levels of: disease 
+Confidence level used: 0.95 
+Intervals are back-transformed from the log scale 

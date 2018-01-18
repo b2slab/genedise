@@ -1,0 +1,255 @@
+---
+title: "Models on performance metrics"
+author: "Sergio Picart-Armada"
+date: "January 2, 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+# Show the code, but suppress messages and warnings
+# otherwise document gets too long
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+```
+
+# Getting started
+
+```{r}
+# Data handling
+library(plyr)
+library(dplyr)
+library(tidyr)
+library(magrittr)
+
+# least squares means
+library(lsmeans)
+library(multcomp)
+
+# plotting
+library(ggplot2)
+
+# parallel computing (contrasts are slow)
+library(doMC)
+doMC::registerDoMC(cores = parallel::detectCores()) 
+
+# have all config variables in a different env
+config <- new.env(parent = globalenv())
+source("20_config.R", local = config)
+
+# load all the metrics csv files
+list_files <- list.files(
+  config$dir_performance, pattern = "^metrics.+"
+)
+
+df_models <- plyr::ldply(
+  setNames(list_files, list_files), 
+  function(file_name) {
+    read.table(
+      paste0("22_performance/", file_name), 
+      header = TRUE 
+    )
+  }, 
+  .id = "cv_scheme"
+) %>% mutate(
+  cv_scheme = gsub("(metrics_cvscheme_)(.+)(\\.csv)", "\\2", cv_scheme)
+)
+```
+
+# Data formatting
+
+```{r}
+list_models <- setNames(
+  c("binomial", "binomial", "binomial", "binomial", "poisson", "poisson"), 
+  c("auroc", "partial_auroc_0.90", "partial_auroc_0.95", "auprc", "top_20_hits", "top_100_hits")
+)
+
+levels_method <- c(
+  "pr", "randomraw", "random", "EGAD", 
+  "association_score.datatypes.affected_pathway", 
+  "association_score.datatypes.animal_model", 
+  "association_score.datatypes.genetic_association", 
+  "association_score.datatypes.literature", 
+  "association_score.datatypes.rna_expression", 
+  "association_score.datatypes.somatic_mutation", 
+  "ppr", "raw", "gm", "mc", "z", 
+  "knn", "wsld", 
+  "COSNet", "bagsvm", "rf", "svm")
+levels_cv_scheme <- c("classic", "block", "representative")
+
+df_models$method <- factor(df_models$method, levels_method)
+df_models$cv_scheme <- factor(df_models$cv_scheme, levels_cv_scheme)
+
+# temporary lines (because not everything is run)
+# df_models <- filter(
+#   df_models, 
+#   as.character(disease) <= "type I diabetes mellitus")
+# diseases <- unique(df_models$disease) %>% as.factor
+```
+
+```{r}
+# Average the folds of each repetition
+df_models_avg <- mutate(
+  df_models, 
+  split_cv = as.factor(gsub("(^Rep\\d+)(\\..+$)", "\\1", split_cv))) %>% 
+  group_by(cv_scheme, disease, input_type, split_cv, method) %>% 
+  summarise_all(funs(mean))
+```
+
+
+# Models 
+
+## Logistic and poisson models
+
+```{r}
+list_strat <- list(
+  none = NULL, 
+  cv_scheme = "cv_scheme", 
+  cv_scheme_disease = c("cv_scheme", "disease")
+)
+```
+
+
+```{r}
+# WATCHOUT: do not mix input types!
+plyr::a_ply(
+  expand.grid(metric = names(list_models), 
+              input_type = levels(df_models_avg$input_type), 
+              stringsAsFactors = FALSE), 
+  1, 
+  function(vars) {
+    # browser()
+    options(max.print = 2000, width = 1000)
+    
+    model_famname <- list_models[vars$metric]
+    model_fam <- switch(
+      model_famname, 
+      "binomial" = quasibinomial(link = "logit"),
+      "poisson" = quasipoisson(link = "log"))
+    
+    df_current <- filter(df_models_avg, input_type == vars$input_type)
+    
+    # adjust model subsetting by input_type and using 
+    # the given metric as response
+    mod <- glm(
+      as.formula(paste0(vars$metric, " ~ method + disease + cv_scheme")), 
+      data = df_current, 
+      family = model_fam)
+    
+    file_prefix <- paste(c(model_famname, vars$metric, vars$input_type), collapse = "_")
+    
+    # write model summary
+    writeLines(
+      capture.output(summary(mod)),
+      con = paste0(config$dir_models, "/", file_prefix, "_model.txt")
+    )
+    # browser()
+    # write predictions based on several grouping factors
+    # (e.g. performance per disease vs performance averaged in all diseases )
+    plyr::l_ply(
+      list_strat,
+      function(vars) {
+        vars_name <- paste(vars, collapse = ",")
+        writeLines(
+          capture.output(
+            lsmeans::lsmeans(
+              mod, specs = "method",
+              by = vars,
+              type = "response")
+          ),
+          con = paste0(config$dir_models, "/", file_prefix, "_lsmeans_split_",
+                       vars_name, ".txt")
+        )
+      }
+    )
+
+    
+    # browser()
+    # compute contrasts between methods
+    mod_glht <- multcomp::glht(
+      mod, 
+      linfct = multcomp::mcp(method = "Tukey"))
+    
+    # model diagnostic plots
+    png(filename = paste0(config$dir_models, "/", file_prefix, "_diagnostics.png"), 
+        width = 20, height = 20, units = "cm", res = 300)
+    layout(matrix(1:4, ncol = 2))
+    plot(mod, pch = ".", ask = FALSE)
+    layout(1)
+    dev.off()
+    
+    mod_confint <- summary(mod_glht)
+    writeLines(
+      capture.output(print(mod_confint)), 
+      con = paste0(config$dir_contrasts, "/", file_prefix, "_contrasts_method.txt")
+    )
+
+    # Plot contrasts and estimates
+    cols <- names(mod_confint$test$coefficients) %>% 
+      strsplit(split = " - ") %>% plyr::ldply(
+      function(x) c(row = x[1], col = x[2])
+    ) 
+    cols$row <- factor(cols$row, levels_method)
+    cols$col <- factor(cols$col, levels_method)
+    cols$estimate <- mod_confint$test$coefficients 
+    cols$pvalue <- mod_confint$test$pvalues
+    
+    e.cor <- reshape2::acast(cols, row~col, value.var = "estimate", fill = 0)
+    p.cor <- reshape2::acast(cols, row~col, value.var = "pvalue", fill = 0)
+    
+    png(filename = paste0(config$dir_contrasts, "/", file_prefix, "_contrasts_method.png"),  
+        width = 1200, height = 1200)
+    corrplot::corrplot(
+      corr = e.cor, method = "color", type = "lower", 
+      addCoef.col = "black", 
+      p.mat = p.cor, diag = TRUE, is.corr = FALSE)
+    dev.off()
+  }, 
+  .progress = "text", 
+  .parallel = TRUE
+)
+```
+
+## Boxplots
+
+```{r}
+plyr::d_ply(
+  df_models_avg, 
+  c("input_type", "cv_scheme"), 
+  function(df) {
+    # browser()
+    input <- df$input_type[1] %>% as.character
+    scheme <- df$cv_scheme[1] %>% as.character
+    file_prefix <- paste0("input_", input, ",scheme_", scheme)
+    
+    df_plot <- tidyr::gather(df, metric, value, -cv_scheme, 
+                             -disease, -input_type, -split_cv, -method)
+    # BIG boxplots
+    gg <- ggplot(df_plot, aes(x = method, y = value)) + 
+      geom_boxplot(aes(fill = method), outlier.size = .3, lwd = .2) +
+      # scale_fill_manual(guide = FALSE) +
+      # scale_fill_brewer(palette = "Set3", guide = FALSE) +
+      theme_bw() + 
+      facet_grid(metric~disease, scales = "free_y") + 
+      xlab("Method") + 
+      ylab("Performance") + 
+      ggtitle(paste0("Input: ", input, ", ", config$k_cv, "-fold (repeated x", 
+                     config$times_cv, ") using ", scheme, " CV"), 
+              subtitle = "Measures averaged per fold") + 
+      theme(aspect.ratio = 1, 
+            axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1, size = 6.5), 
+            legend.position = "none")
+    
+    ggsave(filename = paste0(config$dir_boxplots, "/", file_prefix, ".png"), 
+           device = NULL, plot = gg, width = 140, height = 50, units = "cm", 
+           limitsize = FALSE)
+  }, 
+  .parallel = TRUE
+)
+```
+
+
+# Reproducibility
+
+```{r}
+out <- capture.output(sessionInfo())
+writeLines(out, con = paste0(config$dir_metadata, "/23_sessionInfo.txt"))
+```

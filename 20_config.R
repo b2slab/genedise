@@ -43,6 +43,7 @@ dir_data <- "20_data"
 
 # performance metrics
 dir_performance <- "22_performance"
+dir_models <- "23_models"
 
 # network
 graph_alldiseases <- paste0(dir_data, "/graph_alldiseases.RData")
@@ -53,6 +54,8 @@ file_mashup_features <- paste0(dir_kernel, "/string10_features.csv")
 
 # Analysis of the topology and the positives
 dir_complexes <- "23_complexes"
+dir_boxplots <- "23_boxplots"
+dir_contrasts <- "23_contrasts"
 dir_topology <- "24_topology"
 
 # MashUp features
