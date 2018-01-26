@@ -150,7 +150,7 @@ bag_svm <- function(ind_train, ind_test, K, ytrain, B = 30, ...) {
               as.kernelMatrix(K[ind_test, svm_vec]), 
               type = "decision") %>% as.vector
     }, 
-    .progress = "text"
+    .progress = "none"
     # this last line will work if ind_test are rownames and if they are 
     # numeric values
   ) %>% colMeans %>% setNames(rownames(K[ind_test, 1, drop = FALSE]))
@@ -247,9 +247,136 @@ mlr_svm_rf <- function(ind_train, ind_test, df_features, ytrain) {
 }
 ```
 
-# Heavy runs
+# Predictions on the whole dataset
 
-```{r}
+```{r, eval=TRUE}
+# We estimate the performance later on
+# This gives the actual predictions using current disease data
+# Now this predicts based on drugs and genetic scores
+# This code has slight differences with the cross validation, 
+# be careful with copy-pastes
+# All these scores are reproducible with an error smaller than 
+# 1e-10 except for COSNet
+df_predict <- plyr::ddply(
+  df_input,
+  c("input_type", "disease"), 
+  function(df_in) {
+    name_disease <- as.character(df_in$disease[1])
+    name_input_type <- as.character(df_in$input_type[1])
+    
+    # Ensure reproducibility
+    # See note on the same procedure in the cross validation
+    seed.index <- digest::digest(paste0(name_disease, name_input_type)) %>% 
+      substr(1, 5) %>% strtoi(base = 16)
+    set.seed(seed.index)
+    set.seed(seed.index, kind = "L'Ecuyer")
+    # browser()
+
+    # x: input
+    x <- setNames(df_in$score, df_in$STRING_id)
+    
+    # browser()
+    ######## define input vector in all formats ########
+    # diffuStats + EGAD: positive 1, negative 0, unabelled NULL
+    vec_diffustats <- x
+    # COSnet: positive 1, negative -1, unlabelled 0
+    # THIS IS DIFFERENT THAN IN THE CV!
+    vec_cosnet <- ifelse(x == 1, 1, 0)
+    # RANKS: which(1) - but only for training fold!
+    vec_ranks <- which(vec_cosnet == 1)
+    # EGAD: positive 1, negative/unlabelled 0
+    vec_egad <- ifelse(vec_cosnet == 1, 1, 0)
+    # debug
+    # table(vec_diffustats)
+    # table(vec_cosnet)
+    # length(vec_ranks)
+    # table(vec_egad)
+    
+    # for safety, we will index all the results using the 
+    # names...
+    names_train <- names(vec_diffustats)
+    names_val <- names_train
+
+    ######## diffusion-based approaches ########
+    # diffuStats
+    list_scores <- plyr::llply(
+      setNames(config$list_methods, config$list_methods),
+      function(method) {
+        diffuStats::diffuse(
+          K = K, scores = vec_diffustats,
+          method = method, n.perm = config$mc_nperm)[names_val]
+      }
+    )
+
+    # personalized PageRank
+    list_scores$ppr <- page.rank(
+      g_filter, personalized = vec_egad)$vector[names_val]
+
+    # EGAD (gba)
+    list_scores$EGAD <- EGAD::predictions(
+      genes.labels = vec_egad,
+      network = A
+    )[, 1]
+    list_scores$EGAD <- list_scores$EGAD[names_val]
+
+
+    # RANKS (wsld + knn) kernelized scores
+    list_scores$wsld <- RANKS::WSLD.score(
+      RW = K, x = 1:nrow(K), x.pos = vec_ranks, d = config$wsld_d) %>%
+      setNames(rownames(K))
+    list_scores$wsld <- list_scores$wsld[names_val]
+    list_scores$knn <- RANKS::KNN.score(
+      RW = K, x = 1:nrow(K), x.pos = vec_ranks, k = config$knn_k) %>%
+      setNames(rownames(K))
+    list_scores$knn <- list_scores$knn[names_val]
+    
+    ######## other machine learning approaches ########
+    # based in prodige1: SVM
+    list_scores$bagsvm <- bag_svm(
+      ind_train = names_train, ind_test = names_val,
+      K = K, ytrain = vec_diffustats, B = 30,
+      C = 1, type = "C-svc", scaled = FALSE)
+    
+    # based in MashUp: SVM and RandomForest
+    parallelStartMulticore(config$nslaves)
+    list_mashup <- mlr_svm_rf(
+      ind_train = names_train, ind_test = names_val,
+      df_features = df_mashup, ytrain = vec_diffustats)
+    list_scores <- c(list_scores, list_mashup)
+    parallelStop()
+    
+    # COSNet: neural net
+    # It's important to compute this last, for reproducibility
+    # Set to infinity genes in the input, so they are identifiable 
+    # (they get NA otherwise)
+    scores_COSNet <- COSNet::COSNet(
+      W = A, labeling = vec_cosnet, cost = config$cosnet_cost
+    )$scores
+    list_scores$COSNet <- ifelse(
+      names_val %in% names(scores_COSNet), 
+      scores_COSNet[names_val], 
+      Inf
+    ) %>% setNames(names_val)
+
+    # browser()
+    # return as a long data frame
+    plyr::ldply(
+      list_scores, 
+      function(x) {
+        data.frame(STRING_id = names(x), score = x, stringsAsFactors = TRUE)
+      }, 
+      .id = "method")
+  }, 
+  .progress = "text"
+)
+save(df_predict, 
+     file = paste0(config$dir_performance, "/predictions_final.RData"), 
+     compress = "xz")
+```
+
+# Heavy runs: cross validation schemes
+
+```{r, eval=FALSE}
 # Run only the cv schemes defined for this hostname 
 # (see the 20_config file)
 # 
@@ -457,7 +584,7 @@ plyr::l_ply(
               )
               write.table(df_append, file_name, sep = "\t",
                           append = TRUE, row.names = FALSE, col.names = FALSE)
-              stop("Stop here now!")
+#              stop("Stop here now!")
             }
           )
         }
