@@ -1,0 +1,91 @@
+"disease.efo_info.label","drug","genetic"
+"acne",26,10
+"alcohol dependence",84,28
+"allergy",54,92
+"Alzheimers disease",92,156
+"amyotrophic lateral sclerosis",47,47
+"ankylosing spondylitis",23,35
+"anxiety disorder",110,9
+"arthritis",157,153
+"asthma",78,91
+"atherosclerosis",28,6
+"atopic eczema",39,42
+"attention deficit hyperactivity disorder",34,51
+"autism",29,26
+"autoimmune thyroid disease",13,35
+"azoospermia",3,4
+"benign prostatic hyperplasia",10,0
+"bipolar disorder",112,99
+"calcium metabolic disease",19,22
+"cardiac arrhythmia",134,59
+"cataract",27,22
+"celiac disease",5,56
+"central nervous system infection",27,0
+"chronic cystitis",23,0
+"chronic interstitial cystitis",23,0
+"chronic kidney disease",149,26
+"chronic myeloproliferative disorder",66,7
+"chronic obstructive pulmonary disease",100,125
+"cirrhosis of liver",99,26
+"colitis",7,0
+"congenital heart disease",43,9
+"congestive heart failure",109,0
+"coronary artery disease",137,36
+"coronary heart disease",142,89
+"Crohn's disease",44,157
+"cutaneous lupus erythematosus",8,0
+"cystitis",23,0
+"dermatomyositis",5,0
+"diabetic nephropathy",37,39
+"dilated cardiomyopathy",13,38
+"Down syndrome",10,0
+"drug dependence",115,51
+"encephalomyelitis",3,0
+"endometriosis",28,13
+"epilepsy",69,25
+"fibrosis",124,27
+"hearing loss",11,43
+"heart failure",139,30
+"hypertension",152,56
+"Hypertriglyceridemia",3,6
+"idiopathic pulmonary fibrosis",38,4
+"infertility",23,1
+"juvenile dermatomyositis",1,0
+"lipodystrophy",2,5
+"metabolic syndrome",48,28
+"mucocutaneous lymph node syndrome",3,5
+"multiple sclerosis",151,60
+"myocardial infarction",72,37
+"myopathy",1,15
+"myositis",9,3
+"nicotine dependence",81,2
+"non-alcoholic fatty liver disease",85,0
+"obesity",160,51
+"osteoarthritis",90,19
+"osteoporosis",33,14
+"palsy",55,37
+"pancreatitis",47,8
+"Parkinson's disease",117,39
+"periodontitis",42,20
+"Pick disease",1,2
+"polycystic ovary syndrome",49,12
+"polyp",4,0
+"preeclampsia",33,2
+"psoriasis",91,110
+"psoriasis vulgaris",27,28
+"retinopathy",125,13
+"rheumatoid arthritis",80,122
+"rosacea",22,0
+"schizophrenia",137,320
+"severe cutaneous adverse reaction",1,3
+"Sjogren syndrome",11,10
+"spondyloarthropathy",23,35
+"stroke",123,67
+"systemic lupus erythematosus",94,109
+"teratozoospermia",2,1
+"Thalassemia",11,4
+"type I diabetes mellitus",87,80
+"type II diabetes mellitus",109,105
+"ulcerative colitis",50,116
+"unipolar depression",112,101
+"vitamin metabolic disorder",1,8
