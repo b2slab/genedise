@@ -106,8 +106,8 @@ if (host == "eko") {
   nslaves <- 12
   cv_jobs <- list_cv_schemes[3]
 } else if (host == "sun") {
-  nslaves <- 32
-  cv_jobs <- list_cv_schemes[1:2]
+  nslaves <- 20
+  cv_jobs <- list_cv_schemes[1:3]
 } else {
   print("This host is unknown. Using default options in 20_config.R")
   # if the host is unknown, use all the cores and
