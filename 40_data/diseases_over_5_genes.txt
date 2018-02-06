@@ -1,0 +1,60 @@
+acne
+alcohol dependence
+allergy
+Alzheimers disease
+amyotrophic lateral sclerosis
+ankylosing spondylitis
+anxiety disorder
+arthritis
+asthma
+atherosclerosis
+atopic eczema
+attention deficit hyperactivity disorder
+autism
+autoimmune thyroid disease
+bipolar disorder
+calcium metabolic disease
+cardiac arrhythmia
+cataract
+celiac disease
+chronic kidney disease
+chronic myeloproliferative disorder
+chronic obstructive pulmonary disease
+cirrhosis of liver
+congenital heart disease
+coronary artery disease
+coronary heart disease
+Crohn's disease
+diabetic nephropathy
+dilated cardiomyopathy
+drug dependence
+endometriosis
+epilepsy
+fibrosis
+hearing loss
+heart failure
+hypertension
+metabolic syndrome
+multiple sclerosis
+myocardial infarction
+obesity
+osteoarthritis
+osteoporosis
+palsy
+pancreatitis
+Parkinson's disease
+periodontitis
+polycystic ovary syndrome
+psoriasis
+psoriasis vulgaris
+retinopathy
+rheumatoid arthritis
+schizophrenia
+Sjogren syndrome
+spondyloarthropathy
+stroke
+systemic lupus erythematosus
+type I diabetes mellitus
+type II diabetes mellitus
+ulcerative colitis
+unipolar depression

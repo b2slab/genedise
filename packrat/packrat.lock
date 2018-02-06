@@ -1,6 +1,6 @@
 PackratFormat: 1.4
 PackratVersion: 0.4.8.1
-RVersion: 3.4.2
+RVersion: 3.4.3
 Repos: BioCsoft=https://bioconductor.org/packages/3.5/bioc,
     BioCann=https://bioconductor.org/packages/3.5/data/annotation,
     BioCexp=https://bioconductor.org/packages/3.5/data/experiment,
@@ -344,6 +344,12 @@ Version: 2.26.1
 Hash: e9257345a4d381195752c902325a148c
 Requires: AnnotationDbi, BeadDataPackR, Biobase, BiocGenerics,
     GenomicRanges, IRanges, ggplot2, illuminaio, limma, reshape2
+
+Package: biomaRt
+Source: Bioconductor
+Version: 2.32.1
+Hash: 2d5ab8fa47f5704901327b44d256e08a
+Requires: AnnotationDbi, RCurl, XML
 
 Package: bitops
 Source: CRAN
