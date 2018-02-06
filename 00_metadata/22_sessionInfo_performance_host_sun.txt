@@ -15,10 +15,11 @@ attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
- [1] multcomp_1.4-8     TH.data_1.0-8      MASS_7.3-48        survival_2.41-3    mvtnorm_1.0-6      lsmeans_2.27-61   
- [7] COSNet_1.10.0      RANKS_1.0          EGAD_1.4.1         diffuStats_0.101.1 ggsci_2.8          igraph_1.1.2      
-[13] parallelMap_1.3    mlr_2.11           ParamHelpers_1.10  caret_6.0-78       ggplot2_2.2.1      lattice_0.20-35   
-[19] kernlab_0.9-25     magrittr_1.5       tidyr_0.6.3        dplyr_0.5.0        plyr_1.8.4        
+ [1] multcomp_1.4-8     TH.data_1.0-8      MASS_7.3-48        survival_2.41-3    mvtnorm_1.0-6     
+ [6] lsmeans_2.27-61    COSNet_1.10.0      RANKS_1.0          EGAD_1.4.1         diffuStats_0.101.1
+[11] ggsci_2.8          igraph_1.1.2       parallelMap_1.3    mlr_2.11           ParamHelpers_1.10 
+[16] caret_6.0-78       ggplot2_2.2.1      lattice_0.20-35    kernlab_0.9-25     magrittr_1.5      
+[21] tidyr_0.6.3        dplyr_0.5.0        plyr_1.8.4        
 
 loaded via a namespace (and not attached):
   [1] backports_1.0.5            Hmisc_4.0-3                lazyeval_0.2.0             splines_3.4.3             

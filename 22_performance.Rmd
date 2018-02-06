@@ -249,7 +249,7 @@ mlr_svm_rf <- function(ind_train, ind_test, df_features, ytrain) {
 
 # Predictions on the whole dataset
 
-```{r, eval=TRUE}
+```{r, eval=FALSE}
 # We estimate the performance later on
 # This gives the actual predictions using current disease data
 # Now this predicts based on drugs and genetic scores
@@ -376,7 +376,7 @@ save(df_predict,
 
 # Heavy runs: cross validation schemes
 
-```{r, eval=FALSE}
+```{r, eval=TRUE}
 # Run only the cv schemes defined for this hostname 
 # (see the 20_config file)
 # 
@@ -595,7 +595,8 @@ plyr::l_ply(
       capture.output(print(time_run)), 
       con = file_time
     )
-  }
+  }, 
+  .progress = "text"
 )
 ```
 
