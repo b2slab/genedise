@@ -1,0 +1,26 @@
+ method                                                prob           SE df  asymp.LCL  asymp.UCL
+ pr                                              0.02386577 0.0002454664 NA 0.02338937 0.02435163
+ randomraw                                       0.01593091 0.0002011133 NA 0.01554149 0.01632992
+ random                                          0.01247526 0.0001781813 NA 0.01213082 0.01282936
+ EGAD                                            0.01494813 0.0001948776 NA 0.01457095 0.01533493
+ association_score.datatypes.affected_pathway    0.01124298 0.0001692231 NA 0.01091610 0.01157953
+ association_score.datatypes.animal_model        0.02002727 0.0002251690 NA 0.01959068 0.02047339
+ association_score.datatypes.genetic_association 0.02236031 0.0002377262 NA 0.02189909 0.02283102
+ association_score.datatypes.literature          0.05605662 0.0003716089 NA 0.05533272 0.05678943
+ association_score.datatypes.rna_expression      0.01459248 0.0001925690 NA 0.01421982 0.01497476
+ association_score.datatypes.somatic_mutation    0.01113823 0.0001684389 NA 0.01081289 0.01147325
+ ppr                                             0.02573577 0.0002547302 NA 0.02524120 0.02623978
+ raw                                             0.02206894 0.0002361967 NA 0.02161071 0.02253665
+ gm                                              0.02065247 0.0002286060 NA 0.02020914 0.02110532
+ mc                                              0.01916814 0.0002203531 NA 0.01874099 0.01960482
+ z                                               0.02075115 0.0002291435 NA 0.02030676 0.02120505
+ knn                                             0.01981692 0.0002240000 NA 0.01938262 0.02026075
+ wsld                                            0.01954120 0.0002224578 NA 0.01910992 0.01998201
+ COSNet                                          0.02144852 0.0002329044 NA 0.02099676 0.02190979
+ bagsvm                                          0.02011374 0.0002256477 NA 0.01967621 0.02056080
+ rf                                              0.01572940 0.0001998513 NA 0.01534246 0.01612594
+ svm                                             0.01556466 0.0001988134 NA 0.01517976 0.01595917
+
+Results are averaged over the levels of: disease, cv_scheme 
+Confidence level used: 0.95 
+Intervals are back-transformed from the logit scale 

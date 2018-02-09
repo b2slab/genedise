@@ -5,61 +5,61 @@ glm(formula = as.formula(paste0(vars$metric, " ~ method + disease + cv_scheme"))
 
 Deviance Residuals: 
      Min        1Q    Median        3Q       Max  
--0.52840  -0.10549   0.00305   0.09365   0.80036  
+-0.52349  -0.10578   0.00278   0.09387   0.80193  
 
 Coefficients:
                                                        Estimate Std. Error  t value Pr(>|t|)    
-(Intercept)                                           -4.804043   0.038789 -123.852  < 2e-16 ***
-methodrandomraw                                       -0.193858   0.042425   -4.569 4.91e-06 ***
-methodrandom                                          -0.697705   0.048988  -14.242  < 2e-16 ***
-methodEGAD                                             1.890816   0.031555   59.921  < 2e-16 ***
-methodassociation_score.datatypes.affected_pathway    -0.793397   0.050517  -15.706  < 2e-16 ***
-methodassociation_score.datatypes.animal_model        -0.217175   0.042679   -5.089 3.63e-07 ***
-methodassociation_score.datatypes.genetic_association -0.173284   0.042204   -4.106 4.04e-05 ***
-methodassociation_score.datatypes.literature           0.911573   0.034443   26.466  < 2e-16 ***
-methodassociation_score.datatypes.rna_expression      -0.530040   0.046539  -11.389  < 2e-16 ***
-methodassociation_score.datatypes.somatic_mutation    -0.803387   0.050682  -15.851  < 2e-16 ***
-methodppr                                              2.397149   0.030827   77.761  < 2e-16 ***
-methodraw                                              2.610635   0.030616   85.271  < 2e-16 ***
-methodgm                                               1.847309   0.031636   58.392  < 2e-16 ***
-methodmc                                               1.449349   0.032550   44.527  < 2e-16 ***
-methodz                                                2.584649   0.030639   84.358  < 2e-16 ***
-methodknn                                              2.268559   0.030979   73.228  < 2e-16 ***
-methodwsld                                             2.273050   0.030974   73.387  < 2e-16 ***
-methodCOSNet                                           2.058582   0.031273   65.826  < 2e-16 ***
-methodbagsvm                                           2.598345   0.030627   84.839  < 2e-16 ***
-methodrf                                               3.029634   0.030322   99.914  < 2e-16 ***
-methodsvm                                              2.671725   0.030564   87.415  < 2e-16 ***
-diseaseAlzheimers disease                              1.175766   0.030874   38.082  < 2e-16 ***
-diseasearthritis                                       1.072702   0.031198   34.384  < 2e-16 ***
-diseaseasthma                                          0.629343   0.032981   19.082  < 2e-16 ***
-diseasebipolar disorder                                1.758206   0.029527   59.545  < 2e-16 ***
-diseasecardiac arrhythmia                              2.616768   0.028548   91.661  < 2e-16 ***
-diseasechronic obstructive pulmonary disease           1.384535   0.030305   45.686  < 2e-16 ***
-diseasecoronary heart disease                          1.474604   0.030092   49.003  < 2e-16 ***
-diseasedrug dependence                                 1.413938   0.030234   46.767  < 2e-16 ***
-diseasehypertension                                    1.453508   0.030140   48.225  < 2e-16 ***
-diseasemultiple sclerosis                              2.230056   0.028879   77.221  < 2e-16 ***
-diseaseobesity                                         1.568009   0.029889   52.462  < 2e-16 ***
-diseaseParkinson's disease                             2.452600   0.028670   85.546  < 2e-16 ***
-diseasepsoriasis                                       1.053195   0.031262   33.689  < 2e-16 ***
-diseaserheumatoid arthritis                            0.663239   0.032819   20.209  < 2e-16 ***
-diseaseschizophrenia                                   1.631142   0.029761   54.807  < 2e-16 ***
-diseasestroke                                          2.448447   0.028674   85.390  < 2e-16 ***
-diseasesystemic lupus erythematosus                    1.464225   0.030116   48.620  < 2e-16 ***
-diseasetype I diabetes mellitus                        1.413517   0.030235   46.752  < 2e-16 ***
-diseasetype II diabetes mellitus                       1.573024   0.029878   52.648  < 2e-16 ***
-diseaseulcerative colitis                              0.279580   0.034949    8.000 1.29e-15 ***
-diseaseunipolar depression                             1.123766   0.031034   36.211  < 2e-16 ***
-cv_schemeblock                                        -1.114649   0.007819 -142.547  < 2e-16 ***
-cv_schemerepresentative                               -1.139888   0.007866 -144.912  < 2e-16 ***
+(Intercept)                                           -4.812107   0.038847 -123.874  < 2e-16 ***
+methodrandomraw                                       -0.174782   0.042225   -4.139 3.49e-05 ***
+methodrandom                                          -0.702042   0.049061  -14.309  < 2e-16 ***
+methodEGAD                                             1.890550   0.031558   59.906  < 2e-16 ***
+methodassociation_score.datatypes.affected_pathway    -0.793364   0.050523  -15.703  < 2e-16 ***
+methodassociation_score.datatypes.animal_model        -0.217163   0.042684   -5.088 3.64e-07 ***
+methodassociation_score.datatypes.genetic_association -0.173275   0.042209   -4.105 4.05e-05 ***
+methodassociation_score.datatypes.literature           0.911491   0.034447   26.461  < 2e-16 ***
+methodassociation_score.datatypes.rna_expression      -0.530016   0.046544  -11.387  < 2e-16 ***
+methodassociation_score.datatypes.somatic_mutation    -0.803354   0.050688  -15.849  < 2e-16 ***
+methodppr                                              2.396734   0.030830   77.740  < 2e-16 ***
+methodraw                                              2.610146   0.030619   85.247  < 2e-16 ***
+methodgm                                               1.847053   0.031639   58.379  < 2e-16 ***
+methodmc                                               1.447540   0.032557   44.461  < 2e-16 ***
+methodz                                                2.584169   0.030642   84.335  < 2e-16 ***
+methodknn                                              2.268185   0.030982   73.210  < 2e-16 ***
+methodwsld                                             2.272674   0.030976   73.368  < 2e-16 ***
+methodCOSNet                                           2.060998   0.031272   65.906  < 2e-16 ***
+methodbagsvm                                           2.597042   0.030630   84.787  < 2e-16 ***
+methodrf                                               3.030032   0.030325   99.920  < 2e-16 ***
+methodsvm                                              2.670177   0.030567   87.354  < 2e-16 ***
+diseaseAlzheimers disease                              1.172324   0.030975   37.847  < 2e-16 ***
+diseasearthritis                                       1.082075   0.031259   34.617  < 2e-16 ***
+diseaseasthma                                          0.638253   0.033037   19.319  < 2e-16 ***
+diseasebipolar disorder                                1.767415   0.029596   59.719  < 2e-16 ***
+diseasecardiac arrhythmia                              2.624381   0.028623   91.689  < 2e-16 ***
+diseasechronic obstructive pulmonary disease           1.392464   0.030373   45.845  < 2e-16 ***
+diseasecoronary heart disease                          1.474192   0.030180   48.847  < 2e-16 ***
+diseasedrug dependence                                 1.427185   0.030289   47.119  < 2e-16 ***
+diseasehypertension                                    1.461962   0.030208   48.397  < 2e-16 ***
+diseasemultiple sclerosis                              2.230626   0.028959   77.027  < 2e-16 ***
+diseaseobesity                                         1.576701   0.029957   52.633  < 2e-16 ***
+diseaseParkinson's disease                             2.460908   0.028743   85.617  < 2e-16 ***
+diseasepsoriasis                                       1.064833   0.031316   34.003  < 2e-16 ***
+diseaserheumatoid arthritis                            0.679657   0.032840   20.696  < 2e-16 ***
+diseaseschizophrenia                                   1.630107   0.029849   54.612  < 2e-16 ***
+diseasestroke                                          2.456192   0.028747   85.441  < 2e-16 ***
+diseasesystemic lupus erythematosus                    1.465217   0.030200   48.517  < 2e-16 ***
+diseasetype I diabetes mellitus                        1.427936   0.030287   47.146  < 2e-16 ***
+diseasetype II diabetes mellitus                       1.580621   0.029948   52.778  < 2e-16 ***
+diseaseulcerative colitis                              0.288568   0.034999    8.245  < 2e-16 ***
+diseaseunipolar depression                             1.132559   0.031097   36.420  < 2e-16 ***
+cv_schemeblock                                        -1.111932   0.007818 -142.220  < 2e-16 ***
+cv_schemerepresentative                               -1.136274   0.007863 -144.504  < 2e-16 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-(Dispersion parameter for quasibinomial family taken to be 0.02804687)
+(Dispersion parameter for quasibinomial family taken to be 0.02805487)
 
-    Null deviance: 5810.14  on 34649  degrees of freedom
-Residual deviance:  923.53  on 34606  degrees of freedom
+    Null deviance: 5805.98  on 34649  degrees of freedom
+Residual deviance:  926.09  on 34606  degrees of freedom
 AIC: NA
 
 Number of Fisher Scoring iterations: 7

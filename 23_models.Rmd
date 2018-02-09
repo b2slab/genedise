@@ -44,7 +44,7 @@ df_models <- plyr::ldply(
   setNames(list_files, list_files), 
   function(file_name) {
     read.table(
-      paste0("22_performance/", file_name), 
+      paste0(config$dir_performance, "/", file_name), 
       header = TRUE 
     )
   }, 

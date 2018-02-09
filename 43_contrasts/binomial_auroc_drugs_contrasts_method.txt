@@ -1,0 +1,225 @@
+
+	 Simultaneous Tests for General Linear Hypotheses
+
+Multiple Comparisons of Means: Tukey Contrasts
+
+
+Fit: glm(formula = as.formula(paste0(vars$metric, " ~ method + disease + cv_scheme")), 
+    family = model_fam, data = df_current)
+
+Linear Hypotheses:
+                                                                                                      Estimate Std. Error  z value Pr(>|z|)    
+randomraw - pr == 0                                                                                 -0.2999259  0.0099536  -30.133    <0.01 ***
+random - pr == 0                                                                                    -0.5703509  0.0099122  -57.540    <0.01 ***
+EGAD - pr == 0                                                                                      -0.0862446  0.0100480   -8.583    <0.01 ***
+association_score.datatypes.affected_pathway - pr == 0                                              -0.5655806  0.0099122  -57.059    <0.01 ***
+association_score.datatypes.animal_model - pr == 0                                                  -0.5264664  0.0099131  -53.108    <0.01 ***
+association_score.datatypes.genetic_association - pr == 0                                           -0.4733940  0.0099172  -47.735    <0.01 ***
+association_score.datatypes.literature - pr == 0                                                     0.2913045  0.0103578   28.124    <0.01 ***
+association_score.datatypes.rna_expression - pr == 0                                                -0.4987903  0.0099148  -50.308    <0.01 ***
+association_score.datatypes.somatic_mutation - pr == 0                                              -0.5665245  0.0099122  -57.154    <0.01 ***
+ppr - pr == 0                                                                                        0.7127542  0.0109491   65.097    <0.01 ***
+raw - pr == 0                                                                                        0.9036541  0.0113164   79.853    <0.01 ***
+gm - pr == 0                                                                                        -0.4533427  0.0099196  -45.702    <0.01 ***
+mc - pr == 0                                                                                         1.0753813  0.0117072   91.856    <0.01 ***
+z - pr == 0                                                                                          0.9817286  0.0114866   85.467    <0.01 ***
+knn - pr == 0                                                                                        0.8945729  0.0112974   79.184    <0.01 ***
+wsld - pr == 0                                                                                       0.8806355  0.0112685   78.150    <0.01 ***
+COSNet - pr == 0                                                                                    -0.3228418  0.0099467  -32.457    <0.01 ***
+bagsvm - pr == 0                                                                                     1.0061586  0.0115424   87.170    <0.01 ***
+rf - pr == 0                                                                                         0.6960710  0.0109202   63.742    <0.01 ***
+svm - pr == 0                                                                                        0.3873457  0.0104681   37.002    <0.01 ***
+random - randomraw == 0                                                                             -0.2704250  0.0097604  -27.706    <0.01 ***
+EGAD - randomraw == 0                                                                                0.2136813  0.0098985   21.587    <0.01 ***
+association_score.datatypes.affected_pathway - randomraw == 0                                       -0.2656547  0.0097604  -27.218    <0.01 ***
+association_score.datatypes.animal_model - randomraw == 0                                           -0.2265405  0.0097613  -23.208    <0.01 ***
+association_score.datatypes.genetic_association - randomraw == 0                                    -0.1734680  0.0097655  -17.763    <0.01 ***
+association_score.datatypes.literature - randomraw == 0                                              0.5912304  0.0102130   57.890    <0.01 ***
+association_score.datatypes.rna_expression - randomraw == 0                                         -0.1988644  0.0097631  -20.369    <0.01 ***
+association_score.datatypes.somatic_mutation - randomraw == 0                                       -0.2665986  0.0097604  -27.314    <0.01 ***
+ppr - randomraw == 0                                                                                 1.0126801  0.0108124   93.659    <0.01 ***
+raw - randomraw == 0                                                                                 1.2035800  0.0111843  107.614    <0.01 ***
+gm - randomraw == 0                                                                                 -0.1534167  0.0097679  -15.706    <0.01 ***
+mc - randomraw == 0                                                                                  1.3753073  0.0115796  118.770    <0.01 ***
+z - randomraw == 0                                                                                   1.2816545  0.0113565  112.856    <0.01 ***
+knn - randomraw == 0                                                                                 1.1944988  0.0111650  106.986    <0.01 ***
+wsld - randomraw == 0                                                                                1.1805614  0.0111358  106.015    <0.01 ***
+COSNet - randomraw == 0                                                                             -0.0229159  0.0097956   -2.339    0.726    
+bagsvm - randomraw == 0                                                                              1.3060845  0.0114130  114.439    <0.01 ***
+rf - randomraw == 0                                                                                  0.9959969  0.0107831   92.366    <0.01 ***
+svm - randomraw == 0                                                                                 0.6872716  0.0103250   66.564    <0.01 ***
+EGAD - random == 0                                                                                   0.4841063  0.0098569   49.113    <0.01 ***
+association_score.datatypes.affected_pathway - random == 0                                           0.0047703  0.0097179    0.491    1.000    
+association_score.datatypes.animal_model - random == 0                                               0.0438845  0.0097189    4.515    <0.01 ** 
+association_score.datatypes.genetic_association - random == 0                                        0.0969570  0.0097231    9.972    <0.01 ***
+association_score.datatypes.literature - random == 0                                                 0.8616554  0.0101728   84.702    <0.01 ***
+association_score.datatypes.rna_expression - random == 0                                             0.0715606  0.0097206    7.362    <0.01 ***
+association_score.datatypes.somatic_mutation - random == 0                                           0.0038264  0.0097179    0.394    1.000    
+ppr - random == 0                                                                                    1.2831051  0.0107747  119.085    <0.01 ***
+raw - random == 0                                                                                    1.4740050  0.0111478  132.224    <0.01 ***
+gm - random == 0                                                                                     0.1170083  0.0097255   12.031    <0.01 ***
+mc - random == 0                                                                                     1.6457323  0.0115444  142.557    <0.01 ***
+z - random == 0                                                                                      1.5520796  0.0113206  137.102    <0.01 ***
+knn - random == 0                                                                                    1.4649239  0.0111285  131.637    <0.01 ***
+wsld - random == 0                                                                                   1.4509864  0.0110992  130.729    <0.01 ***
+COSNet - random == 0                                                                                 0.2475091  0.0097534   25.377    <0.01 ***
+bagsvm - random == 0                                                                                 1.5765095  0.0113773  138.567    <0.01 ***
+rf - random == 0                                                                                     1.2664219  0.0107452  117.859    <0.01 ***
+svm - random == 0                                                                                    0.9576966  0.0102853   93.113    <0.01 ***
+association_score.datatypes.affected_pathway - EGAD == 0                                            -0.4793360  0.0098569  -48.629    <0.01 ***
+association_score.datatypes.animal_model - EGAD == 0                                                -0.4402218  0.0098578  -44.657    <0.01 ***
+association_score.datatypes.genetic_association - EGAD == 0                                         -0.3871494  0.0098619  -39.257    <0.01 ***
+association_score.datatypes.literature - EGAD == 0                                                   0.3775491  0.0103050   36.638    <0.01 ***
+association_score.datatypes.rna_expression - EGAD == 0                                              -0.4125457  0.0098595  -41.842    <0.01 ***
+association_score.datatypes.somatic_mutation - EGAD == 0                                            -0.4802799  0.0098569  -48.725    <0.01 ***
+ppr - EGAD == 0                                                                                      0.7989988  0.0108992   73.308    <0.01 ***
+raw - EGAD == 0                                                                                      0.9898987  0.0112682   87.849    <0.01 ***
+gm - EGAD == 0                                                                                      -0.3670981  0.0098643  -37.215    <0.01 ***
+mc - EGAD == 0                                                                                       1.1616259  0.0116606   99.620    <0.01 ***
+z - EGAD == 0                                                                                        1.0679732  0.0114391   93.361    <0.01 ***
+knn - EGAD == 0                                                                                      0.9808175  0.0112491   87.191    <0.01 ***
+wsld - EGAD == 0                                                                                     0.9668801  0.0112200   86.174    <0.01 ***
+COSNet - EGAD == 0                                                                                  -0.2365972  0.0098916  -23.919    <0.01 ***
+bagsvm - EGAD == 0                                                                                   1.0924032  0.0114952   95.032    <0.01 ***
+rf - EGAD == 0                                                                                       0.7823156  0.0108702   71.969    <0.01 ***
+svm - EGAD == 0                                                                                      0.4735903  0.0104159   45.468    <0.01 ***
+association_score.datatypes.animal_model - association_score.datatypes.affected_pathway == 0         0.0391142  0.0097189    4.025    <0.01 ** 
+association_score.datatypes.genetic_association - association_score.datatypes.affected_pathway == 0  0.0921867  0.0097231    9.481    <0.01 ***
+association_score.datatypes.literature - association_score.datatypes.affected_pathway == 0           0.8568851  0.0101728   84.233    <0.01 ***
+association_score.datatypes.rna_expression - association_score.datatypes.affected_pathway == 0       0.0667903  0.0097206    6.871    <0.01 ***
+association_score.datatypes.somatic_mutation - association_score.datatypes.affected_pathway == 0    -0.0009439  0.0097179   -0.097    1.000    
+ppr - association_score.datatypes.affected_pathway == 0                                              1.2783348  0.0107746  118.643    <0.01 ***
+raw - association_score.datatypes.affected_pathway == 0                                              1.4692347  0.0111478  131.796    <0.01 ***
+gm - association_score.datatypes.affected_pathway == 0                                               0.1122380  0.0097255   11.541    <0.01 ***
+mc - association_score.datatypes.affected_pathway == 0                                               1.6409620  0.0115444  142.144    <0.01 ***
+z - association_score.datatypes.affected_pathway == 0                                                1.5473093  0.0113206  136.681    <0.01 ***
+knn - association_score.datatypes.affected_pathway == 0                                              1.4601536  0.0111285  131.209    <0.01 ***
+wsld - association_score.datatypes.affected_pathway == 0                                             1.4462161  0.0110991  130.300    <0.01 ***
+COSNet - association_score.datatypes.affected_pathway == 0                                           0.2427388  0.0097534   24.888    <0.01 ***
+bagsvm - association_score.datatypes.affected_pathway == 0                                           1.5717392  0.0113772  138.148    <0.01 ***
+rf - association_score.datatypes.affected_pathway == 0                                               1.2616516  0.0107452  117.415    <0.01 ***
+svm - association_score.datatypes.affected_pathway == 0                                              0.9529263  0.0102853   92.650    <0.01 ***
+association_score.datatypes.genetic_association - association_score.datatypes.animal_model == 0      0.0530725  0.0097240    5.458    <0.01 ***
+association_score.datatypes.literature - association_score.datatypes.animal_model == 0               0.8177709  0.0101737   80.381    <0.01 ***
+association_score.datatypes.rna_expression - association_score.datatypes.animal_model == 0           0.0276761  0.0097216    2.847    0.339    
+association_score.datatypes.somatic_mutation - association_score.datatypes.animal_model == 0        -0.0400581  0.0097189   -4.122    <0.01 ** 
+ppr - association_score.datatypes.animal_model == 0                                                  1.2392206  0.0107754  115.004    <0.01 ***
+raw - association_score.datatypes.animal_model == 0                                                  1.4301205  0.0111485  128.279    <0.01 ***
+gm - association_score.datatypes.animal_model == 0                                                   0.0731238  0.0097265    7.518    <0.01 ***
+mc - association_score.datatypes.animal_model == 0                                                   1.6018478  0.0115451  138.747    <0.01 ***
+z - association_score.datatypes.animal_model == 0                                                    1.5081951  0.0113214  133.217    <0.01 ***
+knn - association_score.datatypes.animal_model == 0                                                  1.4210394  0.0111292  127.685    <0.01 ***
+wsld - association_score.datatypes.animal_model == 0                                                 1.4071019  0.0110999  126.767    <0.01 ***
+COSNet - association_score.datatypes.animal_model == 0                                               0.2036246  0.0097543   20.875    <0.01 ***
+bagsvm - association_score.datatypes.animal_model == 0                                               1.5326250  0.0113780  134.701    <0.01 ***
+rf - association_score.datatypes.animal_model == 0                                                   1.2225374  0.0107460  113.767    <0.01 ***
+svm - association_score.datatypes.animal_model == 0                                                  0.9138121  0.0102861   88.840    <0.01 ***
+association_score.datatypes.literature - association_score.datatypes.genetic_association == 0        0.7646984  0.0101776   75.135    <0.01 ***
+association_score.datatypes.rna_expression - association_score.datatypes.genetic_association == 0   -0.0253963  0.0097258   -2.611    0.515    
+association_score.datatypes.somatic_mutation - association_score.datatypes.genetic_association == 0 -0.0931305  0.0097231   -9.578    <0.01 ***
+ppr - association_score.datatypes.genetic_association == 0                                           1.1861481  0.0107791  110.041    <0.01 ***
+raw - association_score.datatypes.genetic_association == 0                                           1.3770481  0.0111521  123.479    <0.01 ***
+gm - association_score.datatypes.genetic_association == 0                                            0.0200513  0.0097307    2.061    0.890    
+mc - association_score.datatypes.genetic_association == 0                                            1.5487753  0.0115485  134.110    <0.01 ***
+z - association_score.datatypes.genetic_association == 0                                             1.4551226  0.0113249  128.489    <0.01 ***
+knn - association_score.datatypes.genetic_association == 0                                           1.3679669  0.0111328  122.877    <0.01 ***
+wsld - association_score.datatypes.genetic_association == 0                                          1.3540295  0.0111035  121.947    <0.01 ***
+COSNet - association_score.datatypes.genetic_association == 0                                        0.1505522  0.0097585   15.428    <0.01 ***
+bagsvm - association_score.datatypes.genetic_association == 0                                        1.4795526  0.0113814  129.997    <0.01 ***
+rf - association_score.datatypes.genetic_association == 0                                            1.1694649  0.0107497  108.790    <0.01 ***
+svm - association_score.datatypes.genetic_association == 0                                           0.8607396  0.0102900   83.648    <0.01 ***
+association_score.datatypes.rna_expression - association_score.datatypes.literature == 0            -0.7900948  0.0101753  -77.648    <0.01 ***
+association_score.datatypes.somatic_mutation - association_score.datatypes.literature == 0          -0.8578290  0.0101728  -84.326    <0.01 ***
+ppr - association_score.datatypes.literature == 0                                                    0.4214497  0.0111851   37.680    <0.01 ***
+raw - association_score.datatypes.literature == 0                                                    0.6123496  0.0115448   53.041    <0.01 ***
+gm - association_score.datatypes.literature == 0                                                    -0.7446471  0.0101799  -73.148    <0.01 ***
+mc - association_score.datatypes.literature == 0                                                     0.7840769  0.0119281   65.734    <0.01 ***
+z - association_score.datatypes.literature == 0                                                      0.6904242  0.0117117   58.951    <0.01 ***
+knn - association_score.datatypes.literature == 0                                                    0.6032685  0.0115262   52.339    <0.01 ***
+wsld - association_score.datatypes.literature == 0                                                   0.5893310  0.0114979   51.256    <0.01 ***
+COSNet - association_score.datatypes.literature == 0                                                -0.6141463  0.0102063  -60.173    <0.01 ***
+bagsvm - association_score.datatypes.literature == 0                                                 0.7148541  0.0117664   60.754    <0.01 ***
+rf - association_score.datatypes.literature == 0                                                     0.4047665  0.0111568   36.280    <0.01 ***
+svm - association_score.datatypes.literature == 0                                                    0.0960412  0.0107148    8.963    <0.01 ***
+association_score.datatypes.somatic_mutation - association_score.datatypes.rna_expression == 0      -0.0677342  0.0097206   -6.968    <0.01 ***
+ppr - association_score.datatypes.rna_expression == 0                                                1.2115445  0.0107770  112.420    <0.01 ***
+raw - association_score.datatypes.rna_expression == 0                                                1.4024444  0.0111500  125.779    <0.01 ***
+gm - association_score.datatypes.rna_expression == 0                                                 0.0454476  0.0097282    4.672    <0.01 ***
+mc - association_score.datatypes.rna_expression == 0                                                 1.5741716  0.0115465  136.333    <0.01 ***
+z - association_score.datatypes.rna_expression == 0                                                  1.4805189  0.0113228  130.755    <0.01 ***
+knn - association_score.datatypes.rna_expression == 0                                                1.3933632  0.0111307  125.182    <0.01 ***
+wsld - association_score.datatypes.rna_expression == 0                                               1.3794258  0.0111014  124.257    <0.01 ***
+COSNet - association_score.datatypes.rna_expression == 0                                             0.1759485  0.0097561   18.035    <0.01 ***
+bagsvm - association_score.datatypes.rna_expression == 0                                             1.5049489  0.0113794  132.252    <0.01 ***
+rf - association_score.datatypes.rna_expression == 0                                                 1.1948613  0.0107476  111.175    <0.01 ***
+svm - association_score.datatypes.rna_expression == 0                                                0.8861360  0.0102877   86.135    <0.01 ***
+ppr - association_score.datatypes.somatic_mutation == 0                                              1.2792787  0.0107747  118.730    <0.01 ***
+raw - association_score.datatypes.somatic_mutation == 0                                              1.4701786  0.0111478  131.881    <0.01 ***
+gm - association_score.datatypes.somatic_mutation == 0                                               0.1131818  0.0097255   11.638    <0.01 ***
+mc - association_score.datatypes.somatic_mutation == 0                                               1.6419058  0.0115444  142.225    <0.01 ***
+z - association_score.datatypes.somatic_mutation == 0                                                1.5482531  0.0113206  136.764    <0.01 ***
+knn - association_score.datatypes.somatic_mutation == 0                                              1.4610974  0.0111285  131.294    <0.01 ***
+wsld - association_score.datatypes.somatic_mutation == 0                                             1.4471600  0.0110991  130.385    <0.01 ***
+COSNet - association_score.datatypes.somatic_mutation == 0                                           0.2436827  0.0097534   24.984    <0.01 ***
+bagsvm - association_score.datatypes.somatic_mutation == 0                                           1.5726831  0.0113772  138.231    <0.01 ***
+rf - association_score.datatypes.somatic_mutation == 0                                               1.2625955  0.0107452  117.503    <0.01 ***
+svm - association_score.datatypes.somatic_mutation == 0                                              0.9538702  0.0102853   92.742    <0.01 ***
+raw - ppr == 0                                                                                       0.1908999  0.0120778   15.806    <0.01 ***
+gm - ppr == 0                                                                                       -1.1660968  0.0107813 -108.159    <0.01 ***
+mc - ppr == 0                                                                                        0.3626272  0.0124447   29.139    <0.01 ***
+z - ppr == 0                                                                                         0.2689744  0.0122375   21.980    <0.01 ***
+knn - ppr == 0                                                                                       0.1818187  0.0120600   15.076    <0.01 ***
+wsld - ppr == 0                                                                                      0.1678813  0.0120330   13.952    <0.01 ***
+COSNet - ppr == 0                                                                                   -1.0355960  0.0108062  -95.834    <0.01 ***
+bagsvm - ppr == 0                                                                                    0.2934044  0.0122898   23.874    <0.01 ***
+rf - ppr == 0                                                                                       -0.0166832  0.0117075   -1.425    0.998    
+svm - ppr == 0                                                                                      -0.3254085  0.0112873  -28.830    <0.01 ***
+gm - raw == 0                                                                                       -1.3569968  0.0111542 -121.658    <0.01 ***
+mc - raw == 0                                                                                        0.1717272  0.0127688   13.449    <0.01 ***
+z - raw == 0                                                                                         0.0780745  0.0125670    6.213    <0.01 ***
+knn - raw == 0                                                                                      -0.0090812  0.0123943   -0.733    1.000    
+wsld - raw == 0                                                                                     -0.0230186  0.0123680   -1.861    0.956    
+COSNet - raw == 0                                                                                   -1.2264959  0.0111782 -109.722    <0.01 ***
+bagsvm - raw == 0                                                                                    0.1025045  0.0126180    8.124    <0.01 ***
+rf - raw == 0                                                                                       -0.2075831  0.0120516  -17.225    <0.01 ***
+svm - raw == 0                                                                                      -0.5163084  0.0116439  -44.342    <0.01 ***
+mc - gm == 0                                                                                         1.5287240  0.0115506  132.351    <0.01 ***
+z - gm == 0                                                                                          1.4350713  0.0113269  126.696    <0.01 ***
+knn - gm == 0                                                                                        1.3479156  0.0111349  121.053    <0.01 ***
+wsld - gm == 0                                                                                       1.3339782  0.0111056  120.118    <0.01 ***
+COSNet - gm == 0                                                                                     0.1305008  0.0097609   13.370    <0.01 ***
+bagsvm - gm == 0                                                                                     1.4595012  0.0113835  128.212    <0.01 ***
+rf - gm == 0                                                                                         1.1494136  0.0107519  106.903    <0.01 ***
+svm - gm == 0                                                                                        0.8406883  0.0102923   81.681    <0.01 ***
+z - mc == 0                                                                                         -0.0936527  0.0129199   -7.249    <0.01 ***
+knn - mc == 0                                                                                       -0.1808084  0.0127520  -14.179    <0.01 ***
+wsld - mc == 0                                                                                      -0.1947458  0.0127264  -15.302    <0.01 ***
+COSNet - mc == 0                                                                                    -1.3982231  0.0115737 -120.810    <0.01 ***
+bagsvm - mc == 0                                                                                    -0.0692227  0.0129695   -5.337    <0.01 ***
+rf - mc == 0                                                                                        -0.3793104  0.0124192  -30.542    <0.01 ***
+svm - mc == 0                                                                                       -0.6880357  0.0120240  -57.222    <0.01 ***
+knn - z == 0                                                                                        -0.0871557  0.0125499   -6.945    <0.01 ***
+wsld - z == 0                                                                                       -0.1010931  0.0125239   -8.072    <0.01 ***
+COSNet - z == 0                                                                                     -1.3045704  0.0113505 -114.935    <0.01 ***
+bagsvm - z == 0                                                                                      0.0244300  0.0127708    1.913    0.943    
+rf - z == 0                                                                                         -0.2856576  0.0122116  -23.392    <0.01 ***
+svm - z == 0                                                                                        -0.5943830  0.0118094  -50.332    <0.01 ***
+wsld - knn == 0                                                                                     -0.0139374  0.0123506   -1.128    1.000    
+COSNet - knn == 0                                                                                   -1.2174147  0.0111589 -109.098    <0.01 ***
+bagsvm - knn == 0                                                                                    0.1115857  0.0126009    8.855    <0.01 ***
+rf - knn == 0                                                                                       -0.1985019  0.0120338  -16.495    <0.01 ***
+svm - knn == 0                                                                                      -0.5072273  0.0116254  -43.631    <0.01 ***
+COSNet - wsld == 0                                                                                  -1.2034773  0.0111297 -108.132    <0.01 ***
+bagsvm - wsld == 0                                                                                   0.1255231  0.0125750    9.982    <0.01 ***
+rf - wsld == 0                                                                                      -0.1845645  0.0120066  -15.372    <0.01 ***
+svm - wsld == 0                                                                                     -0.4932898  0.0115973  -42.535    <0.01 ***
+bagsvm - COSNet == 0                                                                                 1.3290004  0.0114070  116.507    <0.01 ***
+rf - COSNet == 0                                                                                     1.0189128  0.0107768   94.547    <0.01 ***
+svm - COSNet == 0                                                                                    0.7101875  0.0103184   68.827    <0.01 ***
+rf - bagsvm == 0                                                                                    -0.3100876  0.0122640  -25.284    <0.01 ***
+svm - bagsvm == 0                                                                                   -0.6188129  0.0118636  -52.161    <0.01 ***
+svm - rf == 0                                                                                       -0.3087253  0.0112592  -27.420    <0.01 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+(Adjusted p values reported -- single-step method)
+
