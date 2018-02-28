@@ -601,6 +601,12 @@ Source: CRAN
 Version: 0.6
 Hash: aa3d5b7912b5fed4b546ed5cd2a1760b
 
+Package: hms
+Source: CRAN
+Version: 0.4.1
+Hash: f245eee62ab93358520f95cae7aeb5f4
+Requires: pkgconfig, rlang
+
 Package: htmlTable
 Source: CRAN
 Version: 1.9
@@ -673,6 +679,13 @@ Package: jsonlite
 Source: CRAN
 Version: 1.5
 Hash: 9c51936d8dd00b2f1d4fe9d10499694c
+
+Package: kableExtra
+Source: CRAN
+Version: 0.7.0
+Hash: f511338dd70c68a8f7130568d0b4a392
+Requires: htmltools, knitr, magrittr, readr, rmarkdown, rvest, scales,
+    stringr, viridisLite, xml2
 
 Package: kernlab
 Source: CRAN
@@ -872,6 +885,12 @@ Source: CRAN
 Version: 4.6-12
 Hash: b37274857316c7b9431cc7f72aaffb77
 
+Package: readr
+Source: CRAN
+Version: 1.1.1
+Hash: c02820ab337b91bee0238126caa714f9
+Requires: BH, R6, Rcpp, hms, tibble
+
 Package: recipes
 Source: CRAN
 Version: 0.1.1
@@ -914,6 +933,12 @@ Source: CRAN
 Version: 0.7
 Hash: e2ebaff8160aff3e6b32e6e78a693c2d
 
+Package: rvest
+Source: CRAN
+Version: 0.3.2
+Hash: c69f7526520bad66fd2111ebe8b1364b
+Requires: httr, magrittr, selectr, xml2
+
 Package: sandwich
 Source: CRAN
 Version: 2.3-4
@@ -925,6 +950,12 @@ Source: CRAN
 Version: 0.4.1
 Hash: 57d595f128897e9daf26db8f6b0f6dc1
 Requires: RColorBrewer, Rcpp, dichromat, labeling, munsell, plyr
+
+Package: selectr
+Source: CRAN
+Version: 0.3-1
+Hash: 367275e3dcdd208339e131c7a41bec56
+Requires: stringr
 
 Package: setRNG
 Source: CRAN
@@ -941,6 +972,11 @@ Source: CRAN
 Version: 0.4-11
 Hash: e083fd1980e39fc2df6e5519bd4eb5ab
 Requires: DBI, RSQLite, chron, gsubfn, proto
+
+Package: stargazer
+Source: CRAN
+Version: 5.2.1
+Hash: 13fb93654b1f1822a3302195c71cbca7
 
 Package: stringi
 Source: CRAN
@@ -1002,6 +1038,12 @@ Package: withr
 Source: CRAN
 Version: 2.1.1
 Hash: a86856ae0b4a7c3daf9a3ef0097a403b
+
+Package: xml2
+Source: CRAN
+Version: 1.2.0
+Hash: f86bfbc77ad5413511792739b7d31d80
+Requires: Rcpp
 
 Package: xtable
 Source: CRAN

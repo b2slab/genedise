@@ -1,0 +1,52 @@
+
+Call:
+glm(formula = as.formula(paste0(vars$metric, " ~ method + disease + cv_scheme + network")), 
+    family = model_fam, data = df_current)
+
+Deviance Residuals: 
+    Min       1Q   Median       3Q      Max  
+-1.5292  -0.6128  -0.1989   0.3407   1.9873  
+
+Coefficients:
+                                                      Estimate Std. Error t value Pr(>|t|)    
+(Intercept)                                           -1.91372    0.03970 -48.201  < 2e-16 ***
+methodassociation_score.datatypes.animal_model         1.24298    0.02744  45.307  < 2e-16 ***
+methodassociation_score.datatypes.genetic_association  1.59247    0.02651  60.063  < 2e-16 ***
+methodassociation_score.datatypes.literature           2.18923    0.02549  85.898  < 2e-16 ***
+methodassociation_score.datatypes.rna_expression       0.71488    0.02949  24.238  < 2e-16 ***
+methodassociation_score.datatypes.somatic_mutation    -0.04965    0.03461  -1.435 0.151438    
+diseaseAlzheimers disease                              0.68134    0.03777  18.041  < 2e-16 ***
+diseasearthritis                                       0.66690    0.03786  17.615  < 2e-16 ***
+diseaseasthma                                          0.72070    0.03752  19.208  < 2e-16 ***
+diseasebipolar disorder                                0.80126    0.03704  21.630  < 2e-16 ***
+diseasecardiac arrhythmia                              0.68502    0.03774  18.149  < 2e-16 ***
+diseasechronic obstructive pulmonary disease           0.27996    0.04078   6.865 6.84e-12 ***
+diseasecoronary heart disease                          0.23233    0.04121   5.638 1.74e-08 ***
+diseasedrug dependence                                 0.60208    0.03829  15.726  < 2e-16 ***
+diseasehypertension                                    0.59942    0.03830  15.649  < 2e-16 ***
+diseasemultiple sclerosis                              0.49844    0.03902  12.774  < 2e-16 ***
+diseaseobesity                                         0.59093    0.03836  15.404  < 2e-16 ***
+diseaseParkinson's disease                             0.47757    0.03918  12.191  < 2e-16 ***
+diseasepsoriasis                                       0.37226    0.04000   9.307  < 2e-16 ***
+diseaserheumatoid arthritis                            0.58283    0.03842  15.171  < 2e-16 ***
+diseaseschizophrenia                                   0.65013    0.03797  17.123  < 2e-16 ***
+diseasestroke                                         -0.47374    0.04968  -9.535  < 2e-16 ***
+diseasesystemic lupus erythematosus                   -0.02086    0.04375  -0.477 0.633464    
+diseasetype I diabetes mellitus                        0.16256    0.04186   3.883 0.000103 ***
+diseasetype II diabetes mellitus                       0.34109    0.04026   8.473  < 2e-16 ***
+diseaseulcerative colitis                              0.45316    0.03936  11.513  < 2e-16 ***
+diseaseunipolar depression                             0.13252    0.04215   3.144 0.001670 ** 
+cv_schemeblock                                        -0.00968    0.01223  -0.792 0.428511    
+cv_schemerepresentative                               -0.32487    0.01332 -24.397  < 2e-16 ***
+networkomnipath                                       -0.07150    0.01048  -6.823 9.19e-12 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+(Dispersion parameter for quasipoisson family taken to be 0.3899098)
+
+    Null deviance: 17686.1  on 19799  degrees of freedom
+Residual deviance:  8204.5  on 19770  degrees of freedom
+AIC: NA
+
+Number of Fisher Scoring iterations: 5
+

@@ -1,0 +1,86 @@
+\begin{table}[H]
+\centering\rowcolors{2}{gray!6}{white}
+
+\resizebox{\linewidth}{!}{\begin{tabular}{llllllll}
+\hiderowcolors
+\toprule
+\multicolumn{2}{c}{ } & \multicolumn{3}{c}{STRING} & \multicolumn{3}{c}{OmniPath} \\
+\cmidrule(l{2pt}r{2pt}){3-5} \cmidrule(l{2pt}r{2pt}){6-8}
+metric & method & string.classic & string.block & string.representative & omnipath.classic & omnipath.block & omnipath.representative\\
+\midrule
+\showrowcolors
+ & association\_score.datatypes.affected\_pathway & [0.494, 0.496] & [0.496, 0.498] & [0.505, 0.508] & [0.495, 0.498] & [0.497, 0.500] & [0.506, 0.509]\\
+
+ & association\_score.datatypes.animal\_model & [0.503, 0.506] & [0.505, 0.508] & [0.514, 0.517] & [0.505, 0.507] & [0.507, 0.509] & [0.516, 0.518]\\
+
+ & association\_score.datatypes.genetic\_association & [0.516, 0.519] & [0.518, 0.521] & [0.527, 0.530] & [0.517, 0.520] & [0.520, 0.522] & [0.529, 0.531]\\
+
+ & association\_score.datatypes.literature & [0.692, 0.694] & [0.693, 0.696] & [0.701, 0.703] & [0.693, 0.695] & [0.695, 0.697] & [0.702, 0.705]\\
+
+ & association\_score.datatypes.rna\_expression & [0.511, 0.513] & [0.513, 0.515] & [0.522, 0.524] & [0.512, 0.515] & [0.514, 0.517] & [0.523, 0.526]\\
+
+\multirow{-6}{*}{\raggedright\arraybackslash auroc} & association\_score.datatypes.somatic\_mutation & [0.493, 0.496] & [0.496, 0.498] & [0.505, 0.507] & [0.495, 0.498] & [0.497, 0.500] & [0.506, 0.509]\\
+\cmidrule{1-8}
+ & association\_score.datatypes.affected\_pathway & [0.046, 0.047] & [0.047, 0.049] & [0.054, 0.055] & [0.045, 0.047] & [0.047, 0.048] & [0.053, 0.055]\\
+
+ & association\_score.datatypes.animal\_model & [0.062, 0.063] & [0.064, 0.066] & [0.072, 0.074] & [0.061, 0.063] & [0.063, 0.065] & [0.072, 0.074]\\
+
+ & association\_score.datatypes.genetic\_association & [0.081, 0.083] & [0.084, 0.086] & [0.095, 0.097] & [0.080, 0.082] & [0.083, 0.085] & [0.094, 0.096]\\
+
+ & association\_score.datatypes.literature & [0.275, 0.279] & [0.282, 0.286] & [0.310, 0.315] & [0.273, 0.277] & [0.280, 0.284] & [0.308, 0.313]\\
+
+ & association\_score.datatypes.rna\_expression & [0.066, 0.067] & [0.068, 0.070] & [0.077, 0.079] & [0.065, 0.067] & [0.067, 0.069] & [0.076, 0.078]\\
+
+\multirow{-6}{*}{\raggedright\arraybackslash partial\_auroc\_0.90} & association\_score.datatypes.somatic\_mutation & [0.045, 0.047] & [0.047, 0.048] & [0.053, 0.055] & [0.045, 0.046] & [0.046, 0.048] & [0.053, 0.054]\\
+\cmidrule{1-8}
+ & association\_score.datatypes.affected\_pathway & [0.023, 0.023] & [0.023, 0.024] & [0.027, 0.028] & [0.022, 0.023] & [0.023, 0.024] & [0.027, 0.028]\\
+
+ & association\_score.datatypes.animal\_model & [0.038, 0.039] & [0.040, 0.041] & [0.046, 0.048] & [0.037, 0.038] & [0.039, 0.040] & [0.045, 0.046]\\
+
+ & association\_score.datatypes.genetic\_association & [0.054, 0.056] & [0.056, 0.058] & [0.065, 0.067] & [0.053, 0.054] & [0.055, 0.057] & [0.064, 0.066]\\
+
+ & association\_score.datatypes.literature & [0.183, 0.186] & [0.189, 0.193] & [0.214, 0.218] & [0.179, 0.182] & [0.185, 0.189] & [0.210, 0.214]\\
+
+ & association\_score.datatypes.rna\_expression & [0.037, 0.038] & [0.039, 0.040] & [0.045, 0.046] & [0.036, 0.037] & [0.038, 0.039] & [0.044, 0.045]\\
+
+\multirow{-6}{*}{\raggedright\arraybackslash partial\_auroc\_0.95} & association\_score.datatypes.somatic\_mutation & [0.022, 0.023] & [0.023, 0.024] & [0.027, 0.028] & [0.022, 0.022] & [0.022, 0.023] & [0.026, 0.027]\\
+\cmidrule{1-8}
+ & association\_score.datatypes.affected\_pathway & [0.010, 0.010] & [0.010, 0.011] & [0.009, 0.009] & [0.012, 0.012] & [0.012, 0.012] & [0.010, 0.010]\\
+
+ & association\_score.datatypes.animal\_model & [0.018, 0.018] & [0.018, 0.019] & [0.015, 0.016] & [0.021, 0.021] & [0.021, 0.022] & [0.018, 0.018]\\
+
+ & association\_score.datatypes.genetic\_association & [0.019, 0.020] & [0.020, 0.020] & [0.016, 0.017] & [0.022, 0.023] & [0.023, 0.024] & [0.019, 0.020]\\
+
+ & association\_score.datatypes.literature & [0.050, 0.052] & [0.052, 0.053] & [0.044, 0.045] & [0.059, 0.060] & [0.060, 0.062] & [0.051, 0.052]\\
+
+ & association\_score.datatypes.rna\_expression & [0.013, 0.013] & [0.013, 0.014] & [0.011, 0.011] & [0.015, 0.016] & [0.016, 0.016] & [0.013, 0.013]\\
+
+\multirow{-6}{*}{\raggedright\arraybackslash auprc} & association\_score.datatypes.somatic\_mutation & [0.010, 0.010] & [0.010, 0.011] & [0.008, 0.009] & [0.011, 0.012] & [0.012, 0.012] & [0.010, 0.010]\\
+\cmidrule{1-8}
+ & association\_score.datatypes.affected\_pathway & [0.21, 0.23] & [0.21, 0.23] & [0.15, 0.17] & [0.20, 0.22] & [0.20, 0.22] & [0.14, 0.16]\\
+
+ & association\_score.datatypes.animal\_model & [0.75, 0.79] & [0.74, 0.79] & [0.54, 0.58] & [0.70, 0.74] & [0.69, 0.73] & [0.50, 0.54]\\
+
+ & association\_score.datatypes.genetic\_association & [1.06, 1.12] & [1.05, 1.11] & [0.77, 0.81] & [0.99, 1.05] & [0.98, 1.04] & [0.71, 0.76]\\
+
+ & association\_score.datatypes.literature & [1.94, 2.03] & [1.92, 2.01] & [1.40, 1.47] & [1.81, 1.89] & [1.79, 1.88] & [1.30, 1.37]\\
+
+ & association\_score.datatypes.rna\_expression & [0.44, 0.47] & [0.43, 0.47] & [0.32, 0.34] & [0.41, 0.44] & [0.40, 0.44] & [0.29, 0.32]\\
+
+\multirow{-6}{*}{\raggedright\arraybackslash top\_20\_hits} & association\_score.datatypes.somatic\_mutation & [0.20, 0.22] & [0.20, 0.22] & [0.15, 0.16] & [0.19, 0.21] & [0.19, 0.21] & [0.14, 0.15]\\
+\cmidrule{1-8}
+ & association\_score.datatypes.affected\_pathway & [1.46, 1.52] & [1.45, 1.51] & [1.09, 1.13] & [1.84, 1.91] & [1.83, 1.90] & [1.37, 1.43]\\
+
+ & association\_score.datatypes.animal\_model & [1.90, 1.96] & [1.89, 1.95] & [1.41, 1.46] & [2.39, 2.47] & [2.38, 2.46] & [1.78, 1.85]\\
+
+ & association\_score.datatypes.genetic\_association & [2.15, 2.22] & [2.14, 2.21] & [1.60, 1.65] & [2.71, 2.80] & [2.70, 2.78] & [2.02, 2.09]\\
+
+ & association\_score.datatypes.literature & [6.85, 7.01] & [6.82, 6.98] & [5.10, 5.23] & [8.64, 8.84] & [8.61, 8.81] & [6.44, 6.60]\\
+
+ & association\_score.datatypes.rna\_expression & [1.63, 1.69] & [1.62, 1.68] & [1.21, 1.26] & [2.06, 2.13] & [2.05, 2.12] & [1.53, 1.59]\\
+
+\multirow{-6}{*}{\raggedright\arraybackslash top\_100\_hits} & association\_score.datatypes.somatic\_mutation & [1.45, 1.51] & [1.45, 1.50] & [1.08, 1.12] & [1.83, 1.90] & [1.82, 1.89] & [1.36, 1.42]\\
+\bottomrule
+\end{tabular}}
+\rowcolors{2}{white}{white}
+\end{table}

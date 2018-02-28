@@ -1,0 +1,61 @@
+
+Call:
+glm(formula = as.formula(paste0(vars$metric, " ~ method + disease + cv_scheme + network")), 
+    family = model_fam, data = df_current)
+
+Deviance Residuals: 
+    Min       1Q   Median       3Q      Max  
+-3.8938  -0.9056  -0.0747   0.7026   6.4827  
+
+Coefficients:
+                                              Estimate Std. Error  t value Pr(>|t|)    
+(Intercept)                                   0.533008   0.018663   28.560   <2e-16 ***
+methodrandomraw                              -0.549501   0.022340  -24.597   <2e-16 ***
+methodrandom                                 -0.782064   0.024123  -32.420   <2e-16 ***
+methodEGAD                                    1.236271   0.015353   80.525   <2e-16 ***
+methodppr                                     1.605670   0.014809  108.422   <2e-16 ***
+methodraw                                     1.736454   0.014657  118.474   <2e-16 ***
+methodgm                                      1.079059   0.015644   68.976   <2e-16 ***
+methodmc                                      1.471696   0.014986   98.206   <2e-16 ***
+methodz                                       1.696921   0.014701  115.429   <2e-16 ***
+methodknn                                     1.682630   0.014717  114.329   <2e-16 ***
+methodwsld                                    1.674328   0.014727  113.691   <2e-16 ***
+methodCOSNet                                  1.121306   0.015562   72.055   <2e-16 ***
+methodbagsvm                                  1.724209   0.014670  117.530   <2e-16 ***
+methodrf                                      1.837299   0.014551  126.264   <2e-16 ***
+methodsvm                                     1.710675   0.014685  116.487   <2e-16 ***
+diseaseAlzheimers disease                     0.692510   0.015666   44.204   <2e-16 ***
+diseasearthritis                              0.831722   0.015323   54.279   <2e-16 ***
+diseaseasthma                                 0.508593   0.016185   31.423   <2e-16 ***
+diseasebipolar disorder                       1.023979   0.014911   68.672   <2e-16 ***
+diseasecardiac arrhythmia                     1.429125   0.014240  100.362   <2e-16 ***
+diseasechronic obstructive pulmonary disease  0.643597   0.015797   40.742   <2e-16 ***
+diseasecoronary heart disease                 0.923081   0.015119   61.055   <2e-16 ***
+diseasedrug dependence                        1.074822   0.014813   72.558   <2e-16 ***
+diseasehypertension                           1.073755   0.014815   72.476   <2e-16 ***
+diseasemultiple sclerosis                     1.288074   0.014447   89.161   <2e-16 ***
+diseaseobesity                                1.185508   0.014614   81.119   <2e-16 ***
+diseaseParkinson's disease                    1.321980   0.014395   91.839   <2e-16 ***
+diseasepsoriasis                              0.500299   0.016211   30.863   <2e-16 ***
+diseaserheumatoid arthritis                   0.275523   0.016964   16.242   <2e-16 ***
+diseaseschizophrenia                          1.140855   0.014692   77.650   <2e-16 ***
+diseasestroke                                 1.281005   0.014458   88.603   <2e-16 ***
+diseasesystemic lupus erythematosus           0.600730   0.015915   37.745   <2e-16 ***
+diseasetype I diabetes mellitus               0.535850   0.016103   33.276   <2e-16 ***
+diseasetype II diabetes mellitus              0.827363   0.015333   53.959   <2e-16 ***
+diseaseulcerative colitis                     0.029575   0.017956    1.647   0.0995 .  
+diseaseunipolar depression                    0.889776   0.015192   58.571   <2e-16 ***
+cv_schemeblock                               -0.671500   0.004182 -160.577   <2e-16 ***
+cv_schemerepresentative                      -0.833005   0.004418 -188.560   <2e-16 ***
+networkomnipath                              -0.308642   0.003528  -87.475   <2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+(Dispersion parameter for quasipoisson family taken to be 1.413352)
+
+    Null deviance: 348548  on 49499  degrees of freedom
+Residual deviance:  70516  on 49461  degrees of freedom
+AIC: NA
+
+Number of Fisher Scoring iterations: 5
+

@@ -1,0 +1,30 @@
+cv_scheme = classic:
+ method                                              rate         SE df asymp.LCL asymp.UCL
+ association_score.datatypes.affected_pathway    1.670544 0.01526277 NA  1.640896  1.700728
+ association_score.datatypes.animal_model        2.166428 0.01775511 NA  2.131907  2.201509
+ association_score.datatypes.genetic_association 2.449867 0.01910456 NA  2.412707  2.487599
+ association_score.datatypes.literature          7.783379 0.04083357 NA  7.703757  7.863824
+ association_score.datatypes.rna_expression      1.863554 0.01625633 NA  1.831963  1.895690
+ association_score.datatypes.somatic_mutation    1.661121 0.01521336 NA  1.631569  1.691208
+
+cv_scheme = block:
+ method                                              rate         SE df asymp.LCL asymp.UCL
+ association_score.datatypes.affected_pathway    1.663952 0.01520923 NA  1.634408  1.694030
+ association_score.datatypes.animal_model        2.157880 0.01769472 NA  2.123476  2.192841
+ association_score.datatypes.genetic_association 2.440200 0.01904067 NA  2.403165  2.477806
+ association_score.datatypes.literature          7.752667 0.04072669 NA  7.673253  7.832902
+ association_score.datatypes.rna_expression      1.856201 0.01620000 NA  1.824720  1.888225
+ association_score.datatypes.somatic_mutation    1.654566 0.01515997 NA  1.625119  1.684548
+
+cv_scheme = representative:
+ method                                              rate         SE df asymp.LCL asymp.UCL
+ association_score.datatypes.affected_pathway    1.245431 0.01180229 NA  1.222513  1.268779
+ association_score.datatypes.animal_model        1.615125 0.01384653 NA  1.588213  1.642493
+ association_score.datatypes.genetic_association 1.826435 0.01496581 NA  1.797337  1.856005
+ association_score.datatypes.literature          5.802699 0.03376193 NA  5.736902  5.869249
+ association_score.datatypes.rna_expression      1.389325 0.01261347 NA  1.364822  1.414268
+ association_score.datatypes.somatic_mutation    1.238406 0.01176209 NA  1.215566  1.261675
+
+Results are averaged over the levels of: disease, network 
+Confidence level used: 0.95 
+Intervals are back-transformed from the log scale 

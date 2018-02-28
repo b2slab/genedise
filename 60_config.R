@@ -1,0 +1,38 @@
+#################################
+# dataset and database
+#################################
+
+# reproducibility
+dir_metadata <- "00_metadata"
+
+
+#################################
+# output directories
+#################################
+
+
+# performance metrics
+dir_models <- "63_models"
+
+# Analysis of the topology and the positives
+dir_boxplots <- "63_boxplots"
+dir_contrasts <- "63_contrasts"
+
+#################################
+# Hostnames
+#################################
+
+# get the host name (linux)
+# our machines at UPC are "eko" and "sun"
+host <- Sys.info()["nodename"]
+print(paste("You are running the CV on the host:", host))
+
+# options for each machine
+# - number of threads to use
+# - cv schemes to run (each cv produces its own file, 
+#     outputs can be combined later between machines). 
+#     Order matters!
+#     
+# If you want to add your own machines, you can do so by 
+# appending more options with their hostnames
+nslaves <- parallel::detectCores()

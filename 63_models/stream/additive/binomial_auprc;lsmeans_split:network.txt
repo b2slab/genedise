@@ -1,0 +1,21 @@
+network = string:
+ method                                                 prob           SE df   asymp.LCL   asymp.UCL
+ association_score.datatypes.affected_pathway    0.009712991 9.156792e-05 NA 0.009535153 0.009894112
+ association_score.datatypes.animal_model        0.017191505 1.257069e-04 NA 0.016946850 0.017439628
+ association_score.datatypes.genetic_association 0.018618757 1.315596e-04 NA 0.018362649 0.018878368
+ association_score.datatypes.literature          0.049092015 2.357563e-04 NA 0.048631998 0.049556156
+ association_score.datatypes.rna_expression      0.012592766 1.055722e-04 NA 0.012387518 0.012801371
+ association_score.datatypes.somatic_mutation    0.009620429 9.109319e-05 NA 0.009443520 0.009800619
+
+network = omnipath:
+ method                                                 prob           SE df   asymp.LCL   asymp.UCL
+ association_score.datatypes.affected_pathway    0.011368570 1.056942e-04 NA 0.011163268 0.011577604
+ association_score.datatypes.animal_model        0.020095929 1.436312e-04 NA 0.019816340 0.020379381
+ association_score.datatypes.genetic_association 0.021758970 1.500495e-04 NA 0.021466814 0.022055013
+ association_score.datatypes.literature          0.057072909 2.609570e-04 NA 0.056563591 0.057586534
+ association_score.datatypes.rna_expression      0.014731901 1.213623e-04 NA 0.014495917 0.014971668
+ association_score.datatypes.somatic_mutation    0.011260411 1.051604e-04 NA 0.011056154 0.011468397
+
+Results are averaged over the levels of: disease, cv_scheme 
+Confidence level used: 0.95 
+Intervals are back-transformed from the logit scale 
