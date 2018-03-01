@@ -1,0 +1,75 @@
+
+Call:
+glm(formula = as.formula(paste0(vars$metric, " ~ ", hypothesis$formula)), 
+    family = model_fam, data = df_current)
+
+Deviance Residuals: 
+    Min       1Q   Median       3Q      Max  
+-4.0889  -0.8742  -0.1990   0.6267   3.3639  
+
+Coefficients:
+                                              Estimate Std. Error  t value Pr(>|t|)    
+(Intercept)                                  -1.985424   0.051084  -38.866  < 2e-16 ***
+methodrandomraw                              -1.286223   0.093467  -13.761  < 2e-16 ***
+methodrandom                                 -0.718330   0.075969   -9.456  < 2e-16 ***
+methodEGAD                                    2.380527   0.045460   52.366  < 2e-16 ***
+methodppr                                     2.635534   0.045024   58.536  < 2e-16 ***
+methodraw                                     2.794115   0.044803   62.364  < 2e-16 ***
+methodgm                                      2.575865   0.045117   57.093  < 2e-16 ***
+methodmc                                      1.355558   0.048778   27.790  < 2e-16 ***
+methodz                                       2.762490   0.044845   61.601  < 2e-16 ***
+methodknn                                     2.620660   0.045047   58.176  < 2e-16 ***
+methodwsld                                    2.634796   0.045026   58.518  < 2e-16 ***
+methodCOSNet                                  2.627127   0.045037   58.332  < 2e-16 ***
+methodbagsvm                                  2.797367   0.044799   62.443  < 2e-16 ***
+methodrf                                      3.049474   0.044511   68.510  < 2e-16 ***
+methodsvm                                     2.828236   0.044760   63.187  < 2e-16 ***
+diseaseAlzheimers disease                     1.438610   0.029840   48.211  < 2e-16 ***
+diseasearthritis                              1.278850   0.030331   42.163  < 2e-16 ***
+diseaseasthma                                 0.791805   0.032337   24.486  < 2e-16 ***
+diseasebipolar disorder                       1.864098   0.028831   64.655  < 2e-16 ***
+diseasecardiac arrhythmia                     2.264006   0.028186   80.323  < 2e-16 ***
+diseasechronic obstructive pulmonary disease  1.518624   0.029619   51.272  < 2e-16 ***
+diseasecoronary heart disease                 1.595658   0.029421   54.235  < 2e-16 ***
+diseasedrug dependence                        1.620047   0.029361   55.176  < 2e-16 ***
+diseasehypertension                           1.739413   0.029087   59.800  < 2e-16 ***
+diseasemultiple sclerosis                     2.225078   0.028239   78.795  < 2e-16 ***
+diseaseobesity                                1.818569   0.028921   62.880  < 2e-16 ***
+diseaseParkinson's disease                    2.204862   0.028267   78.001  < 2e-16 ***
+diseasepsoriasis                              1.075931   0.031065   34.634  < 2e-16 ***
+diseaserheumatoid arthritis                   0.539092   0.033756   15.970  < 2e-16 ***
+diseaseschizophrenia                          1.751723   0.029060   60.279  < 2e-16 ***
+diseasestroke                                 2.190235   0.028288   77.427  < 2e-16 ***
+diseasesystemic lupus erythematosus           1.526131   0.029599   51.560  < 2e-16 ***
+diseasetype I diabetes mellitus               1.506305   0.029652   50.800  < 2e-16 ***
+diseasetype II diabetes mellitus              1.590374   0.029434   54.032  < 2e-16 ***
+diseaseulcerative colitis                     0.430878   0.034459   12.504  < 2e-16 ***
+diseaseunipolar depression                    1.461961   0.029774   49.102  < 2e-16 ***
+cv_schemeblock                               -0.983780   0.006439 -152.796  < 2e-16 ***
+cv_schemerepresentative                      -1.003212   0.006484 -154.713  < 2e-16 ***
+methodpr:networkomnipath                      0.625607   0.053884   11.610  < 2e-16 ***
+methodrandomraw:networkomnipath               0.720939   0.100864    7.148 8.95e-13 ***
+methodrandom:networkomnipath                  0.163600   0.084699    1.932   0.0534 .  
+methodEGAD:networkomnipath                   -0.919829   0.024779  -37.122  < 2e-16 ***
+methodppr:networkomnipath                    -0.591763   0.019510  -30.331  < 2e-16 ***
+methodraw:networkomnipath                    -0.288410   0.016435  -17.549  < 2e-16 ***
+methodgm:networkomnipath                     -0.187077   0.017818  -10.499  < 2e-16 ***
+methodmc:networkomnipath                      0.657216   0.027211   24.153  < 2e-16 ***
+methodz:networkomnipath                      -0.324247   0.016870  -19.220  < 2e-16 ***
+methodknn:networkomnipath                    -0.207063   0.017519  -11.819  < 2e-16 ***
+methodwsld:networkomnipath                   -0.269700   0.017703  -15.235  < 2e-16 ***
+methodCOSNet:networkomnipath                 -0.742824   0.020595  -36.069  < 2e-16 ***
+methodbagsvm:networkomnipath                 -0.297666   0.016452  -18.093  < 2e-16 ***
+methodrf:networkomnipath                     -0.541925   0.015612  -34.712  < 2e-16 ***
+methodsvm:networkomnipath                    -0.506248   0.017244  -29.358  < 2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+(Dispersion parameter for quasipoisson family taken to be 1.255105)
+
+    Null deviance: 244780  on 49499  degrees of freedom
+Residual deviance:  63914  on 49447  degrees of freedom
+AIC: NA
+
+Number of Fisher Scoring iterations: 5
+

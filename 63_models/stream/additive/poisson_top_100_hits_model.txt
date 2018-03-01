@@ -1,6 +1,6 @@
 
 Call:
-glm(formula = as.formula(paste0(vars$metric, " ~ method + disease + cv_scheme + network")), 
+glm(formula = as.formula(paste0(vars$metric, " ~ ", hypothesis$formula)), 
     family = model_fam, data = df_current)
 
 Deviance Residuals: 
@@ -15,6 +15,8 @@ methodassociation_score.datatypes.genetic_association  0.382884   0.010946  34.9
 methodassociation_score.datatypes.literature           1.538841   0.009302 165.426   <2e-16 ***
 methodassociation_score.datatypes.rna_expression       0.109336   0.011623   9.407   <2e-16 ***
 methodassociation_score.datatypes.somatic_mutation    -0.005657   0.011954  -0.473   0.6361    
+cv_schemeblock                                        -0.003954   0.006096  -0.649   0.5166    
+cv_schemerepresentative                               -0.293668   0.006589 -44.568   <2e-16 ***
 diseaseAlzheimers disease                              0.496225   0.019466  25.492   <2e-16 ***
 diseasearthritis                                       0.765975   0.018575  41.238   <2e-16 ***
 diseaseasthma                                          0.396454   0.019849  19.974   <2e-16 ***
@@ -36,8 +38,6 @@ diseasetype I diabetes mellitus                        0.225641   0.020579  10.9
 diseasetype II diabetes mellitus                       0.307821   0.020215  15.227   <2e-16 ***
 diseaseulcerative colitis                              0.312483   0.020195  15.473   <2e-16 ***
 diseaseunipolar depression                             0.600979   0.019096  31.471   <2e-16 ***
-cv_schemeblock                                        -0.003954   0.006096  -0.649   0.5166    
-cv_schemerepresentative                               -0.293668   0.006589 -44.568   <2e-16 ***
 networkomnipath                                        0.232195   0.005237  44.340   <2e-16 ***
 ---
 Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1

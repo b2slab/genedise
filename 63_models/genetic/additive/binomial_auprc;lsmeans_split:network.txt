@@ -34,6 +34,6 @@ network = omnipath:
  rf        0.01359844 0.0001611796 NA 0.01328612 0.01391799
  svm       0.01406874 0.0001640719 NA 0.01375077 0.01439397
 
-Results are averaged over the levels of: disease, cv_scheme 
+Results are averaged over the levels of: cv_scheme, disease 
 Confidence level used: 0.95 
 Intervals are back-transformed from the logit scale 

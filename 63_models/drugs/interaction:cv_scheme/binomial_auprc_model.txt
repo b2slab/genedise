@@ -1,0 +1,89 @@
+
+Call:
+glm(formula = as.formula(paste0(vars$metric, " ~ ", hypothesis$formula)), 
+    family = model_fam, data = df_current)
+
+Deviance Residuals: 
+     Min        1Q    Median        3Q       Max  
+-0.73428  -0.12924  -0.01261   0.09091   0.87523  
+
+Coefficients:
+                                              Estimate Std. Error  t value Pr(>|t|)    
+(Intercept)                                  -4.851028   0.040184 -120.720  < 2e-16 ***
+methodrandomraw                              -0.192171   0.051040   -3.765 0.000167 ***
+methodrandom                                 -0.638107   0.057949  -11.012  < 2e-16 ***
+methodEGAD                                    1.965656   0.037715   52.119  < 2e-16 ***
+methodppr                                     2.520417   0.036866   68.367  < 2e-16 ***
+methodraw                                     2.957807   0.036487   81.065  < 2e-16 ***
+methodgm                                      2.362089   0.037059   63.738  < 2e-16 ***
+methodmc                                      1.918716   0.037811   50.745  < 2e-16 ***
+methodz                                       2.930211   0.036505   80.269  < 2e-16 ***
+methodknn                                     2.530186   0.036855   68.653  < 2e-16 ***
+methodwsld                                    2.495340   0.036894   67.635  < 2e-16 ***
+methodCOSNet                                  2.335010   0.037096   62.945  < 2e-16 ***
+methodbagsvm                                  2.937495   0.036500   80.479  < 2e-16 ***
+methodrf                                      3.162409   0.036375   86.939  < 2e-16 ***
+methodsvm                                     2.800127   0.036600   76.507  < 2e-16 ***
+diseaseAlzheimers disease                     1.084128   0.024695   43.902  < 2e-16 ***
+diseasearthritis                              0.848074   0.025365   33.434  < 2e-16 ***
+diseaseasthma                                 0.672356   0.025963   25.896  < 2e-16 ***
+diseasebipolar disorder                       1.656779   0.023558   70.328  < 2e-16 ***
+diseasecardiac arrhythmia                     2.299289   0.022853  100.614  < 2e-16 ***
+diseasechronic obstructive pulmonary disease  1.304313   0.024185   53.931  < 2e-16 ***
+diseasecoronary heart disease                 1.302729   0.024188   53.858  < 2e-16 ***
+diseasedrug dependence                        1.359937   0.024072   56.496  < 2e-16 ***
+diseasehypertension                           1.376221   0.024040   57.248  < 2e-16 ***
+diseasemultiple sclerosis                     1.976435   0.023148   85.382  < 2e-16 ***
+diseaseobesity                                1.510049   0.023794   63.464  < 2e-16 ***
+diseaseParkinson's disease                    2.087431   0.023035   90.622  < 2e-16 ***
+diseasepsoriasis                              0.857563   0.025336   33.848  < 2e-16 ***
+diseaserheumatoid arthritis                   0.355938   0.027293   13.041  < 2e-16 ***
+diseaseschizophrenia                          1.607833   0.023633   68.034  < 2e-16 ***
+diseasestroke                                 2.064296   0.023057   89.530  < 2e-16 ***
+diseasesystemic lupus erythematosus           1.399448   0.023995   58.323  < 2e-16 ***
+diseasetype I diabetes mellitus               1.367906   0.024056   56.864  < 2e-16 ***
+diseasetype II diabetes mellitus              1.376396   0.024039   57.256  < 2e-16 ***
+diseaseulcerative colitis                     0.251734   0.027814    9.051  < 2e-16 ***
+diseaseunipolar depression                    1.116057   0.024614   45.342  < 2e-16 ***
+networkomnipath                              -0.519388   0.005387  -96.411  < 2e-16 ***
+methodpr:cv_schemeblock                       0.024121   0.048420    0.498 0.618379    
+methodrandomraw:cv_schemeblock               -0.156465   0.055374   -2.826 0.004721 ** 
+methodrandom:cv_schemeblock                  -0.003619   0.065976   -0.055 0.956250    
+methodEGAD:cv_schemeblock                    -1.320104   0.029944  -44.085  < 2e-16 ***
+methodppr:cv_schemeblock                     -1.251416   0.023764  -52.660  < 2e-16 ***
+methodraw:cv_schemeblock                     -1.393241   0.021392  -65.129  < 2e-16 ***
+methodgm:cv_schemeblock                      -1.433629   0.026550  -53.997  < 2e-16 ***
+methodmc:cv_schemeblock                      -0.937368   0.027180  -34.487  < 2e-16 ***
+methodz:cv_schemeblock                       -1.511111   0.022248  -67.921  < 2e-16 ***
+methodknn:cv_schemeblock                     -0.964529   0.022011  -43.820  < 2e-16 ***
+methodwsld:cv_schemeblock                    -0.943309   0.022148  -42.590  < 2e-16 ***
+methodCOSNet:cv_schemeblock                  -1.689205   0.029158  -57.932  < 2e-16 ***
+methodbagsvm:cv_schemeblock                  -1.372542   0.021413  -64.100  < 2e-16 ***
+methodrf:cv_schemeblock                      -1.369154   0.020062  -68.248  < 2e-16 ***
+methodsvm:cv_schemeblock                     -1.301538   0.021946  -59.308  < 2e-16 ***
+methodpr:cv_schemerepresentative             -0.302594   0.052550   -5.758 8.55e-09 ***
+methodrandomraw:cv_schemerepresentative      -0.486905   0.060662   -8.027 1.02e-15 ***
+methodrandom:cv_schemerepresentative         -0.420824   0.073757   -5.706 1.17e-08 ***
+methodEGAD:cv_schemerepresentative           -1.321585   0.029959  -44.114  < 2e-16 ***
+methodppr:cv_schemerepresentative            -1.156163   0.023164  -49.912  < 2e-16 ***
+methodraw:cv_schemerepresentative            -1.213432   0.020490  -59.221  < 2e-16 ***
+methodgm:cv_schemerepresentative             -1.548507   0.027532  -56.243  < 2e-16 ***
+methodmc:cv_schemerepresentative             -0.932732   0.027145  -34.361  < 2e-16 ***
+methodz:cv_schemerepresentative              -1.260481   0.020881  -60.365  < 2e-16 ***
+methodknn:cv_schemerepresentative            -1.096252   0.022734  -48.220  < 2e-16 ***
+methodwsld:cv_schemerepresentative           -1.107063   0.023065  -47.997  < 2e-16 ***
+methodCOSNet:cv_schemerepresentative         -1.499957   0.027393  -54.758  < 2e-16 ***
+methodbagsvm:cv_schemerepresentative         -1.210768   0.020597  -58.785  < 2e-16 ***
+methodrf:cv_schemerepresentative             -1.180811   0.019269  -61.281  < 2e-16 ***
+methodsvm:cv_schemerepresentative            -1.150241   0.021146  -54.396  < 2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+(Dispersion parameter for quasibinomial family taken to be 0.03152252)
+
+    Null deviance: 6984.8  on 49499  degrees of freedom
+Residual deviance: 1517.5  on 49433  degrees of freedom
+AIC: NA
+
+Number of Fisher Scoring iterations: 7
+

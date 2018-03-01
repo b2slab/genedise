@@ -4,7 +4,7 @@
 Multiple Comparisons of Means: Tukey Contrasts
 
 
-Fit: glm(formula = as.formula(paste0(vars$metric, " ~ method + disease + cv_scheme + network")), 
+Fit: glm(formula = as.formula(paste0(vars$metric, " ~ ", hypothesis$formula)), 
     family = model_fam, data = df_current)
 
 Linear Hypotheses:

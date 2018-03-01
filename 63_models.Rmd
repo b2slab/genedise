@@ -144,11 +144,28 @@ list_strat <- list(
 )
 
 # generate output folders
-plyr::l_ply(
-  levels(df_nets_avg$input_type), 
-  function(input) {
-    dir.create(paste0(config$dir_models, "/", input))
-  }
+# plyr::l_ply(
+#   levels(df_nets_avg$input_type), 
+#   function(input) {
+#     dir.create(paste0(config$dir_models, "/", input))
+#   }
+# )
+
+list_hypotheses <- list(
+  "additive" = list(
+    dir = "additive",
+    formula = "method + cv_scheme + disease + network", 
+    contrasts = TRUE), 
+  "interaction:cv_scheme" = list(
+    dir = "interaction:cv_scheme", 
+    formula = "method + method:cv_scheme + disease + network", 
+    contrasts = FALSE, 
+    exclude_input = c("genetic", "stream")), 
+  "interaction:network" = list(
+    dir = "interaction:network",
+    formula = "method + method:network + disease + cv_scheme", 
+    contrasts = FALSE, 
+    exclude_input = c("genetic", "stream"))
 )
 ```
 
@@ -176,90 +193,105 @@ plyr::a_ply(
     
     # adjust models subsetting by input_type and using 
     # the given metric as response
-    # 
-    ###### Additive model ###### 
-    mod <- glm(
-      as.formula(paste0(vars$metric, " ~ method + disease + cv_scheme + network")), 
-      data = df_current, 
-      family = model_fam)
-    
-    mod_dir <- paste0(config$dir_models, "/", vars$input_type, "/additive/")
-    dir.create(path = mod_dir)
-    
-    # write model summary
-    writeLines(
-      capture.output(summary(mod)),
-      con = paste0(mod_dir, "/", file_prefix, "_model.txt")
-    )
-    # browser()
-    # write predictions based on several grouping factors
-    # (e.g. performance per disease vs performance averaged in all diseases )
-    plyr::llply(
-      list_strat,
-      function(variables) {
-        # browser()
-        variables_name <- paste(variables, collapse = ",")
-        predictions <- lsmeans::lsmeans(
-          mod, specs = "method",
-          by = variables,
-          type = "response") %>% summary
-        # write summary
+    plyr::l_ply(
+      list_hypotheses, 
+      function(hypothesis) {
+        # see if the model should be skipped
+        if (vars$input_type %in% hypothesis$exclude_input) return()
+        
+        # adjust model
+        mod <- glm(
+          as.formula(paste0(vars$metric, " ~ ", hypothesis$formula)), 
+          data = df_current, 
+          family = model_fam)
+        
+        mod_dir <- paste0(config$dir_models, "/", vars$input_type, "/", hypothesis$dir, "/")
+        dir.create(path = mod_dir, recursive = TRUE)
+        
+        # write model summary
         writeLines(
-          capture.output(print(predictions)),
-          con = paste0(mod_dir, "/", file_prefix, ";", spit_prefix,
-                       variables_name, ".txt")
+          capture.output(summary(mod)),
+          con = paste0(mod_dir, "/", file_prefix, "_model.txt")
         )
-        # write latex table
-        write.csv(
-          predictions, row.names = FALSE, 
-          file = paste0(mod_dir, "/", file_prefix, ";", spit_prefix,
-                       variables_name, ".csv")
+        # in latex format
+        tex_lines <- stargazer::stargazer(
+          mod, ci = TRUE, ci.level = 0.95, 
+          single.row = TRUE, omit.table.layout = "mdl", 
+          title = paste0(model_fam, " model for ", vars$metric, 
+                         " using the ", vars$input_type, " input"))
+        writeLines(tex_lines, con = paste0(mod_dir, "/", file_prefix, "_model.tex"))
+        
+        # browser()
+        # write predictions based on several grouping factors
+        # (e.g. performance per disease vs performance averaged in all diseases )
+        plyr::l_ply(
+          list_strat,
+          function(variables) {
+            # browser()
+            variables_name <- paste(variables, collapse = ",")
+            predictions <- lsmeans::lsmeans(
+              mod, specs = "method",
+              by = variables,
+              type = "response") %>% summary
+            # write summary
+            writeLines(
+              capture.output(print(predictions)),
+              con = paste0(mod_dir, "/", file_prefix, ";", spit_prefix,
+                           variables_name, ".txt")
+            )
+            # write latex table
+            write.csv(
+              predictions, row.names = FALSE, 
+              file = paste0(mod_dir, "/", file_prefix, ";", spit_prefix,
+                           variables_name, ".csv")
+            )
+          }
         )
+        
+        # browser()
+        # compute contrasts between methods
+        mod_glht <- multcomp::glht(
+          mod, 
+          linfct = multcomp::mcp(method = "Tukey"))
+        
+        # model diagnostic plots
+        png(filename = paste0(mod_dir, "/", file_prefix, "_diagnostics.png"), 
+            width = 20, height = 20, units = "cm", res = 300)
+        layout(matrix(1:4, ncol = 2))
+        plot(mod, pch = ".", ask = FALSE)
+        layout(1)
+        dev.off()
+        
+        mod_confint <- summary(mod_glht)
+        writeLines(
+          capture.output(print(mod_confint)), 
+          con = paste0(mod_dir, "/", file_prefix, "_contrasts_method.txt")
+        )
+    
+        if (hypothesis$contrasts) {
+          # Plot contrasts and estimates
+          cols <- names(mod_confint$test$coefficients) %>% 
+            strsplit(split = " - ") %>% plyr::ldply(
+            function(x) c(row = x[1], col = x[2])
+          ) 
+          cols$row <- factor(cols$row, levels_method)
+          cols$col <- factor(cols$col, levels_method)
+          cols$estimate <- mod_confint$test$coefficients 
+          cols$pvalue <- mod_confint$test$pvalues
+          
+          e.cor <- reshape2::acast(cols, row~col, value.var = "estimate", fill = 0)
+          p.cor <- reshape2::acast(cols, row~col, value.var = "pvalue", fill = 0)
+          
+          png(filename = paste0(mod_dir, "/", file_prefix, "_contrasts_method.png"),  
+              width = 1200, height = 1200)
+          corrplot::corrplot(
+            corr = e.cor, method = "color", type = "lower", 
+            addCoef.col = "black", 
+            p.mat = p.cor, diag = TRUE, is.corr = FALSE)
+          dev.off()
+        }
       }
     )
-    
-    # browser()
-    # compute contrasts between methods
-    mod_glht <- multcomp::glht(
-      mod, 
-      linfct = multcomp::mcp(method = "Tukey"))
-    
-    # model diagnostic plots
-    png(filename = paste0(mod_dir, "/", file_prefix, "_diagnostics.png"), 
-        width = 20, height = 20, units = "cm", res = 300)
-    layout(matrix(1:4, ncol = 2))
-    plot(mod, pch = ".", ask = FALSE)
-    layout(1)
-    dev.off()
-    
-    mod_confint <- summary(mod_glht)
-    writeLines(
-      capture.output(print(mod_confint)), 
-      con = paste0(mod_dir, "/", file_prefix, "_contrasts_method.txt")
-    )
-
-    # Plot contrasts and estimates
-    cols <- names(mod_confint$test$coefficients) %>% 
-      strsplit(split = " - ") %>% plyr::ldply(
-      function(x) c(row = x[1], col = x[2])
-    ) 
-    cols$row <- factor(cols$row, levels_method)
-    cols$col <- factor(cols$col, levels_method)
-    cols$estimate <- mod_confint$test$coefficients 
-    cols$pvalue <- mod_confint$test$pvalues
-    
-    e.cor <- reshape2::acast(cols, row~col, value.var = "estimate", fill = 0)
-    p.cor <- reshape2::acast(cols, row~col, value.var = "pvalue", fill = 0)
-    
-    png(filename = paste0(mod_dir, "/", file_prefix, "_contrasts_method.png"),  
-        width = 1200, height = 1200)
-    corrplot::corrplot(
-      corr = e.cor, method = "color", type = "lower", 
-      addCoef.col = "black", 
-      p.mat = p.cor, diag = TRUE, is.corr = FALSE)
-    dev.off()
-    
-    ###### Other models ###### 
   }, 
   .progress = "text", 
   .parallel = TRUE
@@ -300,11 +332,11 @@ plyr::l_ply(
         digits <- list_metrics[metric]
         df$metric <- metric
         df$col_ci <- paste0(
-          "[", 
+          "(", 
           format(df$asymp.LCL, digits = 0, nsmall = digits), 
           ", ", 
           format(df$asymp.UCL, digits = 0, nsmall = digits), 
-          "]")
+          ")")
         df[c(list_strat_main, "metric", "method", "col_ci")]
       }, 
       .id = "metric") %>% 

@@ -15,6 +15,6 @@
  rf        12.6315623 0.06928481 NA 12.4964939 12.7680906
  svm       11.1292336 0.06490568 NA 11.0027451 11.2571763
 
-Results are averaged over the levels of: disease, cv_scheme, network 
+Results are averaged over the levels of: cv_scheme, disease, network 
 Confidence level used: 0.95 
 Intervals are back-transformed from the log scale 

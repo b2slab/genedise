@@ -1,0 +1,3 @@
+Results are averaged over the levels of: disease, cv_scheme 
+Confidence level used: 0.95 
+Intervals are back-transformed from the logit scale 

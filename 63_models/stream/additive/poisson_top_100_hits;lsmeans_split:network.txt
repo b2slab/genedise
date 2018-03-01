@@ -16,6 +16,6 @@ network = omnipath:
  association_score.datatypes.rna_expression      1.895298 0.01582493 NA  1.864534  1.926570
  association_score.datatypes.somatic_mutation    1.689416 0.01487238 NA  1.660517  1.718819
 
-Results are averaged over the levels of: disease, cv_scheme 
+Results are averaged over the levels of: cv_scheme, disease 
 Confidence level used: 0.95 
 Intervals are back-transformed from the log scale 

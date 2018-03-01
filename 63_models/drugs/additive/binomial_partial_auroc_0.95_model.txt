@@ -1,6 +1,6 @@
 
 Call:
-glm(formula = as.formula(paste0(vars$metric, " ~ method + disease + cv_scheme + network")), 
+glm(formula = as.formula(paste0(vars$metric, " ~ ", hypothesis$formula)), 
     family = model_fam, data = df_current)
 
 Deviance Residuals: 
@@ -24,6 +24,8 @@ methodCOSNet                                  1.139639   0.017715   64.330  < 2e
 methodbagsvm                                  2.088806   0.016770  124.555  < 2e-16 ***
 methodrf                                      2.244883   0.016702  134.410  < 2e-16 ***
 methodsvm                                     2.001296   0.016817  119.001  < 2e-16 ***
+cv_schemeblock                               -0.957560   0.005832 -164.182  < 2e-16 ***
+cv_schemerepresentative                      -0.636353   0.005557 -114.504  < 2e-16 ***
 diseaseAlzheimers disease                     0.303644   0.015991   18.988  < 2e-16 ***
 diseasearthritis                             -0.296715   0.017232  -17.219  < 2e-16 ***
 diseaseasthma                                 0.216472   0.016127   13.423  < 2e-16 ***
@@ -45,8 +47,6 @@ diseasetype I diabetes mellitus               0.145130   0.016249    8.932  < 2e
 diseasetype II diabetes mellitus              0.137797   0.016262    8.474  < 2e-16 ***
 diseaseulcerative colitis                     0.173003   0.016200   10.679  < 2e-16 ***
 diseaseunipolar depression                    0.322600   0.015963   20.209  < 2e-16 ***
-cv_schemeblock                               -0.957560   0.005832 -164.182  < 2e-16 ***
-cv_schemerepresentative                      -0.636353   0.005557 -114.504  < 2e-16 ***
 networkomnipath                              -0.432060   0.004720  -91.547  < 2e-16 ***
 ---
 Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1

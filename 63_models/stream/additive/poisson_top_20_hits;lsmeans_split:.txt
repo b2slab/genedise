@@ -6,6 +6,6 @@
  association_score.datatypes.rna_expression      0.3924359 0.006672359 NA 0.3795738 0.4057338
  association_score.datatypes.somatic_mutation    0.1826989 0.004538737 NA 0.1740162 0.1918148
 
-Results are averaged over the levels of: disease, cv_scheme, network 
+Results are averaged over the levels of: cv_scheme, disease, network 
 Confidence level used: 0.95 
 Intervals are back-transformed from the log scale 
