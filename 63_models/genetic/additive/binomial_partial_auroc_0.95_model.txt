@@ -1,6 +1,6 @@
 
 Call:
-glm(formula = as.formula(paste0(vars$metric, " ~ ", hypothesis$formula)), 
+glm(formula = as.formula(paste0(metric, " ~ ", hypothesis$formula)), 
     family = model_fam, data = df_current)
 
 Deviance Residuals: 
@@ -49,7 +49,7 @@ diseaseulcerative colitis                     0.977043   0.021176   46.140  < 2e
 diseaseunipolar depression                    0.320269   0.023347   13.718  < 2e-16 ***
 networkomnipath                              -0.105139   0.007028  -14.960  < 2e-16 ***
 ---
-Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 (Dispersion parameter for quasibinomial family taken to be 0.03054826)
 

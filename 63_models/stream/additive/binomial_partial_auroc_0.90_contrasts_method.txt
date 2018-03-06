@@ -4,7 +4,7 @@
 Multiple Comparisons of Means: Tukey Contrasts
 
 
-Fit: glm(formula = as.formula(paste0(vars$metric, " ~ ", hypothesis$formula)), 
+Fit: glm(formula = as.formula(paste0(metric, " ~ ", hypothesis$formula)), 
     family = model_fam, data = df_current)
 
 Linear Hypotheses:
@@ -25,6 +25,6 @@ association_score.datatypes.rna_expression - association_score.datatypes.literat
 association_score.datatypes.somatic_mutation - association_score.datatypes.literature == 0          -2.073456   0.008090 -256.314   <1e-05 ***
 association_score.datatypes.somatic_mutation - association_score.datatypes.rna_expression == 0      -0.392179   0.009527  -41.164   <1e-05 ***
 ---
-Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 (Adjusted p values reported -- single-step method)
 

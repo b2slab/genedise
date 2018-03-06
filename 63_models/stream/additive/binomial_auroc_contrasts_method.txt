@@ -4,27 +4,27 @@
 Multiple Comparisons of Means: Tukey Contrasts
 
 
-Fit: glm(formula = as.formula(paste0(vars$metric, " ~ ", hypothesis$formula)), 
+Fit: glm(formula = as.formula(paste0(metric, " ~ ", hypothesis$formula)), 
     family = model_fam, data = df_current)
 
 Linear Hypotheses:
                                                                                                      Estimate Std. Error  z value Pr(>|z|)    
-association_score.datatypes.animal_model - association_score.datatypes.affected_pathway == 0         0.037836   0.003155   11.993   <1e-06 ***
-association_score.datatypes.genetic_association - association_score.datatypes.affected_pathway == 0  0.088940   0.003156   28.181   <1e-06 ***
-association_score.datatypes.literature - association_score.datatypes.affected_pathway == 0           0.833619   0.003296  252.892   <1e-06 ***
-association_score.datatypes.rna_expression - association_score.datatypes.affected_pathway == 0       0.067754   0.003155   21.473   <1e-06 ***
+association_score.datatypes.animal_model - association_score.datatypes.affected_pathway == 0         0.037836   0.003155   11.993   <1e-07 ***
+association_score.datatypes.genetic_association - association_score.datatypes.affected_pathway == 0  0.088940   0.003156   28.181   <1e-07 ***
+association_score.datatypes.literature - association_score.datatypes.affected_pathway == 0           0.833619   0.003296  252.892   <1e-07 ***
+association_score.datatypes.rna_expression - association_score.datatypes.affected_pathway == 0       0.067754   0.003155   21.473   <1e-07 ***
 association_score.datatypes.somatic_mutation - association_score.datatypes.affected_pathway == 0    -0.000919   0.003154   -0.291        1    
-association_score.datatypes.genetic_association - association_score.datatypes.animal_model == 0      0.051105   0.003156   16.191   <1e-06 ***
-association_score.datatypes.literature - association_score.datatypes.animal_model == 0               0.795784   0.003297  241.394   <1e-06 ***
-association_score.datatypes.rna_expression - association_score.datatypes.animal_model == 0           0.029919   0.003156    9.481   <1e-06 ***
-association_score.datatypes.somatic_mutation - association_score.datatypes.animal_model == 0        -0.038754   0.003155  -12.285   <1e-06 ***
-association_score.datatypes.literature - association_score.datatypes.genetic_association == 0        0.744679   0.003298  225.807   <1e-06 ***
-association_score.datatypes.rna_expression - association_score.datatypes.genetic_association == 0   -0.021186   0.003157   -6.711   <1e-06 ***
-association_score.datatypes.somatic_mutation - association_score.datatypes.genetic_association == 0 -0.089859   0.003156  -28.473   <1e-06 ***
-association_score.datatypes.rna_expression - association_score.datatypes.literature == 0            -0.765865   0.003297 -232.276   <1e-06 ***
-association_score.datatypes.somatic_mutation - association_score.datatypes.literature == 0          -0.834538   0.003296 -253.171   <1e-06 ***
-association_score.datatypes.somatic_mutation - association_score.datatypes.rna_expression == 0      -0.068673   0.003155  -21.764   <1e-06 ***
+association_score.datatypes.genetic_association - association_score.datatypes.animal_model == 0      0.051105   0.003156   16.191   <1e-07 ***
+association_score.datatypes.literature - association_score.datatypes.animal_model == 0               0.795784   0.003297  241.394   <1e-07 ***
+association_score.datatypes.rna_expression - association_score.datatypes.animal_model == 0           0.029919   0.003156    9.481   <1e-07 ***
+association_score.datatypes.somatic_mutation - association_score.datatypes.animal_model == 0        -0.038754   0.003155  -12.285   <1e-07 ***
+association_score.datatypes.literature - association_score.datatypes.genetic_association == 0        0.744679   0.003298  225.807   <1e-07 ***
+association_score.datatypes.rna_expression - association_score.datatypes.genetic_association == 0   -0.021186   0.003157   -6.711   <1e-07 ***
+association_score.datatypes.somatic_mutation - association_score.datatypes.genetic_association == 0 -0.089859   0.003156  -28.473   <1e-07 ***
+association_score.datatypes.rna_expression - association_score.datatypes.literature == 0            -0.765865   0.003297 -232.276   <1e-07 ***
+association_score.datatypes.somatic_mutation - association_score.datatypes.literature == 0          -0.834538   0.003296 -253.171   <1e-07 ***
+association_score.datatypes.somatic_mutation - association_score.datatypes.rna_expression == 0      -0.068673   0.003155  -21.764   <1e-07 ***
 ---
-Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 (Adjusted p values reported -- single-step method)
 

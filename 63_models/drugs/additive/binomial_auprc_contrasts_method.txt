@@ -4,7 +4,7 @@
 Multiple Comparisons of Means: Tukey Contrasts
 
 
-Fit: glm(formula = as.formula(paste0(vars$metric, " ~ ", hypothesis$formula)), 
+Fit: glm(formula = as.formula(paste0(metric, " ~ ", hypothesis$formula)), 
     family = model_fam, data = df_current)
 
 Linear Hypotheses:
@@ -115,6 +115,6 @@ rf - bagsvm == 0         0.23213    0.01210  19.182    <0.01 ***
 svm - bagsvm == 0       -0.10430    0.01263  -8.259    <0.01 ***
 svm - rf == 0           -0.33643    0.01229 -27.377    <0.01 ***
 ---
-Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 (Adjusted p values reported -- single-step method)
 

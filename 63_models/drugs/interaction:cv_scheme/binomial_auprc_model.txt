@@ -1,6 +1,6 @@
 
 Call:
-glm(formula = as.formula(paste0(vars$metric, " ~ ", hypothesis$formula)), 
+glm(formula = as.formula(paste0(metric, " ~ ", hypothesis$formula)), 
     family = model_fam, data = df_current)
 
 Deviance Residuals: 
@@ -77,7 +77,7 @@ methodbagsvm:cv_schemerepresentative         -1.210768   0.020597  -58.785  < 2e
 methodrf:cv_schemerepresentative             -1.180811   0.019269  -61.281  < 2e-16 ***
 methodsvm:cv_schemerepresentative            -1.150241   0.021146  -54.396  < 2e-16 ***
 ---
-Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 (Dispersion parameter for quasibinomial family taken to be 0.03152252)
 

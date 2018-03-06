@@ -1,6 +1,6 @@
 
 Call:
-glm(formula = as.formula(paste0(vars$metric, " ~ ", hypothesis$formula)), 
+glm(formula = as.formula(paste0(metric, " ~ ", hypothesis$formula)), 
     family = model_fam, data = df_current)
 
 Deviance Residuals: 
@@ -63,7 +63,7 @@ methodbagsvm:networkomnipath                 -0.438924   0.013973  -31.413  < 2e
 methodrf:networkomnipath                     -0.723953   0.014111  -51.305  < 2e-16 ***
 methodsvm:networkomnipath                    -0.751087   0.014377  -52.242  < 2e-16 ***
 ---
-Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 (Dispersion parameter for quasibinomial family taken to be 0.03787686)
 

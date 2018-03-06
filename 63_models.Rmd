@@ -167,140 +167,8 @@ list_hypotheses <- list(
     contrasts = FALSE, 
     exclude_input = c("genetic", "stream"))
 )
-```
 
 
-```{r}
-# WATCHOUT: do not mix input types!
-plyr::a_ply(
-  expand.grid(metric = names(list_models), 
-              input_type = levels(df_nets_avg$input_type), 
-              stringsAsFactors = FALSE), 
-  1, 
-  function(vars) {
-    # browser()
-    options(max.print = 2000, width = 1000)
-    
-    model_famname <- list_models[vars$metric]
-    model_fam <- switch(
-      model_famname, 
-      "binomial" = quasibinomial(link = "logit"),
-      "poisson" = quasipoisson(link = "log"))
-    
-    df_current <- filter(df_nets_avg, input_type == vars$input_type)
-    file_prefix <- paste(c(model_famname, vars$metric), collapse = "_")
-    spit_prefix <- "lsmeans_split:"
-    
-    # adjust models subsetting by input_type and using 
-    # the given metric as response
-    plyr::l_ply(
-      list_hypotheses, 
-      function(hypothesis) {
-        # see if the model should be skipped
-        if (vars$input_type %in% hypothesis$exclude_input) return()
-        
-        # adjust model
-        mod <- glm(
-          as.formula(paste0(vars$metric, " ~ ", hypothesis$formula)), 
-          data = df_current, 
-          family = model_fam)
-        
-        mod_dir <- paste0(config$dir_models, "/", vars$input_type, "/", hypothesis$dir, "/")
-        dir.create(path = mod_dir, recursive = TRUE)
-        
-        # write model summary
-        writeLines(
-          capture.output(summary(mod)),
-          con = paste0(mod_dir, "/", file_prefix, "_model.txt")
-        )
-        # in latex format
-        tex_lines <- stargazer::stargazer(
-          mod, ci = TRUE, ci.level = 0.95, 
-          single.row = TRUE, omit.table.layout = "mdl", 
-          title = paste0(model_fam, " model for ", vars$metric, 
-                         " using the ", vars$input_type, " input"))
-        writeLines(tex_lines, con = paste0(mod_dir, "/", file_prefix, "_model.tex"))
-        
-        # browser()
-        # write predictions based on several grouping factors
-        # (e.g. performance per disease vs performance averaged in all diseases )
-        plyr::l_ply(
-          list_strat,
-          function(variables) {
-            # browser()
-            variables_name <- paste(variables, collapse = ",")
-            predictions <- lsmeans::lsmeans(
-              mod, specs = "method",
-              by = variables,
-              type = "response") %>% summary
-            # write summary
-            writeLines(
-              capture.output(print(predictions)),
-              con = paste0(mod_dir, "/", file_prefix, ";", spit_prefix,
-                           variables_name, ".txt")
-            )
-            # write latex table
-            write.csv(
-              predictions, row.names = FALSE, 
-              file = paste0(mod_dir, "/", file_prefix, ";", spit_prefix,
-                           variables_name, ".csv")
-            )
-          }
-        )
-        
-        # browser()
-        # compute contrasts between methods
-        mod_glht <- multcomp::glht(
-          mod, 
-          linfct = multcomp::mcp(method = "Tukey"))
-        
-        # model diagnostic plots
-        png(filename = paste0(mod_dir, "/", file_prefix, "_diagnostics.png"), 
-            width = 20, height = 20, units = "cm", res = 300)
-        layout(matrix(1:4, ncol = 2))
-        plot(mod, pch = ".", ask = FALSE)
-        layout(1)
-        dev.off()
-        
-        mod_confint <- summary(mod_glht)
-        writeLines(
-          capture.output(print(mod_confint)), 
-          con = paste0(mod_dir, "/", file_prefix, "_contrasts_method.txt")
-        )
-    
-        if (hypothesis$contrasts) {
-          # Plot contrasts and estimates
-          cols <- names(mod_confint$test$coefficients) %>% 
-            strsplit(split = " - ") %>% plyr::ldply(
-            function(x) c(row = x[1], col = x[2])
-          ) 
-          cols$row <- factor(cols$row, levels_method)
-          cols$col <- factor(cols$col, levels_method)
-          cols$estimate <- mod_confint$test$coefficients 
-          cols$pvalue <- mod_confint$test$pvalues
-          
-          e.cor <- reshape2::acast(cols, row~col, value.var = "estimate", fill = 0)
-          p.cor <- reshape2::acast(cols, row~col, value.var = "pvalue", fill = 0)
-          
-          png(filename = paste0(mod_dir, "/", file_prefix, "_contrasts_method.png"),  
-              width = 1200, height = 1200)
-          corrplot::corrplot(
-            corr = e.cor, method = "color", type = "lower", 
-            addCoef.col = "black", 
-            p.mat = p.cor, diag = TRUE, is.corr = FALSE)
-          dev.off()
-        }
-      }
-    )
-  }, 
-  .progress = "text", 
-  .parallel = TRUE
-)
-```
-
-## Tables in LaTeX
-
-```{r}
 # take only main metrics and stratification
 # additive models only
 
@@ -310,65 +178,242 @@ list_strat_main <- c("cv_scheme", "network")
 list_metrics <- c("auroc" = 3, "partial_auroc_0.90" = 3, 
                   "partial_auroc_0.95" = 3, "auprc" = 3, 
                   "top_20_hits" = 2, "top_100_hits" = 2)
+# where to show the models
 list_metrics_main <- c("auroc", "auprc", "top_20_hits")
+list_metrics_suppl <- c("partial_auroc_0.90", "partial_auroc_0.95", "top_100_hits")
 # Columns to include 
 list_columns_main <- c("asymp.LCL", "asymp.UCL")
+```
 
-plyr::l_ply(
-  levels(df_nets_avg$input_type), 
+
+```{r}
+# The structure of the loops is the same as the one in the folders
+# input_type/hypothesis/metrics*
+# Outer loop: iterate over input types
+list_mod <- plyr::llply(
+  setNames(levels(df_nets_avg$input_type), levels(df_nets_avg$input_type)), 
   function(input) {
-    dir_input <- paste0(config$dir_models, "/", input, "/additive/")
-    df_out <- plyr::ldply(
-      names(list_metrics), 
-      function(metric) {
-        # browser()
-        # read formatted table
-        file_name <- paste0(dir_input, list_models[metric], "_", 
-                            metric, ";", "lsmeans_split:", 
-                            paste(list_strat_main, collapse = ","), ".csv")
-        df <- read.csv(file_name, header = TRUE)
+    # Second loop: iterate over hypotheses
+    plyr::llply(
+      list_hypotheses, 
+      function(hypothesis) {
+        # see if the model should be skipped
+        if (input %in% hypothesis$exclude_input) return(NULL)
         
-        # Format confidence interval
-        digits <- list_metrics[metric]
-        df$metric <- metric
-        df$col_ci <- paste0(
-          "(", 
-          format(df$asymp.LCL, digits = 0, nsmall = digits), 
-          ", ", 
-          format(df$asymp.UCL, digits = 0, nsmall = digits), 
-          ")")
-        df[c(list_strat_main, "metric", "method", "col_ci")]
-      }, 
-      .id = "metric") %>% 
-      mutate(metric = factor(metric, names(list_metrics)), 
+        dir_mod <- paste0(config$dir_models, "/", input, "/", hypothesis$dir, "/")
+        dir.create(path = dir_mod, recursive = TRUE)
+        
+        # Third loop: over metrics
+        list_ans_metric <- plyr::llply(
+          setNames(names(list_models), names(list_models)), 
+          function(metric) {
+            # browser()
+            options(max.print = 2000, width = 1000)
+            
+            model_famname <- list_models[metric]
+            model_fam <- switch(
+              model_famname, 
+              "binomial" = quasibinomial(link = "logit"),
+              "poisson" = quasipoisson(link = "log"))
+            
+            df_current <- filter(df_nets_avg, input_type == input)
+            file_prefix <- paste(c(model_famname, metric), collapse = "_")
+            spit_prefix <- "lsmeans_split:"
+            
+            # adjust model
+            mod <- glm(
+              as.formula(paste0(metric, " ~ ", hypothesis$formula)), 
+              data = df_current, 
+              family = model_fam)
+            
+            # write model summary
+            writeLines(
+              capture.output(summary(mod)),
+              con = paste0(dir_mod, "/", file_prefix, "_model.txt")
+            )
+            # in latex format
+            # browser()
+            sink(file = "/dev/null") # so that stargazer does not flood the terminal
+            stargazer::stargazer(
+              mod, ci = TRUE, ci.level = 0.95, 
+              single.row = TRUE, omit.table.layout = "mdl", 
+              title = paste0(model_fam, " model for ", metric, 
+                             " using the ", input, " input"), 
+              out = paste0(dir_mod, "/", file_prefix, "_model.tex"))
+            sink()
+            
+            # browser()
+            # write predictions based on several grouping factors
+            # (e.g. performance per disease vs performance averaged in all diseases )
+            list_predictions <- plyr::llply(
+              list_strat,
+              function(variables) {
+                # browser()
+                variables_name <- paste(variables, collapse = ",")
+                predictions <- lsmeans::lsmeans(
+                  mod, specs = "method",
+                  by = variables,
+                  type = "response") %>% summary
+                # write summary
+                writeLines(
+                  capture.output(print(predictions)),
+                  con = paste0(dir_mod, "/", file_prefix, ";", spit_prefix,
+                               variables_name, ".txt")
+                )
+                # write latex table
+                write.csv(
+                  predictions, row.names = FALSE, 
+                  file = paste0(dir_mod, "/", file_prefix, ";", spit_prefix,
+                               variables_name, ".csv")
+                )
+                predictions
+              }
+            )
+            
+            # browser()
+            # compute contrasts between methods
+            mod_glht <- multcomp::glht(
+              mod, 
+              linfct = multcomp::mcp(method = "Tukey"))
+            
+            # model diagnostic plots
+            png(filename = paste0(dir_mod, "/", file_prefix, "_diagnostics.png"), 
+                width = 20, height = 20, units = "cm", res = 300)
+            layout(matrix(1:4, ncol = 2))
+            plot(mod, pch = ".", ask = FALSE)
+            layout(1)
+            dev.off()
+            
+            mod_confint <- summary(mod_glht)
+            writeLines(
+              capture.output(print(mod_confint)), 
+              con = paste0(dir_mod, "/", file_prefix, "_contrasts_method.txt")
+            )
+        
+            if (hypothesis$contrasts) {
+              # Plot contrasts and estimates
+              cols <- names(mod_confint$test$coefficients) %>% 
+                strsplit(split = " - ") %>% plyr::ldply(
+                function(x) c(row = x[1], col = x[2])
+              ) 
+              cols$row <- factor(cols$row, levels_method)
+              cols$col <- factor(cols$col, levels_method)
+              cols$estimate <- mod_confint$test$coefficients 
+              cols$pvalue <- mod_confint$test$pvalues
+              
+              e.cor <- reshape2::acast(cols, row~col, value.var = "estimate", fill = 0)
+              p.cor <- reshape2::acast(cols, row~col, value.var = "pvalue", fill = 0)
+              
+              png(filename = paste0(dir_mod, "/", file_prefix, "_contrasts_method.png"),  
+                  width = 1200, height = 1200)
+              corrplot::corrplot(
+                corr = e.cor, method = "color", type = "lower", 
+                addCoef.col = "black", 
+                p.mat = p.cor, diag = TRUE, is.corr = FALSE)
+              dev.off()
+            }
+            
+            # output things that need to be aggregated in the same tables: 
+            # models and predictions
+            list(
+              model = mod, 
+              predictions = list_predictions
+            )
+          }, 
+          .parallel = TRUE
+        )
+        
+        # These last lines export the tables in latex format
+        
+        # list with all the models
+        list_all_models <- lapply(list_ans_metric, function(x) x$model)
+        
+        # browser()
+        ######## Big table with predictions
+        df_out <- plyr::ldply(
+          names(list_ans_metric), 
+          function(metric) {
+            # Retrieve lsmeans table with predictions by method
+            df <- list_ans_metric[[metric]]$predictions[[paste(list_strat_main, collapse = "_")]]
+        
+            # Format confidence interval
+            digits <- list_metrics[metric]
+            df$metric <- metric
+            df$col_ci <- paste0(
+              "(", 
+              format(df$asymp.LCL, digits = 0, nsmall = digits), 
+              ", ", 
+              format(df$asymp.UCL, digits = 0, nsmall = digits), 
+              ")")
+            df[c(list_strat_main, "metric", "method", "col_ci")]
+            
+          },
+          .id = "metric"
+        ) %>% mutate(metric = factor(metric, names(list_metrics)), 
              method = factor(method, levels_method), 
              cv_scheme = factor(cv_scheme, levels_cv_scheme), 
              network = factor(network, levels_network))
-    # browser()
-    # cast the data frame so that network+cvscheme define the columns
-    # need to cast through data.table to be able to choose the separator
-    df_out_cast <- data.table::dcast(
-      data.table::setDT(df_out), metric + method ~ network + cv_scheme, 
-      value.var = "col_ci", sep = ".") 
-    
-    # kable accepts escape=FALSE in case math mode is to be entered manually, adding $s to the cells
-    # 
-    # only metrics in the main body
-    tex <- knitr::kable(filter(df_out_cast, metric %in% list_metrics_main), 
-                        format = "latex", booktabs = TRUE, escape = TRUE) %>% 
-      kable_styling(latex_options = c("striped", "scale_down")) %>% 
-      collapse_rows(columns = 1:2, latex_hline = "major") %>% 
-      add_header_above(c(" " = 2, "STRING" = 3, "OmniPath" = 3)) 
-    writeLines(tex, con = paste0(dir_input, "tex_main_metrics.tex"))
-    
-    # all the metrics
-    tex <- knitr::kable(df_out_cast, format = "latex", booktabs = TRUE, escape = TRUE) %>% 
-      kable_styling(latex_options = c("striped", "scale_down")) %>% 
-      collapse_rows(columns = 1:2, latex_hline = "major") %>% 
-      add_header_above(c(" " = 2, "STRING" = 3, "OmniPath" = 3)) 
-    writeLines(tex, con = paste0(dir_input, "tex_all_metrics.tex"))
-  }
+          
+        # cast the data frame so that network+cvscheme define the columns
+        # need to cast through data.table to be able to choose the separator
+        df_out_cast <- data.table::dcast(
+          data.table::setDT(df_out), metric + method ~ network + cv_scheme, 
+          value.var = "col_ci", sep = ".") 
+        
+        # kable accepts escape=FALSE in case math mode is to be entered manually, adding $s to the cells
+        # 
+        
+        ######### Main body
+        # only metrics in the main body
+        tex <- knitr::kable(filter(df_out_cast, metric %in% list_metrics_main), 
+                            format = "latex", booktabs = TRUE, escape = TRUE) %>% 
+          kable_styling(latex_options = c("striped", "scale_down")) %>% 
+          collapse_rows(columns = 1:2, latex_hline = "major") %>% 
+          add_header_above(c(" " = 2, "STRING" = 3, "OmniPath" = 3)) 
+        writeLines(tex, con = paste0(dir_mod, "/tex_main_metrics.tex"))
+        
+        # big table with model summaries
+        list_stargazer <- list_all_models[list_metrics_main]
+        sink(file = "/dev/null") # so that stargazer does not flood the terminal
+        stargazer::stargazer(
+          list_stargazer, ci = TRUE, ci.level = 0.95, 
+          single.row = TRUE, omit.table.layout = "mdl", intercept.bottom = FALSE, 
+          title = paste0("Models for the metrics ", 
+                         paste(names(list_stargazer), collapse = ", "), 
+                         " using the ", input, " input"), 
+          out = paste0(dir_mod, "/tex_main_model.tex"))
+        sink()
+        
+        ######### Supplement - rest of metrics
+        # the rest of metrics the metrics
+        tex <- knitr::kable(filter(df_out_cast, metric %in% list_metrics_suppl), 
+                            format = "latex", booktabs = TRUE, escape = TRUE) %>% 
+          kable_styling(latex_options = c("striped", "scale_down")) %>% 
+          collapse_rows(columns = 1:2, latex_hline = "major") %>% 
+          add_header_above(c(" " = 2, "STRING" = 3, "OmniPath" = 3)) 
+        writeLines(tex, con = paste0(dir_mod, "/tex_suppl_metrics.tex"))
+        
+        # big table with model summaries
+        list_stargazer <- list_all_models[list_metrics_suppl]
+        sink(file = "/dev/null") # so that stargazer does not flood the terminal
+        stargazer::stargazer(
+          list_stargazer, ci = TRUE, ci.level = 0.95, 
+          single.row = TRUE, omit.table.layout = "mdl", intercept.bottom = FALSE, 
+          title = paste0("Models for the metrics ", 
+                         paste(names(list_stargazer), collapse = ", "), 
+                         " using the ", input, " input"), 
+          out = paste0(dir_mod, "/tex_suppl_model.tex"))
+        sink()
+        
+        # return list with results
+        list_ans_metric
+      }
+    )
+  }, 
+  .progress = "text", 
+  .parallel = FALSE
 )
+# models are too heavy to save (compressed file: ~50MB)
 ```
 
 # Reproducibility
