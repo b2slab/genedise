@@ -41,12 +41,26 @@ df_disease <- read.table(
   stringsAsFactors = FALSE, quote = "") 
 df_disease$known_gene_binary <- (df_disease[[config$col_genetic]] >= config$threshold_genetic)*1
 
+# summary as tex file
+sink("/dev/null")
+stargazer::stargazer(
+  df_disease, nobs = TRUE, mean.sd = TRUE, median = TRUE, 
+  iqr = TRUE, out = paste0(config$dir_data, "/descriptive_rawdata.tex"))
+sink()
+
 paste("Number of NAs:", sum(is.na(df_disease)))
 
 # retrieve string db
 string_db <- do.call(
   STRINGdb$new, config$params_string
 )
+
+# summary in text format of the string version
+writeLines(
+  capture.output(print(config$params_string)), 
+  con = paste0(config$dir_data, "/info_string.txt")
+)
+
 
 # network object
 string_g <- string_db$get_graph()
@@ -60,13 +74,16 @@ summary(string_g)
 df_map <- string_db$map(
   df_disease, 
   my_data_frame_id_col_names = config$colname_symbol)
-
-paste("Fraction of data rows correctly mapped:", 
-      nrow(na.omit(df_map))/nrow(df_map))
+rows_original <- nrow(df_map)
 
 # we only lose 3% of the ids
 df_map <- na.omit(df_map)
-paste("Number of rows after mapping:", nrow(df_map))
+rows_mapped <- nrow(df_map)
+
+paste("Number of rows after mapping:", rows_mapped)
+paste("Fraction of data rows correctly mapped:", 
+      rows_mapped/rows_original)
+
 
 # are ensembl ids unique, given a disease?
 col_split <- c("STRING_id", "disease.id")
@@ -92,8 +109,20 @@ if (nrow(df_collisions)) {
     .progress = "text"
   )
 }
+rows_final <- nrow(df_map)
 
 paste("Final dimensions:", paste(dim(df_map), collapse = " by "))
+
+# save in a text file 
+writeLines(
+  paste(
+    c("Number of rows"), 
+    c("in the original data:", "rows mapping to STRING:", "rows when removing duplicates:"), 
+    c(rows_original, rows_mapped, rows_final), 
+    sep = " ", collapse = "\n"
+  ), 
+  con = paste0(config$dir_data, "/descriptive_mapping.txt")
+)
 ```
 
 ## Filter network and assess coverage
@@ -107,7 +136,8 @@ list.edge.filters <- list(
   Net3 = "experiments < 400 & database < 400", 
   Net4 = "combined_score < 700 | (experiments < 1 & database < 1)", 
   Net5 = "combined_score < 700 | (experiments < 1 & database < 1 & textmining < 900)", 
-  Net6 = "database < 400" 
+  Net6 = "database < 400", 
+  All = "combined_score < 0"
 )
 
 # Build all the networks, take their largest connected component 
@@ -115,25 +145,31 @@ list.edge.filters <- list(
 df_coverage <- plyr::ldply(
   list.edge.filters, 
   function(quote.char) {
-    # browser()
-    
-    # network and largest cc
+    # network 
     g <- delete_edges(
       string_g, 
       E(string_g)[eval(parse(text = quote.char), envir = environment())]
-    ) %>% largest_cc
+    )
     
-    # number of rows of mapped data that also map to the graphs
-    rows_mapped <- df_map$STRING_id %in% V(g)$name
-    
-    data.frame(
-      filter = quote.char, 
-      nodes = vcount(g), 
-      edges = ecount(g), 
-      coverage_allrows = sum(rows_mapped), 
-      coverage_drug = sum(df_map$known_drug_binary*rows_mapped), 
-      coverage_genetic = sum(df_map$known_gene_binary*rows_mapped), 
-      stringsAsFactors = FALSE
+    # quantify what happens before and after taking largest cc
+    plyr::ldply(
+      list(before_cc = identity, after_cc = largest_cc), 
+      function(fun) {
+        g <- do.call(fun, list(g))
+        
+        # number of rows of mapped data that also map to the graphs
+        rows_mapped <- df_map$STRING_id %in% V(g)$name
+        data.frame(
+          filter = quote.char, 
+          nodes = vcount(g), 
+          edges = ecount(g), 
+          coverage_allrows = sum(rows_mapped), 
+          coverage_drug = sum(df_map$known_drug_binary*rows_mapped), 
+          coverage_genetic = sum(df_map$known_gene_binary*rows_mapped), 
+          stringsAsFactors = FALSE
+        )
+      }, 
+      .id = "cc"
     )
   }, 
   .id = "network", 
@@ -145,12 +181,24 @@ write.csv(df_coverage,
           row.names = FALSE)
 
 df_coverage
+
+# this assumes the cc level is alphabetically sorted
+tex_coverage <- df_coverage %>% 
+  group_by(network, filter) %>% 
+  summarise_all(function(x) paste0(x[2], "(", x[1], ")")) %>% 
+  select(-cc) %>% 
+  xtable::xtable(x = .)
+
+xtable::print.xtable(
+  tex_coverage, 
+  include.rownames = FALSE, 
+  file = paste0(config$dir_data, "/descriptive_networks.tex"))
 ```
 
 ```{r}
 # Plot the coverage to decide
 df_plotcoverage <- tidyr::gather(
-  df_coverage, key = "coverage_type", value = coverage_value, 
+  filter(df_coverage, cc == "after_cc"), key = "coverage_type", value = coverage_value, 
   contains("coverage"))
 ggplot(df_plotcoverage, aes(x = nodes, y = coverage_value)) + 
   geom_smooth(method = "lm") + 
@@ -221,6 +269,12 @@ write.csv(
   df_count, 
   file = paste0(config$dir_data, "/diseases_mapped_genes.csv"), 
   row.names = FALSE)
+
+# export latex table
+xtable::print.xtable(
+  xtable::xtable(df_count, digits = 0), 
+  include.rownames = FALSE, 
+  file = paste0(config$dir_data, "/descriptive_mapped_genes.tex"))
 ```
 
 ## Filter diseases by a minimum of drugs and genetic genes
@@ -271,6 +325,24 @@ load(config$file_complexes)
 # it is stored in a$all$genes.for.complexes
 # (current criteria is in favour of using "all")
 list_complex_raw <- a$all$genes.for.complexes
+
+# descriptive stats
+df_descriptive_complex <- plyr::ldply(
+  list_complex_raw, 
+  function(prot) {
+    data.frame(
+      original = length(unique(prot)), 
+      mapped = sum(paste0("9606.", as.character(prot)) %in% V(g_filter)$name)
+    )
+  }, 
+  .id = "complex_id"
+)
+
+sink("/dev/null")
+stargazer::stargazer(
+  df_descriptive_complex, nobs = TRUE, mean.sd = TRUE, median = TRUE, 
+  iqr = TRUE, out = paste0(config$dir_data, "/descriptive_complexes.tex"))
+sink()
 
 # complex data as a list
 # genes are mapped to the network, only the intersection is kept
@@ -419,6 +491,14 @@ df_descriptive <- plyr::ddply(
 write.csv(df_descriptive, 
           file = paste0(config$dir_data, "/descriptive_diseases.csv"), 
           row.names = FALSE)
+
+# export in latex format
+xtable::xtable(
+  df_descriptive, 
+  digits = c(0, 0, 0, 0, 0, 2, 2), 
+  display = c("s", "d", "d", "d", "d", "e", "e")) %>% 
+  xtable::print.xtable(x = ., include.rownames = FALSE, 
+                       file = paste0(config$dir_data, "/descriptive_diseases.tex"))
 
 # check for NAs in the input
 stopifnot(all(!is.na(df_input)))
@@ -728,6 +808,33 @@ stopifnot(all(df_stat_complex$train_val > 0))
 # due to empty train or val
 table(df_stat_complex$cv_scheme)
 summary(df_stat_complex)
+
+# generate tex tables
+# summary of the npositives and split complexes
+df_stat_cvschemes <- dplyr::group_by(df_stat_complex, disease, cv_scheme) %>% 
+  summarise_if(
+    is.numeric, 
+    function(x) {
+      paste0(
+        format(mean(x), digits = 0, nsmall = 1), "(", 
+        format(sd(x), digits = 0, nsmall = 2), ")"
+      )
+    }) %>% 
+  select(disease, cv_scheme, train_pos, validation_pos, split_complexes) %>% 
+  reshape2::melt(id.vars = c("disease", "cv_scheme")) %>% 
+  reshape2::dcast(disease ~ variable + cv_scheme) 
+tex_stat_cvschemes <- knitr::kable(
+  df_stat_cvschemes, 
+  format = "latex", booktabs = TRUE, escape = TRUE) %>% 
+  kableExtra::kable_styling(latex_options = c("striped", "scale_down")) %>% 
+  kableExtra::add_header_above(c(" " = 1, "train_pos" = 3, "validation_pos" = 3, "split_complexes" = 3))
+writeLines(tex_stat_cvschemes, con = paste0(config$dir_data, "/descriptive_cvsplits.tex"))
+
+tex_count_cvschemes <- knitr::kable(
+  dplyr::group_by(df_stat_complex, cv_scheme) %>% summarise(count = length(train_pos)), 
+  format = "latex", booktabs = TRUE, escape = TRUE) %>% 
+  kableExtra::kable_styling(latex_options = c("striped", "scale_down"))
+writeLines(tex_count_cvschemes, con = paste0(config$dir_data, "/descriptive_cvsplits_counts.tex"))
 
 # check that "classic" and "representative" are balanced
 # we substract the maximum and the minimum amount of genes 

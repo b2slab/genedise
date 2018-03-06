@@ -1,0 +1,12 @@
+$version
+[1] "10"
+
+$species
+[1] 9606
+
+$score_threshold
+[1] 400
+
+$input_directory
+[1] "~/all/devel/datasets/bioinfo/databases/string/10"
+

@@ -1,7 +1,15 @@
-"network","filter","nodes","edges","coverage_allrows","coverage_drug","coverage_genetic"
-"Net1","combined_score < 400 | experiments < 1",13307,103607,153747,5687,4593
-"Net2","experiments < 600",8854,37084,109535,3791,3115
-"Net3","experiments < 400 & database < 400",14149,284759,159554,6190,4750
-"Net4","combined_score < 700 | (experiments < 1 & database < 1)",11748,236963,144920,6121,4170
-"Net5","combined_score < 700 | (experiments < 1 & database < 1 & textmining < 900)",12022,240082,147635,6160,4266
-"Net6","database < 400",7564,205866,110293,5711,2881
+"network","cc","filter","nodes","edges","coverage_allrows","coverage_drug","coverage_genetic"
+"Net1","before_cc","combined_score < 400 | experiments < 1",18884,103648,178622,6395,5751
+"Net1","after_cc","combined_score < 400 | experiments < 1",13307,103607,153747,5687,4593
+"Net2","before_cc","experiments < 600",18884,37288,178622,6395,5751
+"Net2","after_cc","experiments < 600",8854,37084,109535,3791,3115
+"Net3","before_cc","experiments < 400 & database < 400",18884,284786,178622,6395,5751
+"Net3","after_cc","experiments < 400 & database < 400",14149,284759,159554,6190,4750
+"Net4","before_cc","combined_score < 700 | (experiments < 1 & database < 1)",18884,237049,178622,6395,5751
+"Net4","after_cc","combined_score < 700 | (experiments < 1 & database < 1)",11748,236963,144920,6121,4170
+"Net5","before_cc","combined_score < 700 | (experiments < 1 & database < 1 & textmining < 900)",18884,240193,178622,6395,5751
+"Net5","after_cc","combined_score < 700 | (experiments < 1 & database < 1 & textmining < 900)",12022,240082,147635,6160,4266
+"Net6","before_cc","database < 400",18884,206177,178622,6395,5751
+"Net6","after_cc","database < 400",7564,205866,110293,5711,2881
+"All","before_cc","combined_score < 0",18884,740950,178622,6395,5751
+"All","after_cc","combined_score < 0",18884,740950,178622,6395,5751

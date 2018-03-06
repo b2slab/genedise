@@ -1,0 +1,3 @@
+Number of rows in the original data: 187246
+Number of rows rows mapping to STRING: 179906
+Number of rows rows when removing duplicates: 179906
