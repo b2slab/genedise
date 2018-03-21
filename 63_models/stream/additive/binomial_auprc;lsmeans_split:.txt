@@ -1,11 +1,11 @@
- method                                                prob           SE df  asymp.LCL  asymp.UCL
- association_score.datatypes.affected_pathway    0.01050857 9.443746e-05 NA 0.01032508 0.01069529
- association_score.datatypes.animal_model        0.01858815 1.253734e-04 NA 0.01834400 0.01883547
- association_score.datatypes.genetic_association 0.02012897 1.304183e-04 NA 0.01987494 0.02038618
- association_score.datatypes.literature          0.05294066 2.095264e-04 NA 0.05253149 0.05335283
- association_score.datatypes.rna_expression      0.01362098 1.074449e-04 NA 0.01341199 0.01383318
- association_score.datatypes.somatic_mutation    0.01040851 9.398871e-05 NA 0.01022590 0.01059434
+ method                                                prob           SE  df  asymp.LCL  asymp.UCL
+ association_score.datatypes.affected_pathway    0.01050857 9.443746e-05 Inf 0.01032508 0.01069529
+ association_score.datatypes.animal_model        0.01858815 1.253734e-04 Inf 0.01834400 0.01883547
+ association_score.datatypes.genetic_association 0.02012897 1.304183e-04 Inf 0.01987494 0.02038618
+ association_score.datatypes.literature          0.05294066 2.095264e-04 Inf 0.05253149 0.05335283
+ association_score.datatypes.rna_expression      0.01362098 1.074449e-04 Inf 0.01341199 0.01383318
+ association_score.datatypes.somatic_mutation    0.01040851 9.398871e-05 Inf 0.01022590 0.01059434
 
-Results are averaged over the levels of: cv_scheme, disease, network 
+Results are averaged over the levels of: cv_scheme, network, disease 
 Confidence level used: 0.95 
 Intervals are back-transformed from the logit scale 

@@ -468,10 +468,16 @@ Source: CRAN
 Version: 1.6-8
 Hash: 20320ec66d4dc608654769145b7c624a
 
+Package: emmeans
+Source: CRAN
+Version: 1.1.2
+Hash: 6121e6269dfa8d51411f5ba3054c5ff5
+Requires: coda, estimability, ggplot2, multcomp, mvtnorm, plyr, xtable
+
 Package: estimability
 Source: CRAN
-Version: 1.2
-Hash: 9632ba095a2e0f4ed73291c10363d777
+Version: 1.3
+Hash: ba891d1dd687c14aee41ac01e221a562
 
 Package: evaluate
 Source: CRAN
@@ -506,6 +512,12 @@ Source: CRAN
 Version: 2.17.0
 Hash: e7d520c2a9597b303f54499e3bd90644
 Requires: gtools
+
+Package: gdtools
+Source: CRAN
+Version: 0.1.7
+Hash: 910056b65e1f27f2bfbf34e62d74992f
+Requires: Rcpp, withr
 
 Package: genefilter
 Source: Bioconductor
@@ -988,6 +1000,12 @@ Source: CRAN
 Version: 1.2.0
 Hash: 25a86d7f410513ebb7c0bc6a5e16bdc3
 Requires: magrittr, stringi
+
+Package: svglite
+Source: CRAN
+Version: 1.2.1
+Hash: a84311f5d43f075eeaf5a16130acb83b
+Requires: BH, Rcpp, gdtools
 
 Package: tibble
 Source: CRAN

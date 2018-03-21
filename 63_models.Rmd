@@ -21,7 +21,7 @@ library(tidyr)
 library(magrittr)
 
 # least squares means
-library(lsmeans)
+library(emmeans)
 library(multcomp)
 
 # generate latex tables
@@ -105,11 +105,38 @@ streams_abbrev <- c(
   "association_score.datatypes.rna_expression" = "s:re", 
   "association_score.datatypes.somatic_mutation" = "s:sm"
 )
+
+disease_abbrev <- c(
+  "allergy" = "allergy",
+  "Alzheimers disease" = "Alzheimers disease",
+  "arthritis" = "arthritis",
+  "asthma" = "asthma",
+  "bipolar disorder" = "bipolar disorder",
+  "cardiac arrhythmia" = "cardiac arrhythmia",
+  "chronic obstructive pulmonary disease" = "COPD",
+  "coronary heart disease" = "coronary heart disease",
+  "drug dependence" = "drug dependence",
+  "hypertension" = "hypertension",
+  "multiple sclerosis" = "multiple sclerosis",
+  "obesity" = "obesity",
+  "Parkinson's disease" = "Parkinson's disease",
+  "psoriasis" = "psoriasis",
+  "rheumatoid arthritis" = "rheumatoid arthritis",
+  "schizophrenia" = "schizophrenia",
+  "stroke" = "stroke",
+  "systemic lupus erythematosus" = "lupus",
+  "type I diabetes mellitus" = "type I diabetes",
+  "type II diabetes mellitus" = "type II diabetes",
+  "ulcerative colitis" = "ulcerative colitis",
+  "unipolar depression" = "unipolar depression"
+)
+
 levels_cv_scheme <- c("classic", "block", "representative")
 levels_network <- c("string", "omnipath")
 
 df_nets$method <- factor(df_nets$method, levels_method)
 df_nets$cv_scheme <- factor(df_nets$cv_scheme, levels_cv_scheme)
+df_nets$disease <- factor(disease_abbrev[df_nets$disease], disease_abbrev)
 
 # temporary lines (because not everything is run)
 # df_models <- filter(
@@ -153,17 +180,20 @@ list_strat <- list(
 
 list_hypotheses <- list(
   "additive" = list(
-    dir = "additive",
-    formula = "method + cv_scheme + disease + network", 
+    dir = "additive", 
+    plot = TRUE, 
+    formula = "method + cv_scheme + network + disease", 
     contrasts = TRUE), 
   "interaction:cv_scheme" = list(
     dir = "interaction:cv_scheme", 
-    formula = "method + method:cv_scheme + disease + network", 
+    plot = FALSE, 
+    formula = "method + method:cv_scheme + network + disease", 
     contrasts = FALSE, 
     exclude_input = c("genetic", "stream")), 
   "interaction:network" = list(
-    dir = "interaction:network",
-    formula = "method + method:network + disease + cv_scheme", 
+    dir = "interaction:network", 
+    plot = FALSE, 
+    formula = "method + method:network + cv_scheme + disease", 
     contrasts = FALSE, 
     exclude_input = c("genetic", "stream"))
 )
@@ -231,8 +261,20 @@ list_mod <- plyr::llply(
               capture.output(summary(mod)),
               con = paste0(dir_mod, "/", file_prefix, "_model.txt")
             )
-            # in latex format
+            
+            # coefficients with confidence intervals
             # browser()
+            
+            # as a data frame
+            # make sure to use confint.default, confint is too slow
+            df.coef <- stats::confint.default(mod, level = .95)
+            df.coef <- data.frame(
+              label = factor(names(mod$coefficients), levels = names(mod$coefficients)), 
+              coef = mod$coefficients, 
+              lower = df.coef[, 1], 
+              upper = df.coef[, 2])
+            
+            # in latex formatmet
             sink(file = "/dev/null") # so that stargazer does not flood the terminal
             stargazer::stargazer(
               mod, ci = TRUE, ci.level = 0.95, 
@@ -250,10 +292,11 @@ list_mod <- plyr::llply(
               function(variables) {
                 # browser()
                 variables_name <- paste(variables, collapse = ",")
-                predictions <- lsmeans::lsmeans(
+                predictions <- emmeans::lsmeans(
                   mod, specs = "method",
                   by = variables,
-                  type = "response") %>% summary
+                  type = "response", 
+                  nesting = NULL) %>% summary
                 # write summary
                 writeLines(
                   capture.output(print(predictions)),
@@ -317,18 +360,55 @@ list_mod <- plyr::llply(
             # models and predictions
             list(
               model = mod, 
+              ci = df.coef, 
               predictions = list_predictions
             )
           }, 
           .parallel = TRUE
-        )
+        ) #here
         
         # These last lines export the tables in latex format
         
         # list with all the models
         list_all_models <- lapply(list_ans_metric, function(x) x$model)
         
-        # browser()
+        # plot for the main body with the model coefficients with error bars
+        if (hypothesis$plot) {
+          # browser()
+          df_all_ci <- plyr::ldply(list_ans_metric, function(x) x$ci, .id = "metric")
+          # this assumes all the models have the same formulation!
+          list_reference_levels <- sapply(list_all_models[[1]]$xlevels, function(l) l[1])
+          
+          # find type of coefficient (disease? method? ...)
+          # shorten the names as well, e.g. form methodraw to raw
+          levels_typelabel <- setNames(
+            gsub("(method|network|disease|cv_scheme)(.+)", "\\2", levels(df_all_ci$label)), 
+            levels(df_all_ci$label))
+          column_type <- gsub("(method|network|disease|cv_scheme)(.+)", "\\1", df_all_ci$label)
+          # make sure the level order is in accordance with the plotting order
+          df_all_ci$type <- factor(column_type, levels = (unique(column_type)))
+          # rev is needed here
+          df_all_ci$typelabel <- factor(levels_typelabel[as.character(df_all_ci$label)], levels = rev(levels_typelabel))
+          
+          # plot models 
+          g <- ggplot(filter(df_all_ci, metric %in% list_metrics_main), 
+                      aes(x = typelabel)) + 
+            geom_hline(yintercept = 0, lty = 3, color = "gray45") + 
+            geom_errorbar(aes(ymin = lower, ymax = upper), width = .5, position = "dodge") + 
+            facet_grid(type~metric, scales = "free", space = "free_y", drop = TRUE) + 
+            coord_flip() + 
+            theme_bw() + 
+            theme(strip.text.y = element_text(angle = 0)) +
+            xlab("Coefficient") + 
+            ylab("Coefficient estimate") + 
+            theme(axis.text.x = element_text(colour = "black"), 
+                  axis.text.y = element_text(colour = "black"))
+          # save in vector format
+          ggsave(g, 
+                 file = paste0(dir_mod, "/svg_main_coefficients.svg"), 
+                 width = 19, height = 18, units = "cm")
+        }
+        
         ######## Big table with predictions
         df_out <- plyr::ldply(
           names(list_ans_metric), 
@@ -469,10 +549,11 @@ local({
         function(variables) {
           # browser()
           variables_name <- paste(variables, collapse = ",")
-          predictions <- lsmeans::lsmeans(
+          predictions <- emmeans::lsmeans(
             mod, specs = "method",
             by = variables,
-            type = "response") %>% summary
+            type = "response", 
+            nesting = NULL) %>% summary
           # write summary
           writeLines(
             capture.output(print(predictions)),

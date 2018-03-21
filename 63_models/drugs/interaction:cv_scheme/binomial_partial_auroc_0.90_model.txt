@@ -8,74 +8,74 @@ Deviance Residuals:
 -0.88310  -0.13462   0.00018   0.12505   0.88869  
 
 Coefficients:
-                                              Estimate Std. Error  t value Pr(>|t|)    
-(Intercept)                                  -1.998605   0.021910  -91.218  < 2e-16 ***
-methodrandomraw                              -0.319602   0.029699  -10.761  < 2e-16 ***
-methodrandom                                 -0.815687   0.033850  -24.097  < 2e-16 ***
-methodEGAD                                    1.820939   0.023211   78.452  < 2e-16 ***
-methodppr                                     2.288468   0.023129   98.943  < 2e-16 ***
-methodraw                                     2.522276   0.023211  108.668  < 2e-16 ***
-methodgm                                      1.169658   0.023914   48.911  < 2e-16 ***
-methodmc                                      2.210524   0.023120   95.611  < 2e-16 ***
-methodz                                       2.450226   0.023177  105.719  < 2e-16 ***
-methodknn                                     2.288485   0.023129   98.944  < 2e-16 ***
-methodwsld                                    2.274275   0.023127   98.340  < 2e-16 ***
-methodCOSNet                                  1.327248   0.023673   56.066  < 2e-16 ***
-methodbagsvm                                  2.465817   0.023183  106.361  < 2e-16 ***
-methodrf                                      2.506175   0.023202  108.013  < 2e-16 ***
-methodsvm                                     2.289362   0.023129   98.981  < 2e-16 ***
-diseaseAlzheimers disease                     0.082811   0.013781    6.009 1.88e-09 ***
-diseasearthritis                             -0.431684   0.014372  -30.036  < 2e-16 ***
-diseaseasthma                                 0.120717   0.013752    8.778  < 2e-16 ***
-diseasebipolar disorder                       0.156208   0.013727   11.380  < 2e-16 ***
-diseasecardiac arrhythmia                     0.550087   0.013554   40.586  < 2e-16 ***
-diseasechronic obstructive pulmonary disease -0.079907   0.013925   -5.738 9.61e-09 ***
-diseasecoronary heart disease                -0.169823   0.014021  -12.112  < 2e-16 ***
-diseasedrug dependence                        0.264878   0.013661   19.390  < 2e-16 ***
-diseasehypertension                          -0.166019   0.014017  -11.844  < 2e-16 ***
-diseasemultiple sclerosis                     0.211674   0.013691   15.460  < 2e-16 ***
-diseaseobesity                                0.042606   0.013813    3.085 0.002040 ** 
-diseaseParkinson's disease                    0.582760   0.013547   43.016  < 2e-16 ***
-diseasepsoriasis                             -0.101907   0.013947   -7.307 2.78e-13 ***
-diseaserheumatoid arthritis                  -0.354261   0.014257  -24.849  < 2e-16 ***
-diseaseschizophrenia                          0.239120   0.013675   17.486  < 2e-16 ***
-diseasestroke                                 0.464971   0.013576   34.250  < 2e-16 ***
-diseasesystemic lupus erythematosus          -0.084372   0.013929   -6.057 1.40e-09 ***
-diseasetype I diabetes mellitus              -0.103101   0.013949   -7.392 1.47e-13 ***
-diseasetype II diabetes mellitus             -0.125557   0.013972   -8.986  < 2e-16 ***
-diseaseulcerative colitis                     0.088449   0.013776    6.420 1.37e-10 ***
-diseaseunipolar depression                    0.145617   0.013734   10.602  < 2e-16 ***
-networkomnipath                              -0.475824   0.004181 -113.804  < 2e-16 ***
-methodpr:cv_schemeblock                       0.035896   0.027563    1.302 0.192813    
-methodrandomraw:cv_schemeblock               -0.373993   0.034353  -10.887  < 2e-16 ***
-methodrandom:cv_schemeblock                  -0.007446   0.039070   -0.191 0.848857    
-methodEGAD:cv_schemeblock                    -0.952754   0.019231  -49.543  < 2e-16 ***
-methodppr:cv_schemeblock                     -0.855190   0.017844  -47.927  < 2e-16 ***
-methodraw:cv_schemeblock                     -0.897335   0.017692  -50.721  < 2e-16 ***
-methodgm:cv_schemeblock                      -0.912536   0.022472  -40.608  < 2e-16 ***
-methodmc:cv_schemeblock                      -0.827478   0.017914  -46.192  < 2e-16 ***
-methodz:cv_schemeblock                       -0.955089   0.017812  -53.619  < 2e-16 ***
-methodknn:cv_schemeblock                     -0.719710   0.017653  -40.770  < 2e-16 ***
-methodwsld:cv_schemeblock                    -0.711975   0.017658  -40.320  < 2e-16 ***
-methodCOSNet:cv_schemeblock                  -1.231206   0.023094  -53.313  < 2e-16 ***
-methodbagsvm:cv_schemeblock                  -0.881514   0.017704  -49.793  < 2e-16 ***
-methodrf:cv_schemeblock                      -0.897403   0.017699  -50.703  < 2e-16 ***
-methodsvm:cv_schemeblock                     -0.949758   0.018000  -52.763  < 2e-16 ***
-methodpr:cv_schemerepresentative              0.100790   0.027237    3.701 0.000215 ***
-methodrandomraw:cv_schemerepresentative      -0.264502   0.033439   -7.910 2.63e-15 ***
-methodrandom:cv_schemerepresentative          0.011272   0.038908    0.290 0.772033    
-methodEGAD:cv_schemerepresentative           -0.735262   0.018638  -39.449  < 2e-16 ***
-methodppr:cv_schemerepresentative            -0.493849   0.017425  -28.342  < 2e-16 ***
-methodraw:cv_schemerepresentative            -0.485936   0.017405  -27.920  < 2e-16 ***
-methodgm:cv_schemerepresentative             -1.040457   0.023153  -44.939  < 2e-16 ***
-methodmc:cv_schemerepresentative             -0.427230   0.017422  -24.522  < 2e-16 ***
-methodz:cv_schemerepresentative              -0.529531   0.017406  -30.422  < 2e-16 ***
-methodknn:cv_schemerepresentative            -0.549876   0.017471  -31.473  < 2e-16 ***
-methodwsld:cv_schemerepresentative           -0.548515   0.017480  -31.380  < 2e-16 ***
-methodCOSNet:cv_schemerepresentative         -0.484339   0.019863  -24.384  < 2e-16 ***
-methodbagsvm:cv_schemerepresentative         -0.480600   0.017386  -27.643  < 2e-16 ***
-methodrf:cv_schemerepresentative             -0.618799   0.017458  -35.445  < 2e-16 ***
-methodsvm:cv_schemerepresentative            -0.665519   0.017587  -37.840  < 2e-16 ***
+                                         Estimate Std. Error  t value Pr(>|t|)    
+(Intercept)                             -1.998605   0.021910  -91.218  < 2e-16 ***
+methodrandomraw                         -0.319602   0.029699  -10.761  < 2e-16 ***
+methodrandom                            -0.815687   0.033850  -24.097  < 2e-16 ***
+methodEGAD                               1.820939   0.023211   78.452  < 2e-16 ***
+methodppr                                2.288468   0.023129   98.943  < 2e-16 ***
+methodraw                                2.522276   0.023211  108.668  < 2e-16 ***
+methodgm                                 1.169658   0.023914   48.911  < 2e-16 ***
+methodmc                                 2.210524   0.023120   95.611  < 2e-16 ***
+methodz                                  2.450226   0.023177  105.719  < 2e-16 ***
+methodknn                                2.288485   0.023129   98.944  < 2e-16 ***
+methodwsld                               2.274275   0.023127   98.340  < 2e-16 ***
+methodCOSNet                             1.327248   0.023673   56.066  < 2e-16 ***
+methodbagsvm                             2.465817   0.023183  106.361  < 2e-16 ***
+methodrf                                 2.506175   0.023202  108.013  < 2e-16 ***
+methodsvm                                2.289362   0.023129   98.981  < 2e-16 ***
+networkomnipath                         -0.475824   0.004181 -113.804  < 2e-16 ***
+diseaseAlzheimers disease                0.082811   0.013781    6.009 1.88e-09 ***
+diseasearthritis                        -0.431684   0.014372  -30.036  < 2e-16 ***
+diseaseasthma                            0.120717   0.013752    8.778  < 2e-16 ***
+diseasebipolar disorder                  0.156208   0.013727   11.380  < 2e-16 ***
+diseasecardiac arrhythmia                0.550087   0.013554   40.586  < 2e-16 ***
+diseaseCOPD                             -0.079907   0.013925   -5.738 9.61e-09 ***
+diseasecoronary heart disease           -0.169823   0.014021  -12.112  < 2e-16 ***
+diseasedrug dependence                   0.264878   0.013661   19.390  < 2e-16 ***
+diseasehypertension                     -0.166019   0.014017  -11.844  < 2e-16 ***
+diseasemultiple sclerosis                0.211674   0.013691   15.460  < 2e-16 ***
+diseaseobesity                           0.042606   0.013813    3.085 0.002040 ** 
+diseaseParkinson's disease               0.582760   0.013547   43.016  < 2e-16 ***
+diseasepsoriasis                        -0.101907   0.013947   -7.307 2.78e-13 ***
+diseaserheumatoid arthritis             -0.354261   0.014257  -24.849  < 2e-16 ***
+diseaseschizophrenia                     0.239120   0.013675   17.486  < 2e-16 ***
+diseasestroke                            0.464971   0.013576   34.250  < 2e-16 ***
+diseaselupus                            -0.084372   0.013929   -6.057 1.40e-09 ***
+diseasetype I diabetes                  -0.103101   0.013949   -7.392 1.47e-13 ***
+diseasetype II diabetes                 -0.125557   0.013972   -8.986  < 2e-16 ***
+diseaseulcerative colitis                0.088449   0.013776    6.420 1.37e-10 ***
+diseaseunipolar depression               0.145617   0.013734   10.602  < 2e-16 ***
+methodpr:cv_schemeblock                  0.035896   0.027563    1.302 0.192813    
+methodrandomraw:cv_schemeblock          -0.373993   0.034353  -10.887  < 2e-16 ***
+methodrandom:cv_schemeblock             -0.007446   0.039070   -0.191 0.848857    
+methodEGAD:cv_schemeblock               -0.952754   0.019231  -49.543  < 2e-16 ***
+methodppr:cv_schemeblock                -0.855190   0.017844  -47.927  < 2e-16 ***
+methodraw:cv_schemeblock                -0.897335   0.017692  -50.721  < 2e-16 ***
+methodgm:cv_schemeblock                 -0.912536   0.022472  -40.608  < 2e-16 ***
+methodmc:cv_schemeblock                 -0.827478   0.017914  -46.192  < 2e-16 ***
+methodz:cv_schemeblock                  -0.955089   0.017812  -53.619  < 2e-16 ***
+methodknn:cv_schemeblock                -0.719710   0.017653  -40.770  < 2e-16 ***
+methodwsld:cv_schemeblock               -0.711975   0.017658  -40.320  < 2e-16 ***
+methodCOSNet:cv_schemeblock             -1.231206   0.023094  -53.313  < 2e-16 ***
+methodbagsvm:cv_schemeblock             -0.881514   0.017704  -49.793  < 2e-16 ***
+methodrf:cv_schemeblock                 -0.897403   0.017699  -50.703  < 2e-16 ***
+methodsvm:cv_schemeblock                -0.949758   0.018000  -52.763  < 2e-16 ***
+methodpr:cv_schemerepresentative         0.100790   0.027237    3.701 0.000215 ***
+methodrandomraw:cv_schemerepresentative -0.264502   0.033439   -7.910 2.63e-15 ***
+methodrandom:cv_schemerepresentative     0.011272   0.038908    0.290 0.772033    
+methodEGAD:cv_schemerepresentative      -0.735262   0.018638  -39.449  < 2e-16 ***
+methodppr:cv_schemerepresentative       -0.493849   0.017425  -28.342  < 2e-16 ***
+methodraw:cv_schemerepresentative       -0.485936   0.017405  -27.920  < 2e-16 ***
+methodgm:cv_schemerepresentative        -1.040457   0.023153  -44.939  < 2e-16 ***
+methodmc:cv_schemerepresentative        -0.427230   0.017422  -24.522  < 2e-16 ***
+methodz:cv_schemerepresentative         -0.529531   0.017406  -30.422  < 2e-16 ***
+methodknn:cv_schemerepresentative       -0.549876   0.017471  -31.473  < 2e-16 ***
+methodwsld:cv_schemerepresentative      -0.548515   0.017480  -31.380  < 2e-16 ***
+methodCOSNet:cv_schemerepresentative    -0.484339   0.019863  -24.384  < 2e-16 ***
+methodbagsvm:cv_schemerepresentative    -0.480600   0.017386  -27.643  < 2e-16 ***
+methodrf:cv_schemerepresentative        -0.618799   0.017458  -35.445  < 2e-16 ***
+methodsvm:cv_schemerepresentative       -0.665519   0.017587  -37.840  < 2e-16 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 

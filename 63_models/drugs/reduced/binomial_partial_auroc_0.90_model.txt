@@ -8,45 +8,45 @@ Deviance Residuals:
 -0.63746  -0.12741  -0.01590   0.09652   1.07984  
 
 Coefficients:
-                                              Estimate Std. Error t value Pr(>|t|)    
-(Intercept)                                  -2.105606   0.034032 -61.871  < 2e-16 ***
-methodrandomraw                              -0.663431   0.043177 -15.365  < 2e-16 ***
-methodrandom                                 -0.811804   0.045035 -18.026  < 2e-16 ***
-methodEGAD                                    1.369127   0.031503  43.460  < 2e-16 ***
-methodppr                                     1.837471   0.030944  59.380  < 2e-16 ***
-methodraw                                     1.867533   0.030924  60.390  < 2e-16 ***
-methodgm                                     -0.331869   0.039693  -8.361  < 2e-16 ***
-methodmc                                      1.589775   0.031179  50.988  < 2e-16 ***
-methodz                                       1.768610   0.030997  57.058  < 2e-16 ***
-methodknn                                     1.923034   0.030893  62.249  < 2e-16 ***
-methodwsld                                    1.935779   0.030886  62.675  < 2e-16 ***
-methodCOSNet                                  0.191519   0.035747   5.358 8.66e-08 ***
-methodbagsvm                                  1.852376   0.030934  59.881  < 2e-16 ***
-methodrf                                      1.991230   0.030862  64.521  < 2e-16 ***
-methodsvm                                     1.705491   0.031053  54.922  < 2e-16 ***
-diseaseAlzheimers disease                     0.066492   0.031377   2.119  0.03411 *  
-diseasearthritis                             -0.627185   0.033464 -18.742  < 2e-16 ***
-diseaseasthma                                 0.157557   0.031235   5.044 4.65e-07 ***
-diseasebipolar disorder                      -0.039609   0.031577  -1.254  0.20975    
-diseasecardiac arrhythmia                     0.245250   0.031123   7.880 3.69e-15 ***
-diseasechronic obstructive pulmonary disease -0.388250   0.032524 -11.937  < 2e-16 ***
-diseasecoronary heart disease                -0.532031   0.033059 -16.094  < 2e-16 ***
-diseasedrug dependence                        0.205373   0.031171   6.589 4.71e-11 ***
-diseasehypertension                          -0.655258   0.033592 -19.507  < 2e-16 ***
-diseasemultiple sclerosis                     0.099053   0.031323   3.162  0.00157 ** 
-diseaseobesity                               -0.384933   0.032513 -11.839  < 2e-16 ***
-diseaseParkinson's disease                    0.832381   0.030930  26.912  < 2e-16 ***
-diseasepsoriasis                             -0.001823   0.031501  -0.058  0.95386    
-diseaserheumatoid arthritis                  -0.254774   0.032106  -7.935 2.38e-15 ***
-diseaseschizophrenia                         -0.204835   0.031968  -6.407 1.56e-10 ***
-diseasestroke                                 0.518601   0.030919  16.773  < 2e-16 ***
-diseasesystemic lupus erythematosus          -0.618699   0.033426 -18.510  < 2e-16 ***
-diseasetype I diabetes mellitus              -0.640053   0.033522 -19.094  < 2e-16 ***
-diseasetype II diabetes mellitus             -0.441587   0.032712 -13.499  < 2e-16 ***
-diseaseulcerative colitis                     0.371110   0.031002  11.970  < 2e-16 ***
-diseaseunipolar depression                    0.079143   0.031356   2.524  0.01162 *  
+                               Estimate Std. Error t value Pr(>|t|)    
+(Intercept)                   -2.105606   0.034032 -61.871  < 2e-16 ***
+methodrandomraw               -0.663431   0.043177 -15.365  < 2e-16 ***
+methodrandom                  -0.811804   0.045035 -18.026  < 2e-16 ***
+methodEGAD                     1.369127   0.031503  43.460  < 2e-16 ***
+methodppr                      1.837471   0.030944  59.380  < 2e-16 ***
+methodraw                      1.867533   0.030924  60.390  < 2e-16 ***
+methodgm                      -0.331869   0.039693  -8.361  < 2e-16 ***
+methodmc                       1.589775   0.031179  50.988  < 2e-16 ***
+methodz                        1.768610   0.030997  57.058  < 2e-16 ***
+methodknn                      1.923034   0.030893  62.249  < 2e-16 ***
+methodwsld                     1.935779   0.030886  62.675  < 2e-16 ***
+methodCOSNet                   0.191519   0.035747   5.358 8.66e-08 ***
+methodbagsvm                   1.852376   0.030934  59.881  < 2e-16 ***
+methodrf                       1.991230   0.030862  64.521  < 2e-16 ***
+methodsvm                      1.705491   0.031053  54.922  < 2e-16 ***
+diseaseAlzheimers disease      0.066492   0.031377   2.119  0.03411 *  
+diseasearthritis              -0.627185   0.033464 -18.742  < 2e-16 ***
+diseaseasthma                  0.157557   0.031235   5.044 4.65e-07 ***
+diseasebipolar disorder       -0.039609   0.031577  -1.254  0.20975    
+diseasecardiac arrhythmia      0.245250   0.031123   7.880 3.69e-15 ***
+diseaseCOPD                   -0.388250   0.032524 -11.937  < 2e-16 ***
+diseasecoronary heart disease -0.532031   0.033059 -16.094  < 2e-16 ***
+diseasedrug dependence         0.205373   0.031171   6.589 4.71e-11 ***
+diseasehypertension           -0.655258   0.033592 -19.507  < 2e-16 ***
+diseasemultiple sclerosis      0.099053   0.031323   3.162  0.00157 ** 
+diseaseobesity                -0.384933   0.032513 -11.839  < 2e-16 ***
+diseaseParkinson's disease     0.832381   0.030930  26.912  < 2e-16 ***
+diseasepsoriasis              -0.001823   0.031501  -0.058  0.95386    
+diseaserheumatoid arthritis   -0.254774   0.032106  -7.935 2.38e-15 ***
+diseaseschizophrenia          -0.204835   0.031968  -6.407 1.56e-10 ***
+diseasestroke                  0.518601   0.030919  16.773  < 2e-16 ***
+diseaselupus                  -0.618699   0.033426 -18.510  < 2e-16 ***
+diseasetype I diabetes        -0.640053   0.033522 -19.094  < 2e-16 ***
+diseasetype II diabetes       -0.441587   0.032712 -13.499  < 2e-16 ***
+diseaseulcerative colitis      0.371110   0.031002  11.970  < 2e-16 ***
+diseaseunipolar depression     0.079143   0.031356   2.524  0.01162 *  
 ---
-Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 (Dispersion parameter for quasibinomial family taken to be 0.03480594)
 

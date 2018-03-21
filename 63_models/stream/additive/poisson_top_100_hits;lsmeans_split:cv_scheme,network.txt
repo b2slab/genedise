@@ -1,56 +1,56 @@
 cv_scheme = classic, network = string:
- method                                              rate         SE df asymp.LCL asymp.UCL
- association_score.datatypes.affected_pathway    1.487433 0.01426031 NA  1.459744  1.515647
- association_score.datatypes.animal_model        1.928962 0.01677285 NA  1.896367  1.962118
- association_score.datatypes.genetic_association 2.181333 0.01815262 NA  2.146043  2.217203
- association_score.datatypes.literature          6.930230 0.04156032 NA  6.849250  7.012167
- association_score.datatypes.rna_expression      1.659287 0.01525608 NA  1.629654  1.689459
- association_score.datatypes.somatic_mutation    1.479043 0.01421100 NA  1.451450  1.507160
+ method                                              rate         SE  df asymp.LCL asymp.UCL
+ association_score.datatypes.affected_pathway    1.487433 0.01426031 Inf  1.459744  1.515647
+ association_score.datatypes.animal_model        1.928962 0.01677285 Inf  1.896367  1.962118
+ association_score.datatypes.genetic_association 2.181333 0.01815262 Inf  2.146043  2.217203
+ association_score.datatypes.literature          6.930230 0.04156032 Inf  6.849250  7.012167
+ association_score.datatypes.rna_expression      1.659287 0.01525608 Inf  1.629654  1.689459
+ association_score.datatypes.somatic_mutation    1.479043 0.01421100 Inf  1.451450  1.507160
 
 cv_scheme = block, network = string:
- method                                              rate         SE df asymp.LCL asymp.UCL
- association_score.datatypes.affected_pathway    1.481564 0.01420971 NA  1.453973  1.509677
- association_score.datatypes.animal_model        1.921351 0.01671478 NA  1.888868  1.954392
- association_score.datatypes.genetic_association 2.172726 0.01809058 NA  2.137556  2.208473
- association_score.datatypes.literature          6.902884 0.04143859 NA  6.822142  6.984582
- association_score.datatypes.rna_expression      1.652740 0.01520248 NA  1.623210  1.682806
- association_score.datatypes.somatic_mutation    1.473207 0.01416056 NA  1.445712  1.501224
+ method                                              rate         SE  df asymp.LCL asymp.UCL
+ association_score.datatypes.affected_pathway    1.481564 0.01420971 Inf  1.453973  1.509677
+ association_score.datatypes.animal_model        1.921351 0.01671478 Inf  1.888868  1.954392
+ association_score.datatypes.genetic_association 2.172726 0.01809058 Inf  2.137556  2.208473
+ association_score.datatypes.literature          6.902884 0.04143859 Inf  6.822142  6.984582
+ association_score.datatypes.rna_expression      1.652740 0.01520248 Inf  1.623210  1.682806
+ association_score.datatypes.somatic_mutation    1.473207 0.01416056 Inf  1.445712  1.501224
 
 cv_scheme = representative, network = string:
- method                                              rate         SE df asymp.LCL asymp.UCL
- association_score.datatypes.affected_pathway    1.108917 0.01099137 NA  1.087583  1.130671
- association_score.datatypes.animal_model        1.438088 0.01301747 NA  1.412800  1.463830
- association_score.datatypes.genetic_association 1.626237 0.01413816 NA  1.598761  1.654185
- association_score.datatypes.literature          5.166655 0.03360041 NA  5.101217  5.232932
- association_score.datatypes.rna_expression      1.237039 0.01179190 NA  1.214142  1.260368
- association_score.datatypes.somatic_mutation    1.102662 0.01095183 NA  1.081405  1.124338
+ method                                              rate         SE  df asymp.LCL asymp.UCL
+ association_score.datatypes.affected_pathway    1.108917 0.01099137 Inf  1.087583  1.130671
+ association_score.datatypes.animal_model        1.438088 0.01301747 Inf  1.412800  1.463830
+ association_score.datatypes.genetic_association 1.626237 0.01413816 Inf  1.598761  1.654185
+ association_score.datatypes.literature          5.166655 0.03360041 Inf  5.101217  5.232932
+ association_score.datatypes.rna_expression      1.237039 0.01179190 Inf  1.214142  1.260368
+ association_score.datatypes.somatic_mutation    1.102662 0.01095183 Inf  1.081405  1.124338
 
 cv_scheme = classic, network = omnipath:
- method                                              rate         SE df asymp.LCL asymp.UCL
- association_score.datatypes.affected_pathway    1.876197 0.01767462 NA  1.841873  1.911160
- association_score.datatypes.animal_model        2.433127 0.02070852 NA  2.392876  2.474056
- association_score.datatypes.genetic_association 2.751459 0.02236700 NA  2.707968  2.795649
- association_score.datatypes.literature          8.741556 0.05005951 NA  8.643990  8.840223
- association_score.datatypes.rna_expression      2.092968 0.01887931 NA  2.056291  2.130300
- association_score.datatypes.somatic_mutation    1.865614 0.01761489 NA  1.831407  1.900460
+ method                                              rate         SE  df asymp.LCL asymp.UCL
+ association_score.datatypes.affected_pathway    1.876197 0.01767462 Inf  1.841873  1.911160
+ association_score.datatypes.animal_model        2.433127 0.02070852 Inf  2.392876  2.474056
+ association_score.datatypes.genetic_association 2.751459 0.02236700 Inf  2.707968  2.795649
+ association_score.datatypes.literature          8.741556 0.05005951 Inf  8.643990  8.840223
+ association_score.datatypes.rna_expression      2.092968 0.01887931 Inf  2.056291  2.130300
+ association_score.datatypes.somatic_mutation    1.865614 0.01761489 Inf  1.831407  1.900460
 
 cv_scheme = block, network = omnipath:
- method                                              rate         SE df asymp.LCL asymp.UCL
- association_score.datatypes.affected_pathway    1.868794 0.01761216 NA  1.834591  1.903634
- association_score.datatypes.animal_model        2.423526 0.02063726 NA  2.383414  2.464314
- association_score.datatypes.genetic_association 2.740602 0.02229112 NA  2.697259  2.784642
- association_score.datatypes.literature          8.707062 0.04991780 NA  8.609773  8.805451
- association_score.datatypes.rna_expression      2.084709 0.01881330 NA  2.048160  2.121911
- association_score.datatypes.somatic_mutation    1.858252 0.01755261 NA  1.824166  1.892975
+ method                                              rate         SE  df asymp.LCL asymp.UCL
+ association_score.datatypes.affected_pathway    1.868794 0.01761216 Inf  1.834591  1.903634
+ association_score.datatypes.animal_model        2.423526 0.02063726 Inf  2.383414  2.464314
+ association_score.datatypes.genetic_association 2.740602 0.02229112 Inf  2.697259  2.784642
+ association_score.datatypes.literature          8.707062 0.04991780 Inf  8.609773  8.805451
+ association_score.datatypes.rna_expression      2.084709 0.01881330 Inf  2.048160  2.121911
+ association_score.datatypes.somatic_mutation    1.858252 0.01755261 Inf  1.824166  1.892975
 
 cv_scheme = representative, network = omnipath:
- method                                              rate         SE df asymp.LCL asymp.UCL
- association_score.datatypes.affected_pathway    1.398751 0.01363868 NA  1.372273  1.425739
- association_score.datatypes.animal_model        1.813956 0.01609909 NA  1.782675  1.845785
- association_score.datatypes.genetic_association 2.051280 0.01745548 NA  2.017351  2.085779
- association_score.datatypes.literature          6.517042 0.04076343 NA  6.437635  6.597429
- association_score.datatypes.rna_expression      1.560359 0.01461219 NA  1.531980  1.589262
- association_score.datatypes.somatic_mutation    1.390861 0.01359053 NA  1.364477  1.417754
+ method                                              rate         SE  df asymp.LCL asymp.UCL
+ association_score.datatypes.affected_pathway    1.398751 0.01363868 Inf  1.372273  1.425739
+ association_score.datatypes.animal_model        1.813956 0.01609909 Inf  1.782675  1.845785
+ association_score.datatypes.genetic_association 2.051280 0.01745548 Inf  2.017351  2.085779
+ association_score.datatypes.literature          6.517042 0.04076343 Inf  6.437635  6.597429
+ association_score.datatypes.rna_expression      1.560359 0.01461219 Inf  1.531980  1.589262
+ association_score.datatypes.somatic_mutation    1.390861 0.01359053 Inf  1.364477  1.417754
 
 Results are averaged over the levels of: disease 
 Confidence level used: 0.95 

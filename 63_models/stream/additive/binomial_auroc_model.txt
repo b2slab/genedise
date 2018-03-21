@@ -17,12 +17,13 @@ methodassociation_score.datatypes.rna_expression       0.067754   0.003155  21.4
 methodassociation_score.datatypes.somatic_mutation    -0.000919   0.003154  -0.291 0.770803    
 cv_schemeblock                                         0.008339   0.002259   3.690 0.000224 ***
 cv_schemerepresentative                                0.044422   0.002261  19.647  < 2e-16 ***
+networkomnipath                                        0.006058   0.001846   3.282 0.001031 ** 
 diseaseAlzheimers disease                             -0.015824   0.006139  -2.578 0.009951 ** 
 diseasearthritis                                      -0.094811   0.006129 -15.470  < 2e-16 ***
 diseaseasthma                                         -0.002211   0.006141  -0.360 0.718810    
 diseasebipolar disorder                               -0.076512   0.006131 -12.480  < 2e-16 ***
 diseasecardiac arrhythmia                             -0.138436   0.006125 -22.602  < 2e-16 ***
-diseasechronic obstructive pulmonary disease          -0.082798   0.006130 -13.507  < 2e-16 ***
+diseaseCOPD                                           -0.082798   0.006130 -13.507  < 2e-16 ***
 diseasecoronary heart disease                         -0.163021   0.006123 -26.622  < 2e-16 ***
 diseasedrug dependence                                -0.032035   0.006136  -5.221 1.80e-07 ***
 diseasehypertension                                   -0.067426   0.006132 -10.996  < 2e-16 ***
@@ -33,12 +34,11 @@ diseasepsoriasis                                      -0.023828   0.006138  -3.8
 diseaserheumatoid arthritis                           -0.036909   0.006136  -6.016 1.82e-09 ***
 diseaseschizophrenia                                  -0.042666   0.006135  -6.955 3.64e-12 ***
 diseasestroke                                         -0.154552   0.006124 -25.237  < 2e-16 ***
-diseasesystemic lupus erythematosus                   -0.123914   0.006126 -20.227  < 2e-16 ***
-diseasetype I diabetes mellitus                       -0.068474   0.006131 -11.168  < 2e-16 ***
-diseasetype II diabetes mellitus                      -0.115114   0.006127 -18.789  < 2e-16 ***
+diseaselupus                                          -0.123914   0.006126 -20.227  < 2e-16 ***
+diseasetype I diabetes                                -0.068474   0.006131 -11.168  < 2e-16 ***
+diseasetype II diabetes                               -0.115114   0.006127 -18.789  < 2e-16 ***
 diseaseulcerative colitis                              0.005210   0.006142   0.848 0.396280    
 diseaseunipolar depression                            -0.021032   0.006138  -3.427 0.000613 ***
-networkomnipath                                        0.006058   0.001846   3.282 0.001031 ** 
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 

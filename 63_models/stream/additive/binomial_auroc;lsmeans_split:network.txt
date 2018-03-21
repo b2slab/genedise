@@ -1,20 +1,20 @@
 network = string:
- method                                               prob           SE df asymp.LCL asymp.UCL
- association_score.datatypes.affected_pathway    0.4994628 0.0006034730 NA 0.4982800 0.5006456
- association_score.datatypes.animal_model        0.5089207 0.0006033728 NA 0.5077381 0.5101032
- association_score.datatypes.genetic_association 0.5216843 0.0006028445 NA 0.5205026 0.5228657
- association_score.datatypes.literature          0.6966658 0.0005486452 NA 0.6955894 0.6977401
- association_score.datatypes.rna_expression      0.5163955 0.0006031182 NA 0.5152134 0.5175775
- association_score.datatypes.somatic_mutation    0.4992331 0.0006034723 NA 0.4980503 0.5004158
+ method                                               prob           SE  df asymp.LCL asymp.UCL
+ association_score.datatypes.affected_pathway    0.4994628 0.0006034730 Inf 0.4982800 0.5006456
+ association_score.datatypes.animal_model        0.5089207 0.0006033728 Inf 0.5077381 0.5101032
+ association_score.datatypes.genetic_association 0.5216843 0.0006028445 Inf 0.5205026 0.5228657
+ association_score.datatypes.literature          0.6966658 0.0005486452 Inf 0.6955894 0.6977401
+ association_score.datatypes.rna_expression      0.5163955 0.0006031182 Inf 0.5152134 0.5175775
+ association_score.datatypes.somatic_mutation    0.4992331 0.0006034723 Inf 0.4980503 0.5004158
 
 network = omnipath:
- method                                               prob           SE df asymp.LCL asymp.UCL
- association_score.datatypes.affected_pathway    0.5009774 0.0006034716 NA 0.4997946 0.5021602
- association_score.datatypes.animal_model        0.5104348 0.0006033124 NA 0.5092523 0.5116172
- association_score.datatypes.genetic_association 0.5231959 0.0006027045 NA 0.5220145 0.5243770
- association_score.datatypes.literature          0.6979446 0.0005475003 NA 0.6968704 0.6990166
- association_score.datatypes.rna_expression      0.5179084 0.0006030112 NA 0.5167264 0.5190902
- association_score.datatypes.somatic_mutation    0.5007477 0.0006034724 NA 0.4995649 0.5019305
+ method                                               prob           SE  df asymp.LCL asymp.UCL
+ association_score.datatypes.affected_pathway    0.5009774 0.0006034716 Inf 0.4997946 0.5021602
+ association_score.datatypes.animal_model        0.5104348 0.0006033124 Inf 0.5092523 0.5116172
+ association_score.datatypes.genetic_association 0.5231959 0.0006027045 Inf 0.5220145 0.5243770
+ association_score.datatypes.literature          0.6979446 0.0005475003 Inf 0.6968704 0.6990166
+ association_score.datatypes.rna_expression      0.5179084 0.0006030112 Inf 0.5167264 0.5190902
+ association_score.datatypes.somatic_mutation    0.5007477 0.0006034724 Inf 0.4995649 0.5019305
 
 Results are averaged over the levels of: cv_scheme, disease 
 Confidence level used: 0.95 

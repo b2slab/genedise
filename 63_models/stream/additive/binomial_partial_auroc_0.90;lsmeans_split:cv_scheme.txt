@@ -1,30 +1,30 @@
 cv_scheme = classic:
- method                                                prob           SE df  asymp.LCL  asymp.UCL
- association_score.datatypes.affected_pathway    0.04613014 0.0003509214 NA 0.04544721 0.04682284
- association_score.datatypes.animal_model        0.06226850 0.0004160790 NA 0.06145797 0.06308901
- association_score.datatypes.genetic_association 0.08175087 0.0004867557 NA 0.08080191 0.08270998
- association_score.datatypes.literature          0.27593646 0.0009525992 NA 0.27407331 0.27780742
- association_score.datatypes.rna_expression      0.06623686 0.0004310882 NA 0.06539693 0.06708680
- association_score.datatypes.somatic_mutation    0.04573120 0.0003492115 NA 0.04505161 0.04642054
+ method                                                prob           SE  df  asymp.LCL  asymp.UCL
+ association_score.datatypes.affected_pathway    0.04613014 0.0003509214 Inf 0.04544721 0.04682284
+ association_score.datatypes.animal_model        0.06226850 0.0004160790 Inf 0.06145797 0.06308901
+ association_score.datatypes.genetic_association 0.08175087 0.0004867557 Inf 0.08080191 0.08270998
+ association_score.datatypes.literature          0.27593646 0.0009525992 Inf 0.27407331 0.27780742
+ association_score.datatypes.rna_expression      0.06623686 0.0004310882 Inf 0.06539693 0.06708680
+ association_score.datatypes.somatic_mutation    0.04573120 0.0003492115 Inf 0.04505161 0.04642054
 
 cv_scheme = block:
- method                                                prob           SE df  asymp.LCL  asymp.UCL
- association_score.datatypes.affected_pathway    0.04768515 0.0003608958 NA 0.04698277 0.04839750
- association_score.datatypes.animal_model        0.06433083 0.0004270885 NA 0.06349881 0.06517300
- association_score.datatypes.genetic_association 0.08440037 0.0004985886 NA 0.08342828 0.08538274
- association_score.datatypes.literature          0.28294021 0.0009613803 NA 0.28105974 0.28482827
- association_score.datatypes.rna_expression      0.06842103 0.0004422984 NA 0.06755921 0.06929302
- association_score.datatypes.somatic_mutation    0.04727342 0.0003591551 NA 0.04657445 0.04798236
+ method                                                prob           SE  df  asymp.LCL  asymp.UCL
+ association_score.datatypes.affected_pathway    0.04768515 0.0003608958 Inf 0.04698277 0.04839750
+ association_score.datatypes.animal_model        0.06433083 0.0004270885 Inf 0.06349881 0.06517300
+ association_score.datatypes.genetic_association 0.08440037 0.0004985886 Inf 0.08342828 0.08538274
+ association_score.datatypes.literature          0.28294021 0.0009613803 Inf 0.28105974 0.28482827
+ association_score.datatypes.rna_expression      0.06842103 0.0004422984 Inf 0.06755921 0.06929302
+ association_score.datatypes.somatic_mutation    0.04727342 0.0003591551 Inf 0.04657445 0.04798236
 
 cv_scheme = representative:
- method                                                prob           SE df  asymp.LCL  asymp.UCL
- association_score.datatypes.affected_pathway    0.05431617 0.0004028700 NA 0.05353195 0.05511121
- association_score.datatypes.animal_model        0.07309890 0.0004730844 NA 0.07217707 0.07403156
- association_score.datatypes.genetic_association 0.09562430 0.0005476060 NA 0.09455638 0.09670298
- association_score.datatypes.literature          0.31158188 0.0009943604 NA 0.30963631 0.31353412
- association_score.datatypes.rna_expression      0.07770028 0.0004890506 NA 0.07674716 0.07866423
- association_score.datatypes.somatic_mutation    0.05385043 0.0004010073 NA 0.05306985 0.05464182
+ method                                                prob           SE  df  asymp.LCL  asymp.UCL
+ association_score.datatypes.affected_pathway    0.05431617 0.0004028700 Inf 0.05353195 0.05511121
+ association_score.datatypes.animal_model        0.07309890 0.0004730844 Inf 0.07217707 0.07403156
+ association_score.datatypes.genetic_association 0.09562430 0.0005476060 Inf 0.09455638 0.09670298
+ association_score.datatypes.literature          0.31158188 0.0009943604 Inf 0.30963631 0.31353412
+ association_score.datatypes.rna_expression      0.07770028 0.0004890506 Inf 0.07674716 0.07866423
+ association_score.datatypes.somatic_mutation    0.05385043 0.0004010073 Inf 0.05306985 0.05464182
 
-Results are averaged over the levels of: disease, network 
+Results are averaged over the levels of: network, disease 
 Confidence level used: 0.95 
 Intervals are back-transformed from the logit scale 

@@ -8,60 +8,60 @@ Deviance Residuals:
 -0.65503  -0.12463  -0.00644   0.10172   0.79641  
 
 Coefficients:
-                                              Estimate Std. Error  t value Pr(>|t|)    
-(Intercept)                                  -4.586170   0.036088 -127.084  < 2e-16 ***
-methodrandomraw                              -0.174395   0.043967   -3.967  7.3e-05 ***
-methodrandom                                 -0.700782   0.051098  -13.714  < 2e-16 ***
-methodEGAD                                    1.882067   0.032840   57.309  < 2e-16 ***
-methodppr                                     2.385043   0.032079   74.349  < 2e-16 ***
-methodraw                                     2.597134   0.031857   81.526  < 2e-16 ***
-methodgm                                      1.838844   0.032925   55.850  < 2e-16 ***
-methodmc                                      1.441729   0.033882   42.551  < 2e-16 ***
-methodz                                       2.571316   0.031881   80.653  < 2e-16 ***
-methodknn                                     2.257305   0.032238   70.019  < 2e-16 ***
-methodwsld                                    2.261766   0.032233   70.170  < 2e-16 ***
-methodCOSNet                                  2.051437   0.032542   63.041  < 2e-16 ***
-methodbagsvm                                  2.584109   0.031869   81.086  < 2e-16 ***
-methodrf                                      3.014556   0.031544   95.567  < 2e-16 ***
-methodsvm                                     2.656801   0.031802   83.541  < 2e-16 ***
-diseaseAlzheimers disease                     1.084223   0.024285   44.646  < 2e-16 ***
-diseasearthritis                              0.848172   0.024945   34.001  < 2e-16 ***
-diseaseasthma                                 0.672446   0.025533   26.336  < 2e-16 ***
-diseasebipolar disorder                       1.656794   0.023167   71.516  < 2e-16 ***
-diseasecardiac arrhythmia                     2.299249   0.022473  102.310  < 2e-16 ***
-diseasechronic obstructive pulmonary disease  1.304388   0.023784   54.844  < 2e-16 ***
-diseasecoronary heart disease                 1.302804   0.023787   54.770  < 2e-16 ***
-diseasedrug dependence                        1.360005   0.023672   57.452  < 2e-16 ***
-diseasehypertension                           1.376287   0.023641   58.217  < 2e-16 ***
-diseasemultiple sclerosis                     1.976394   0.022764   86.822  < 2e-16 ***
-diseaseobesity                                1.510092   0.023399   64.537  < 2e-16 ***
-diseaseParkinson's disease                    2.087380   0.022652   92.149  < 2e-16 ***
-diseasepsoriasis                              0.857662   0.024916   34.422  < 2e-16 ***
-diseaserheumatoid arthritis                   0.355993   0.026842   13.263  < 2e-16 ***
-diseaseschizophrenia                          1.607858   0.023241   69.183  < 2e-16 ***
-diseasestroke                                 2.064246   0.022674   91.039  < 2e-16 ***
-diseasesystemic lupus erythematosus           1.399510   0.023596   59.310  < 2e-16 ***
-diseasetype I diabetes mellitus               1.367972   0.023657   57.826  < 2e-16 ***
-diseasetype II diabetes mellitus              1.376462   0.023640   58.225  < 2e-16 ***
-diseaseulcerative colitis                     0.251774   0.027354    9.204  < 2e-16 ***
-diseaseunipolar depression                    1.116150   0.024206   46.110  < 2e-16 ***
-cv_schemeblock                               -1.247809   0.006510 -191.666  < 2e-16 ***
-cv_schemerepresentative                      -1.186893   0.006408 -185.214  < 2e-16 ***
-methodpr:networkomnipath                      0.133965   0.040906    3.275  0.00106 ** 
-methodrandomraw:networkomnipath              -0.131599   0.047195   -2.788  0.00530 ** 
-methodrandom:networkomnipath                  0.166167   0.056498    2.941  0.00327 ** 
-methodEGAD:networkomnipath                   -1.175833   0.025724  -45.710  < 2e-16 ***
-methodppr:networkomnipath                    -0.831072   0.019475  -42.673  < 2e-16 ***
-methodraw:networkomnipath                    -0.396818   0.016775  -23.656  < 2e-16 ***
-methodgm:networkomnipath                     -0.198900   0.020496   -9.704  < 2e-16 ***
-methodmc:networkomnipath                      0.211346   0.021957    9.626  < 2e-16 ***
-methodz:networkomnipath                      -0.487380   0.017156  -28.409  < 2e-16 ***
-methodknn:networkomnipath                    -0.287220   0.018164  -15.812  < 2e-16 ***
-methodwsld:networkomnipath                   -0.368301   0.018406  -20.010  < 2e-16 ***
-methodCOSNet:networkomnipath                 -0.885002   0.022182  -39.898  < 2e-16 ***
-methodbagsvm:networkomnipath                 -0.400358   0.016844  -23.769  < 2e-16 ***
-methodrf:networkomnipath                     -0.869804   0.016322  -53.290  < 2e-16 ***
-methodsvm:networkomnipath                    -0.828141   0.017870  -46.344  < 2e-16 ***
+                                 Estimate Std. Error  t value Pr(>|t|)    
+(Intercept)                     -4.586170   0.036088 -127.084  < 2e-16 ***
+methodrandomraw                 -0.174395   0.043967   -3.967  7.3e-05 ***
+methodrandom                    -0.700782   0.051098  -13.714  < 2e-16 ***
+methodEGAD                       1.882067   0.032840   57.309  < 2e-16 ***
+methodppr                        2.385043   0.032079   74.349  < 2e-16 ***
+methodraw                        2.597134   0.031857   81.526  < 2e-16 ***
+methodgm                         1.838844   0.032925   55.850  < 2e-16 ***
+methodmc                         1.441729   0.033882   42.551  < 2e-16 ***
+methodz                          2.571316   0.031881   80.653  < 2e-16 ***
+methodknn                        2.257305   0.032238   70.019  < 2e-16 ***
+methodwsld                       2.261766   0.032233   70.170  < 2e-16 ***
+methodCOSNet                     2.051437   0.032542   63.041  < 2e-16 ***
+methodbagsvm                     2.584109   0.031869   81.086  < 2e-16 ***
+methodrf                         3.014556   0.031544   95.567  < 2e-16 ***
+methodsvm                        2.656801   0.031802   83.541  < 2e-16 ***
+cv_schemeblock                  -1.247809   0.006510 -191.666  < 2e-16 ***
+cv_schemerepresentative         -1.186893   0.006408 -185.214  < 2e-16 ***
+diseaseAlzheimers disease        1.084223   0.024285   44.646  < 2e-16 ***
+diseasearthritis                 0.848172   0.024945   34.001  < 2e-16 ***
+diseaseasthma                    0.672446   0.025533   26.336  < 2e-16 ***
+diseasebipolar disorder          1.656794   0.023167   71.516  < 2e-16 ***
+diseasecardiac arrhythmia        2.299249   0.022473  102.310  < 2e-16 ***
+diseaseCOPD                      1.304388   0.023784   54.844  < 2e-16 ***
+diseasecoronary heart disease    1.302804   0.023787   54.770  < 2e-16 ***
+diseasedrug dependence           1.360005   0.023672   57.452  < 2e-16 ***
+diseasehypertension              1.376287   0.023641   58.217  < 2e-16 ***
+diseasemultiple sclerosis        1.976394   0.022764   86.822  < 2e-16 ***
+diseaseobesity                   1.510092   0.023399   64.537  < 2e-16 ***
+diseaseParkinson's disease       2.087380   0.022652   92.149  < 2e-16 ***
+diseasepsoriasis                 0.857662   0.024916   34.422  < 2e-16 ***
+diseaserheumatoid arthritis      0.355993   0.026842   13.263  < 2e-16 ***
+diseaseschizophrenia             1.607858   0.023241   69.183  < 2e-16 ***
+diseasestroke                    2.064246   0.022674   91.039  < 2e-16 ***
+diseaselupus                     1.399510   0.023596   59.310  < 2e-16 ***
+diseasetype I diabetes           1.367972   0.023657   57.826  < 2e-16 ***
+diseasetype II diabetes          1.376462   0.023640   58.225  < 2e-16 ***
+diseaseulcerative colitis        0.251774   0.027354    9.204  < 2e-16 ***
+diseaseunipolar depression       1.116150   0.024206   46.110  < 2e-16 ***
+methodpr:networkomnipath         0.133965   0.040906    3.275  0.00106 ** 
+methodrandomraw:networkomnipath -0.131599   0.047195   -2.788  0.00530 ** 
+methodrandom:networkomnipath     0.166167   0.056498    2.941  0.00327 ** 
+methodEGAD:networkomnipath      -1.175833   0.025724  -45.710  < 2e-16 ***
+methodppr:networkomnipath       -0.831072   0.019475  -42.673  < 2e-16 ***
+methodraw:networkomnipath       -0.396818   0.016775  -23.656  < 2e-16 ***
+methodgm:networkomnipath        -0.198900   0.020496   -9.704  < 2e-16 ***
+methodmc:networkomnipath         0.211346   0.021957    9.626  < 2e-16 ***
+methodz:networkomnipath         -0.487380   0.017156  -28.409  < 2e-16 ***
+methodknn:networkomnipath       -0.287220   0.018164  -15.812  < 2e-16 ***
+methodwsld:networkomnipath      -0.368301   0.018406  -20.010  < 2e-16 ***
+methodCOSNet:networkomnipath    -0.885002   0.022182  -39.898  < 2e-16 ***
+methodbagsvm:networkomnipath    -0.400358   0.016844  -23.769  < 2e-16 ***
+methodrf:networkomnipath        -0.869804   0.016322  -53.290  < 2e-16 ***
+methodsvm:networkomnipath       -0.828141   0.017870  -46.344  < 2e-16 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
