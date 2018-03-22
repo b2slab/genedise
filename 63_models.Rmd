@@ -155,6 +155,7 @@ df_nets_avg <- mutate(
                                 "stream", as.character(input_type)))) %>% 
   group_by(network, cv_scheme, disease, input_type, split_cv, method) %>% 
   summarise_all(funs(mean))
+save(df_nets_avg, file = paste0(config$dir_models, "/df_nets_avg.RData"), compress = "xz")
 ```
 
 
