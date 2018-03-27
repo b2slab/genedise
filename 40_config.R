@@ -29,6 +29,7 @@ file_list_diseases <- "20_data/diseases_over_50_genes.txt"
 
 # data for the runs
 dir_data <- "40_data"
+file_mapping <- paste0(dir_data, "/table_map_ensembl2uniprot.RData")
 
 # performance metrics
 dir_performance <- "42_performance"

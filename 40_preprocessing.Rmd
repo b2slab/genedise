@@ -42,6 +42,13 @@ df_disease <- read.table(
   stringsAsFactors = FALSE, quote = "") 
 df_disease$known_gene_binary <- (df_disease[[config$col_genetic]] >= config$threshold_genetic)*1
 
+# summary as tex file
+sink("/dev/null")
+stargazer::stargazer(
+  df_disease, nobs = TRUE, mean.sd = TRUE, median = TRUE, 
+  iqr = TRUE, out = paste0(config$dir_data, "/descriptive_rawdata.tex"))
+sink()
+ 
 paste("Number of NAs:", sum(is.na(df_disease)))
 
 # retrieve omnipath file from David
@@ -49,7 +56,8 @@ omnipath_db <- load(config$file_omnipath)
 
 # network object
 omnipath_df <- get(omnipath_db) %>% dplyr::select(source, target) %>% mutate_all(as.character) %>% as.matrix
-omnipath_g <- graph_from_edgelist(omnipath_df, directed = FALSE) %>% simplify %>% largest_cc
+omnipath_g_raw <- graph_from_edgelist(omnipath_df, directed = FALSE) 
+omnipath_g <- simplify(omnipath_g_raw) %>% largest_cc
 summary(omnipath_g)
 ```
 
@@ -59,40 +67,44 @@ summary(omnipath_g)
 # Map genes to uniprot
 list_genes <- df_disease[[config$colname_symbol]] %>% as.character
 
-ensembl_mart <- biomaRt::useMart("ensembl")
-# If the internet (or the server) gives issues, this gives the error 
-# "dataset not found"
-# Therefore, we try until we get it
-bool_try <- TRUE
-while(bool_try) {
-  message("Trying to load the biomaRt dataset...")
-  # see datasets
-  # df_mart_datasets <- biomaRt::listDatasets(ensembl)
-  # df_mart_datasets$dataset
-  bool_try <- inherits(
-    try({
-      ensembl <- biomaRt::useDataset("hsapiens_gene_ensembl", mart = ensembl_mart)
-    }), 
-    "try-error"
-  )
+# is the mapping file ensembl-uniprot available?
+if (!file.exists(config$file_mapping)) {
+  ensembl_mart <- biomaRt::useMart("ensembl")
+  # If the internet (or the server) gives issues, this gives the error 
+  # "dataset not found"
+  # Therefore, we try until we get it
+  bool_try <- TRUE
+  while(bool_try) {
+    message("Trying to load the biomaRt dataset...")
+    # see datasets
+    # df_mart_datasets <- biomaRt::listDatasets(ensembl)
+    # df_mart_datasets$dataset
+    bool_try <- inherits(
+      try({
+        ensembl <- biomaRt::useDataset("hsapiens_gene_ensembl", mart = ensembl_mart)
+      }), 
+      "try-error"
+    )
+  }
+  
+  # database options
+  ensembl_attr <- listAttributes(ensembl)$name
+  ensembl_attr <- ensembl_attr[grepl("uniprot", ensembl_attr)] %>% unique
+  
+  # take all of them for now
+  df_ensembl_uniprot <- getBM(
+    attributes = c("ensembl_gene_id", "ensembl_peptide_id", ensembl_attr), mart = ensembl)
+  dim(df_ensembl_uniprot)
+  # save it for reproducibility
+  df_info <- listDatasets(ensembl)
+  
+  # save dataset and metadata
+  save(df_ensembl_uniprot, df_info, file = config$file_mapping, compress = "xz")
+} else {
+  # if it's available, load it
+  # because biomaRt will use the last version by default... and results won't replicate
+  load(config$file_mapping)
 }
-
-# database options
-ensembl_attr <- listAttributes(ensembl)$name
-ensembl_attr <- ensembl_attr[grepl("uniprot", ensembl_attr)] %>% unique
-
-# take all of them for now
-df_ensembl_uniprot <- getBM(
-  attributes = c("ensembl_gene_id", "ensembl_peptide_id", ensembl_attr), mart = ensembl)
-dim(df_ensembl_uniprot)
-# save it for reproducibility
-df_info <- listDatasets(ensembl)
-
-# save dataset and metadata
-save(
-  df_ensembl_uniprot, df_info, file = paste0(config$dir_data, 
-  "/table_map_ensembl2uniprot.RData"), compress = "xz")
-
 
 # how well does each uniprot option map to the network?
 # uniprot_gn: UniProtKB Gene Name
@@ -254,6 +266,28 @@ load(config$file_complexes)
 # (current criteria is in favour of using "all")
 list_complex_raw <- a$all$genes.for.complexes
 
+# descriptive stats
+df_descriptive_complex <- plyr::ldply(
+  list_complex_raw, 
+  function(prot) {
+    df_tmp <- filter(df_ensembl_uniprot, ensembl_peptide_id %in% as.character(prot))
+    data.frame(
+      original = length(unique(prot)), 
+      mapped = length(intersect(as.character(df_tmp$uniprotswissprot), V(g_filter)$name))
+    )
+  }, 
+  .id = "complex_id", 
+  .progress = "text"
+)
+# insert NAs instead of empty complexes
+df_descriptive_complex[df_descriptive_complex == 0] <- NA
+
+sink("/dev/null")
+stargazer::stargazer(
+  df_descriptive_complex, nobs = TRUE, mean.sd = TRUE, median = TRUE, 
+  iqr = TRUE, out = paste0(config$dir_data, "/descriptive_complexes.tex"))
+sink()
+
 # complex data as a list
 # genes are mapped to the network, only the intersection is kept
 list_complex <- plyr::llply(
@@ -288,6 +322,50 @@ g_filter$df_complex <- df_complex
 # save the graph with the dataset
 save(g_filter, file = config$graph_alldiseases, compress = "xz")
 ```
+
+## Descriptive stats on network
+
+```{r}
+df_coverage <- plyr::ldply(
+  list(before_simp_cc = omnipath_g_raw, after_simpl_cc = g_filter), 
+  function(g) {
+    # network 
+  
+    plyr::ldply(
+    list(before_cc = identity, after_cc = largest_cc), 
+    function(fun) {
+      # number of rows of mapped data that also map to the graphs
+      g <- do.call(fun, list(g))
+      rows_mapped <- df_map$uniprot.id %in% V(g)$name
+      data.frame(
+        nodes = vcount(g), 
+        edges = ecount(g), 
+        coverage_allrows = sum(rows_mapped), 
+        coverage_drug = sum(df_map$known_drug_binary*rows_mapped), 
+        coverage_genetic = sum(df_map$known_gene_binary*rows_mapped), 
+        stringsAsFactors = FALSE
+      )
+    }, 
+    .id = "cc"
+    )
+  }, 
+  .id = "network", 
+  .progress = "text"
+)
+
+tex_coverage <- df_coverage %>% 
+  group_by(network) %>% 
+  summarise_all(function(x) paste0(x[2], "(", x[1], ")")) %>% 
+  dplyr::select(-cc) %>% 
+  xtable::xtable(x = .)
+
+xtable::print.xtable(
+  tex_coverage, 
+  include.rownames = FALSE, 
+  file = paste0(config$dir_data, "/descriptive_networks.tex"))
+```
+
+
 
 # Input data
 
@@ -402,6 +480,14 @@ df_descriptive <- plyr::ddply(
 write.csv(df_descriptive, 
           file = paste0(config$dir_data, "/descriptive_diseases.csv"), 
           row.names = FALSE)
+
+# export in latex format
+xtable::xtable(
+  df_descriptive, 
+  digits = c(0, 0, 0, 0, 0, 2, 2), 
+  display = c("s", "d", "d", "d", "d", "e", "e")) %>% 
+  xtable::print.xtable(x = ., include.rownames = FALSE, 
+                       file = paste0(config$dir_data, "/descriptive_diseases.tex"))
 
 # check for NAs in the input
 stopifnot(all(!is.na(df_input)))
@@ -711,6 +797,34 @@ stopifnot(all(df_stat_complex$train_val > 0))
 # due to empty train or val
 table(df_stat_complex$cv_scheme)
 summary(df_stat_complex)
+
+# generate tex tables
+# summary of the npositives and split complexes
+df_stat_cvschemes <- dplyr::group_by(df_stat_complex, disease, cv_scheme) %>% 
+  summarise_if(
+    is.numeric, 
+    function(x) {
+      paste0(
+        format(mean(x), digits = 0, nsmall = 1), "(", 
+        format(sd(x), digits = 0, nsmall = 2), ")"
+      )
+    }) %>% 
+  dplyr::select(disease, cv_scheme, train_pos, validation_pos, split_complexes) %>% 
+  reshape2::melt(id.vars = c("disease", "cv_scheme")) %>% 
+  reshape2::dcast(disease ~ variable + cv_scheme) 
+tex_stat_cvschemes <- knitr::kable(
+  df_stat_cvschemes, 
+  format = "latex", booktabs = TRUE, escape = TRUE) %>% 
+  kableExtra::kable_styling(latex_options = c("striped", "scale_down")) %>% 
+  kableExtra::add_header_above(c(" " = 1, "train_pos" = 3, "validation_pos" = 3, "split_complexes" = 3))
+writeLines(tex_stat_cvschemes, con = paste0(config$dir_data, "/descriptive_cvsplits.tex"))
+
+tex_count_cvschemes <- knitr::kable(
+  dplyr::group_by(df_stat_complex, cv_scheme) %>% summarise(count = length(train_pos)), 
+  format = "latex", booktabs = TRUE, escape = TRUE) %>% 
+  kableExtra::kable_styling(latex_options = c("striped", "scale_down"))
+writeLines(tex_count_cvschemes, con = paste0(config$dir_data, "/descriptive_cvsplits_counts.tex"))
+
 
 # check that "classic" and "representative" are balanced
 # we substract the maximum and the minimum amount of genes 

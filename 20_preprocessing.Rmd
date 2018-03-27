@@ -338,6 +338,9 @@ df_descriptive_complex <- plyr::ldply(
   .id = "complex_id"
 )
 
+# insert NAs instead of empty complexes
+df_descriptive_complex[df_descriptive_complex == 0] <- NA
+
 sink("/dev/null")
 stargazer::stargazer(
   df_descriptive_complex, nobs = TRUE, mean.sd = TRUE, median = TRUE, 
