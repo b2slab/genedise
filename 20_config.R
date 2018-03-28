@@ -16,6 +16,9 @@ dir_raw <- "00_rawdata"
 file_alldiseases <- paste0(dir_raw, "/17.06_ot_commondisease_associations_filtered.csv")
 file_complexes <- paste0(dir_raw, "/OT-000-20-2_out.rda")
 
+# abbreviations (plots, tables, etc)
+file_abbrev <- "60_abbreviations.R"
+
 # Thresholds to generate the dataset
 # (Ben. Subject: Genetics OT score, 2 nov)
 # The OT genetics threshold score for distinguishing positives 
@@ -53,10 +56,11 @@ file_kernel <- paste0(dir_kernel, "/Net4_weightsIn01.RData")
 file_mashup_features <- paste0(dir_kernel, "/string10_features.csv")
 
 # Analysis of the topology and the positives
+dir_topology <- "21_topology"
 dir_complexes <- "23_complexes"
 dir_boxplots <- "23_boxplots"
 dir_contrasts <- "23_contrasts"
-dir_topology <- "24_topology"
+
 
 # MashUp features
 file_mashup_names <- "05_mashup/node_names.txt"

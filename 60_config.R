@@ -5,6 +5,8 @@
 # reproducibility
 dir_metadata <- "00_metadata"
 
+# abbreviations
+file_abbrev <- "60_abbreviations.R"
 
 #################################
 # output directories
@@ -17,6 +19,7 @@ dir_models <- "63_models"
 # Analysis of the topology and the positives
 dir_boxplots <- "63_boxplots"
 dir_contrasts <- "63_contrasts"
+
 
 #################################
 # Hostnames
