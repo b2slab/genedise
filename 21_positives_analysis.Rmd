@@ -389,6 +389,9 @@ list_clusters <- plyr::llply(
   }
 )
 
+write.csv(df_interdisease, 
+          file = paste0(config$dir_topology, "/interdiseases_properties.csv"), 
+          row.names = FALSE)
 save(list_clusters, file = paste0(config$dir_topology, "/interdiseases_clusters.RData"))
 ```
 
@@ -396,11 +399,14 @@ save(list_clusters, file = paste0(config$dir_topology, "/interdiseases_clusters.
 
 ```{r}
 n_null <- 100
+set.seed(1)
 df_modularity <- plyr::ddply(
   df_disease, 
-  "disease", 
+  "disease.efo_info.label", 
   function(df_dis) {
     # browser()
+    disease <- df_dis$disease[1] %>% as.character
+    
     genes_dis <- filter(df_dis, drugs == 1)$STRING_id 
     member <- ifelse(V(g_filter)$name %in% genes_dis, 1, 2)
     
@@ -410,6 +416,8 @@ df_modularity <- plyr::ddply(
       igraph::modularity(g_filter, sample(member))
     )
     data.frame(
+      disease = disease, 
+      n_drug = length(unique(genes_dis)), 
       modularity = c(md, md_null), 
       random = c(FALSE, rep(TRUE, n_null))
     )
@@ -417,7 +425,11 @@ df_modularity <- plyr::ddply(
   .progress = "text"
 )
 
-filter(df_modularity, !random)
+# save the non-random modularity values
+df_modularity_save <- filter(df_modularity, !random) %>% select(-random)
+write.csv(df_modularity_save, 
+          file = paste0(config$dir_topology, "/modularity_diseases.csv"), 
+          row.names = FALSE)
 
 ggplot(data = filter(df_modularity, random), 
        aes(x = disease, y = modularity, color = random, pch = random)) + 

@@ -1,0 +1,23 @@
+"disease.efo_info.label","disease","n_drug","modularity"
+"allergy","allergy",57,0.000639214258124188
+"Alzheimers disease","Alzheimers disease",103,0.00158266043604249
+"arthritis","arthritis",188,0.0035733546280251
+"asthma","asthma",80,0.00158346376328089
+"bipolar disorder","bipolar disorder",148,0.00916589315968108
+"cardiac arrhythmia","cardiac arrhythmia",177,0.0158123221146571
+"chronic obstructive pulmonary disease","COPD",116,0.00881263301631419
+"coronary heart disease","coronary heart disease",171,0.00984276193067357
+"drug dependence","drug dependence",143,0.00434523603412817
+"hypertension","hypertension",188,0.00978523064286418
+"multiple sclerosis","multiple sclerosis",167,0.0110322230772351
+"obesity","obesity",194,0.0102623178351241
+"Parkinson's disease","Parkinson's disease",145,0.00806599800478303
+"psoriasis","psoriasis",105,0.0018940625518713
+"rheumatoid arthritis","rheumatoid arthritis",95,0.000806232202756774
+"schizophrenia","schizophrenia",163,0.0121464400138241
+"stroke","stroke",156,0.00926361854688851
+"systemic lupus erythematosus","lupus",109,0.00892849425321984
+"type I diabetes mellitus","type I diabetes",106,0.00861441990071166
+"type II diabetes mellitus","type II diabetes",154,0.0092451920992429
+"ulcerative colitis","ulcerative colitis",51,0.00092684337820359
+"unipolar depression","unipolar depression",121,0.00250760809339379

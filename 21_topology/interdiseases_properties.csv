@@ -1,0 +1,485 @@
+"dis1","dis2","overlap","dist","mean_dist"
+"allergy","allergy",57,0,2.56140350877193
+"allergy","Alzheimers disease",22,0,2.78760006813149
+"allergy","arthritis",30,0,2.79833893243748
+"allergy","asthma",30,0,2.54122807017544
+"allergy","bipolar disorder",10,0,3.04409672830725
+"allergy","cardiac arrhythmia",14,0,3.07493309545049
+"allergy","COPD",23,0,2.89019963702359
+"allergy","coronary heart disease",16,0,2.96870832050887
+"allergy","drug dependence",18,0,2.91780149674887
+"allergy","hypertension",20,0,2.93551698394923
+"allergy","multiple sclerosis",16,0,2.8753020275239
+"allergy","obesity",18,0,2.99158979924037
+"allergy","Parkinson's disease",20,0,2.95716878402904
+"allergy","psoriasis",34,0,2.7062656641604
+"allergy","rheumatoid arthritis",25,0,2.70212373037858
+"allergy","schizophrenia",13,0,2.87783876870089
+"allergy","stroke",13,0,2.97008547008547
+"allergy","lupus",18,0,2.87139868018671
+"allergy","type I diabetes",13,0,2.89192320423701
+"allergy","type II diabetes",14,0,2.98564593301435
+"allergy","ulcerative colitis",18,0,2.48400412796698
+"allergy","unipolar depression",18,0,2.80600260983036
+"Alzheimers disease","allergy",22,0,2.78760006813149
+"Alzheimers disease","Alzheimers disease",103,0,2.81723065321897
+"Alzheimers disease","arthritis",44,0,2.88029332782483
+"Alzheimers disease","asthma",27,0,2.75266990291262
+"Alzheimers disease","bipolar disorder",53,0,3.05182366832852
+"Alzheimers disease","cardiac arrhythmia",34,0,3.07481761834238
+"Alzheimers disease","COPD",21,0,3.01916638767995
+"Alzheimers disease","coronary heart disease",35,0,3.00726735933685
+"Alzheimers disease","drug dependence",68,0,2.94846900672143
+"Alzheimers disease","hypertension",49,0,2.99127246436687
+"Alzheimers disease","multiple sclerosis",31,0,2.9282599848846
+"Alzheimers disease","obesity",51,0,3.02917625863277
+"Alzheimers disease","Parkinson's disease",64,0,2.97937730164044
+"Alzheimers disease","psoriasis",39,0,2.80878409616274
+"Alzheimers disease","rheumatoid arthritis",17,0,2.87429739397036
+"Alzheimers disease","schizophrenia",43,0,2.9418666984335
+"Alzheimers disease","stroke",49,0,3.02346278317152
+"Alzheimers disease","lupus",6,0,2.96962679255367
+"Alzheimers disease","type I diabetes",16,0,3.00439640959883
+"Alzheimers disease","type II diabetes",32,0,3.0425545328458
+"Alzheimers disease","ulcerative colitis",7,0,2.6963639824862
+"Alzheimers disease","unipolar depression",61,0,2.85364679451175
+"arthritis","allergy",30,0,2.79833893243748
+"arthritis","Alzheimers disease",44,0,2.88029332782483
+"arthritis","arthritis",188,0,2.84410366681756
+"arthritis","asthma",35,0,2.74727393617021
+"arthritis","bipolar disorder",61,0,3.03673087981599
+"arthritis","cardiac arrhythmia",60,0,3.04703089313619
+"arthritis","COPD",25,0,3.00293470286134
+"arthritis","coronary heart disease",79,0,2.98090083364439
+"arthritis","drug dependence",69,0,2.95335515548282
+"arthritis","hypertension",71,0,2.97829900407424
+"arthritis","multiple sclerosis",42,0,2.89266148553956
+"arthritis","obesity",82,0,3.01362689186225
+"arthritis","Parkinson's disease",46,0,2.97366104181952
+"arthritis","psoriasis",53,0,2.83682877406282
+"arthritis","rheumatoid arthritis",95,0,2.82357222844345
+"arthritis","schizophrenia",62,0,2.9001109515729
+"arthritis","stroke",46,0,3.007058101473
+"arthritis","lupus",41,0,2.9394397813781
+"arthritis","type I diabetes",30,0,2.97495985547973
+"arthritis","type II diabetes",66,0,3.01581928709588
+"arthritis","ulcerative colitis",24,0,2.67073425114727
+"arthritis","unipolar depression",49,0,2.88187972569017
+"asthma","allergy",30,0,2.54122807017544
+"asthma","Alzheimers disease",27,0,2.75266990291262
+"asthma","arthritis",35,0,2.74727393617021
+"asthma","asthma",80,0,2.4578125
+"asthma","bipolar disorder",16,0,2.99712837837838
+"asthma","cardiac arrhythmia",17,0,3.01666666666667
+"asthma","COPD",41,0,2.85528017241379
+"asthma","coronary heart disease",25,0,2.92244152046784
+"asthma","drug dependence",29,0,2.8597027972028
+"asthma","hypertension",36,0,2.89581117021277
+"asthma","multiple sclerosis",26,0,2.80486526946108
+"asthma","obesity",23,0,2.94220360824742
+"asthma","Parkinson's disease",27,0,2.87681034482759
+"asthma","psoriasis",31,0,2.67511904761905
+"asthma","rheumatoid arthritis",30,0,2.65078947368421
+"asthma","schizophrenia",22,0,2.84248466257669
+"asthma","stroke",20,0,2.9301282051282
+"asthma","lupus",17,0,2.8605504587156
+"asthma","type I diabetes",21,0,2.85884433962264
+"asthma","type II diabetes",27,0,2.93741883116883
+"asthma","ulcerative colitis",19,0,2.44460784313726
+"asthma","unipolar depression",30,0,2.73873966942149
+"bipolar disorder","allergy",10,0,3.04409672830725
+"bipolar disorder","Alzheimers disease",53,0,3.05182366832852
+"bipolar disorder","arthritis",61,0,3.03673087981599
+"bipolar disorder","asthma",16,0,2.99712837837838
+"bipolar disorder","bipolar disorder",148,0,2.9636596055515
+"bipolar disorder","cardiac arrhythmia",81,0,3.02416399450298
+"bipolar disorder","COPD",69,0,2.93219944082013
+"bipolar disorder","coronary heart disease",105,0,2.95179389916232
+"bipolar disorder","drug dependence",66,0,3.12237762237762
+"bipolar disorder","hypertension",98,0,2.98619896492237
+"bipolar disorder","multiple sclerosis",30,0,3.04118789448131
+"bipolar disorder","obesity",124,0,3.00602535525216
+"bipolar disorder","Parkinson's disease",53,0,3.13630009319664
+"bipolar disorder","psoriasis",26,0,3.03539253539254
+"bipolar disorder","rheumatoid arthritis",31,0,3.04082503556188
+"bipolar disorder","schizophrenia",92,0,2.87589122865196
+"bipolar disorder","stroke",48,0,3.19850138600139
+"bipolar disorder","lupus",55,0,2.82581205058269
+"bipolar disorder","type I diabetes",62,0,2.86333503314635
+"bipolar disorder","type II diabetes",100,0,2.97937872937873
+"bipolar disorder","ulcerative colitis",8,0,2.90633280339163
+"bipolar disorder","unipolar depression",65,0,3.05840964931874
+"cardiac arrhythmia","allergy",14,0,3.07493309545049
+"cardiac arrhythmia","Alzheimers disease",34,0,3.07481761834238
+"cardiac arrhythmia","arthritis",60,0,3.04703089313619
+"cardiac arrhythmia","asthma",17,0,3.01666666666667
+"cardiac arrhythmia","bipolar disorder",81,0,3.02416399450298
+"cardiac arrhythmia","cardiac arrhythmia",177,0,2.92763892878802
+"cardiac arrhythmia","COPD",62,0,2.97628092733294
+"cardiac arrhythmia","coronary heart disease",102,0,2.98853536855321
+"cardiac arrhythmia","drug dependence",45,0,3.1617873651772
+"cardiac arrhythmia","hypertension",116,0,3.01388388027407
+"cardiac arrhythmia","multiple sclerosis",61,0,2.92120843059643
+"cardiac arrhythmia","obesity",106,0,3.04595491874891
+"cardiac arrhythmia","Parkinson's disease",84,0,3.03093707383596
+"cardiac arrhythmia","psoriasis",20,0,3.04821092278719
+"cardiac arrhythmia","rheumatoid arthritis",14,0,3.04198632173654
+"cardiac arrhythmia","schizophrenia",78,0,2.91934421683824
+"cardiac arrhythmia","stroke",88,0,3.08311603650587
+"cardiac arrhythmia","lupus",63,0,2.85165604105116
+"cardiac arrhythmia","type I diabetes",60,0,2.9044877944782
+"cardiac arrhythmia","type II diabetes",92,0,3.0241397021058
+"cardiac arrhythmia","ulcerative colitis",3,0,2.91381411321591
+"cardiac arrhythmia","unipolar depression",52,0,3.06845029649344
+"COPD","allergy",23,0,2.89019963702359
+"COPD","Alzheimers disease",21,0,3.01916638767995
+"COPD","arthritis",25,0,3.00293470286134
+"COPD","asthma",41,0,2.85528017241379
+"COPD","bipolar disorder",69,0,2.93219944082013
+"COPD","cardiac arrhythmia",62,0,2.97628092733294
+"COPD","COPD",116,0,2.74881093935791
+"COPD","coronary heart disease",68,0,2.89372857430934
+"COPD","drug dependence",27,0,3.13955871714492
+"COPD","hypertension",79,0,2.89985326485693
+"COPD","multiple sclerosis",13,0,3.00511046871774
+"COPD","obesity",73,0,2.95920725204408
+"COPD","Parkinson's disease",20,0,3.15457788347206
+"COPD","psoriasis",20,0,2.93990147783251
+"COPD","rheumatoid arthritis",19,0,2.93756805807622
+"COPD","schizophrenia",64,0,2.81008038925323
+"COPD","stroke",7,0,3.17561892130858
+"COPD","lupus",60,0,2.65422334704208
+"COPD","type I diabetes",64,0,2.6856701366298
+"COPD","type II diabetes",76,0,2.90226153157188
+"COPD","ulcerative colitis",11,0,2.74442190669371
+"COPD","unipolar depression",25,0,3.04438586491878
+"coronary heart disease","allergy",16,0,2.96870832050887
+"coronary heart disease","Alzheimers disease",35,0,3.00726735933685
+"coronary heart disease","arthritis",79,0,2.98090083364439
+"coronary heart disease","asthma",25,0,2.92244152046784
+"coronary heart disease","bipolar disorder",105,0,2.95179389916232
+"coronary heart disease","cardiac arrhythmia",102,0,2.98853536855321
+"coronary heart disease","COPD",68,0,2.89372857430934
+"coronary heart disease","coronary heart disease",171,0,2.89901166170788
+"coronary heart disease","drug dependence",50,0,3.10469063100642
+"coronary heart disease","hypertension",110,0,2.94242254572602
+"coronary heart disease","multiple sclerosis",22,0,2.9925062156389
+"coronary heart disease","obesity",131,0,2.96593717971906
+"coronary heart disease","Parkinson's disease",43,0,3.10897358338375
+"coronary heart disease","psoriasis",27,0,2.96563631300473
+"coronary heart disease","rheumatoid arthritis",37,0,2.95894121268082
+"coronary heart disease","schizophrenia",88,0,2.86119183439171
+"coronary heart disease","stroke",49,0,3.14949767581347
+"coronary heart disease","lupus",71,0,2.77514888137776
+"coronary heart disease","type I diabetes",66,0,2.82605097649785
+"coronary heart disease","type II diabetes",114,0,2.93438140806562
+"coronary heart disease","ulcerative colitis",10,0,2.82983602797844
+"coronary heart disease","unipolar depression",46,0,3.0230535015224
+"drug dependence","allergy",18,0,2.91780149674887
+"drug dependence","Alzheimers disease",68,0,2.94846900672143
+"drug dependence","arthritis",69,0,2.95335515548282
+"drug dependence","asthma",29,0,2.8597027972028
+"drug dependence","bipolar disorder",66,0,3.12237762237762
+"drug dependence","cardiac arrhythmia",45,0,3.1617873651772
+"drug dependence","COPD",27,0,3.13955871714492
+"drug dependence","coronary heart disease",50,0,3.10469063100642
+"drug dependence","drug dependence",143,0,2.96229644481393
+"drug dependence","hypertension",63,0,3.09496354709121
+"drug dependence","multiple sclerosis",36,0,3.0334156861103
+"drug dependence","obesity",71,0,3.1123206690217
+"drug dependence","Parkinson's disease",80,0,3.02975645044611
+"drug dependence","psoriasis",21,0,2.96763236763237
+"drug dependence","rheumatoid arthritis",7,0,2.99867500920133
+"drug dependence","schizophrenia",76,0,2.98674331803166
+"drug dependence","stroke",57,0,3.10906401291017
+"drug dependence","lupus",2,0,3.13248219670238
+"drug dependence","type I diabetes",18,0,3.13286713286713
+"drug dependence","type II diabetes",34,0,3.13109617655072
+"drug dependence","ulcerative colitis",6,0,2.83902372137666
+"drug dependence","unipolar depression",81,0,2.92706467086632
+"hypertension","allergy",20,0,2.93551698394923
+"hypertension","Alzheimers disease",49,0,2.99127246436687
+"hypertension","arthritis",71,0,2.97829900407424
+"hypertension","asthma",36,0,2.89581117021277
+"hypertension","bipolar disorder",98,0,2.98619896492237
+"hypertension","cardiac arrhythmia",116,0,3.01388388027407
+"hypertension","COPD",79,0,2.89985326485693
+"hypertension","coronary heart disease",110,0,2.94242254572602
+"hypertension","drug dependence",63,0,3.09496354709121
+"hypertension","hypertension",188,0,2.94075373472159
+"hypertension","multiple sclerosis",33,0,2.99069945215951
+"hypertension","obesity",112,0,3.00065803904365
+"hypertension","Parkinson's disease",53,0,3.12028613352898
+"hypertension","psoriasis",33,0,2.94240121580547
+"hypertension","rheumatoid arthritis",32,0,2.94910414333707
+"hypertension","schizophrenia",82,0,2.87628899621459
+"hypertension","stroke",52,0,3.15299372613202
+"hypertension","lupus",63,0,2.79528596525473
+"hypertension","type I diabetes",74,0,2.83691288639101
+"hypertension","type II diabetes",108,0,2.96770516717325
+"hypertension","ulcerative colitis",13,0,2.7895285773884
+"hypertension","unipolar depression",60,0,3.01292421311764
+"multiple sclerosis","allergy",16,0,2.8753020275239
+"multiple sclerosis","Alzheimers disease",31,0,2.9282599848846
+"multiple sclerosis","arthritis",42,0,2.89266148553956
+"multiple sclerosis","asthma",26,0,2.80486526946108
+"multiple sclerosis","bipolar disorder",30,0,3.04118789448131
+"multiple sclerosis","cardiac arrhythmia",61,0,2.92120843059643
+"multiple sclerosis","COPD",13,0,3.00511046871774
+"multiple sclerosis","coronary heart disease",22,0,2.9925062156389
+"multiple sclerosis","drug dependence",36,0,3.0334156861103
+"multiple sclerosis","hypertension",33,0,2.99069945215951
+"multiple sclerosis","multiple sclerosis",167,0,2.69461077844311
+"multiple sclerosis","obesity",34,0,3.02450768565961
+"multiple sclerosis","Parkinson's disease",73,0,2.86413380136279
+"multiple sclerosis","psoriasis",29,0,2.87915597376675
+"multiple sclerosis","rheumatoid arthritis",21,0,2.84115978569177
+"multiple sclerosis","schizophrenia",35,0,2.93016421145439
+"multiple sclerosis","stroke",74,0,2.90384615384615
+"multiple sclerosis","lupus",23,0,2.9124869527001
+"multiple sclerosis","type I diabetes",21,0,2.96525816291944
+"multiple sclerosis","type II diabetes",11,0,3.03441169608834
+"multiple sclerosis","ulcerative colitis",20,0,2.70059880239521
+"multiple sclerosis","unipolar depression",48,0,2.91032810412233
+"obesity","allergy",18,0,2.99158979924037
+"obesity","Alzheimers disease",51,0,3.02917625863277
+"obesity","arthritis",82,0,3.01362689186225
+"obesity","asthma",23,0,2.94220360824742
+"obesity","bipolar disorder",124,0,3.00602535525216
+"obesity","cardiac arrhythmia",106,0,3.04595491874891
+"obesity","COPD",73,0,2.95920725204408
+"obesity","coronary heart disease",131,0,2.96593717971906
+"obesity","drug dependence",71,0,3.1123206690217
+"obesity","hypertension",112,0,3.00065803904365
+"obesity","multiple sclerosis",34,0,3.02450768565961
+"obesity","obesity",194,0,3.01503879264534
+"obesity","Parkinson's disease",59,0,3.11759687166726
+"obesity","psoriasis",31,0,3.0012763868434
+"obesity","rheumatoid arthritis",33,0,3.00097666847531
+"obesity","schizophrenia",100,0,2.90971475554993
+"obesity","stroke",48,0,3.1738699444885
+"obesity","lupus",70,0,2.86626312304928
+"obesity","type I diabetes",70,0,2.90843221163198
+"obesity","type II diabetes",113,0,2.99769045387602
+"obesity","ulcerative colitis",10,0,2.86456438245401
+"obesity","unipolar depression",62,0,3.03497486580898
+"Parkinson's disease","allergy",20,0,2.95716878402904
+"Parkinson's disease","Alzheimers disease",64,0,2.97937730164044
+"Parkinson's disease","arthritis",46,0,2.97366104181952
+"Parkinson's disease","asthma",27,0,2.87681034482759
+"Parkinson's disease","bipolar disorder",53,0,3.13630009319664
+"Parkinson's disease","cardiac arrhythmia",84,0,3.03093707383596
+"Parkinson's disease","COPD",20,0,3.15457788347206
+"Parkinson's disease","coronary heart disease",43,0,3.10897358338375
+"Parkinson's disease","drug dependence",80,0,3.02975645044611
+"Parkinson's disease","hypertension",53,0,3.12028613352898
+"Parkinson's disease","multiple sclerosis",73,0,2.86413380136279
+"Parkinson's disease","obesity",59,0,3.11759687166726
+"Parkinson's disease","Parkinson's disease",145,0,2.87372175980975
+"Parkinson's disease","psoriasis",26,0,2.98206896551724
+"Parkinson's disease","rheumatoid arthritis",5,0,2.9740834845735
+"Parkinson's disease","schizophrenia",51,0,3.02140892743812
+"Parkinson's disease","stroke",94,0,2.96419098143236
+"Parkinson's disease","lupus",4,0,3.12350521986713
+"Parkinson's disease","type I diabetes",17,0,3.14404684450228
+"Parkinson's disease","type II diabetes",37,0,3.14151365875504
+"Parkinson's disease","ulcerative colitis",4,0,2.85016903313049
+"Parkinson's disease","unipolar depression",79,0,2.93650612710174
+"psoriasis","allergy",34,0,2.7062656641604
+"psoriasis","Alzheimers disease",39,0,2.80878409616274
+"psoriasis","arthritis",53,0,2.83682877406282
+"psoriasis","asthma",31,0,2.67511904761905
+"psoriasis","bipolar disorder",26,0,3.03539253539254
+"psoriasis","cardiac arrhythmia",20,0,3.04821092278719
+"psoriasis","COPD",20,0,2.93990147783251
+"psoriasis","coronary heart disease",27,0,2.96563631300473
+"psoriasis","drug dependence",21,0,2.96763236763237
+"psoriasis","hypertension",33,0,2.94240121580547
+"psoriasis","multiple sclerosis",29,0,2.87915597376675
+"psoriasis","obesity",31,0,3.0012763868434
+"psoriasis","Parkinson's disease",26,0,2.98206896551724
+"psoriasis","psoriasis",105,0,2.68444444444444
+"psoriasis","rheumatoid arthritis",34,0,2.7722305764411
+"psoriasis","schizophrenia",18,0,2.92690622261174
+"psoriasis","stroke",25,0,2.98931623931624
+"psoriasis","lupus",25,0,2.86404543468764
+"psoriasis","type I diabetes",26,0,2.9047619047619
+"psoriasis","type II diabetes",26,0,2.99746444032158
+"psoriasis","ulcerative colitis",36,0,2.53202614379085
+"psoriasis","unipolar depression",28,0,2.84478551751279
+"rheumatoid arthritis","allergy",25,0,2.70212373037858
+"rheumatoid arthritis","Alzheimers disease",17,0,2.87429739397036
+"rheumatoid arthritis","arthritis",95,0,2.82357222844345
+"rheumatoid arthritis","asthma",30,0,2.65078947368421
+"rheumatoid arthritis","bipolar disorder",31,0,3.04082503556188
+"rheumatoid arthritis","cardiac arrhythmia",14,0,3.04198632173654
+"rheumatoid arthritis","COPD",19,0,2.93756805807622
+"rheumatoid arthritis","coronary heart disease",37,0,2.95894121268082
+"rheumatoid arthritis","drug dependence",7,0,2.99867500920133
+"rheumatoid arthritis","hypertension",32,0,2.94910414333707
+"rheumatoid arthritis","multiple sclerosis",21,0,2.84115978569177
+"rheumatoid arthritis","obesity",33,0,3.00097666847531
+"rheumatoid arthritis","Parkinson's disease",5,0,2.9740834845735
+"rheumatoid arthritis","psoriasis",34,0,2.7722305764411
+"rheumatoid arthritis","rheumatoid arthritis",95,0,2.70072022160665
+"rheumatoid arthritis","schizophrenia",10,0,2.90784630287375
+"rheumatoid arthritis","stroke",7,0,2.97793522267206
+"rheumatoid arthritis","lupus",26,0,2.86846933848382
+"rheumatoid arthritis","type I diabetes",19,0,2.90873882820258
+"rheumatoid arthritis","type II diabetes",39,0,2.98673957621326
+"rheumatoid arthritis","ulcerative colitis",23,0,2.54365325077399
+"rheumatoid arthritis","unipolar depression",10,0,2.88699434536755
+"schizophrenia","allergy",13,0,2.87783876870089
+"schizophrenia","Alzheimers disease",43,0,2.9418666984335
+"schizophrenia","arthritis",62,0,2.9001109515729
+"schizophrenia","asthma",22,0,2.84248466257669
+"schizophrenia","bipolar disorder",92,0,2.87589122865196
+"schizophrenia","cardiac arrhythmia",78,0,2.91934421683824
+"schizophrenia","COPD",64,0,2.81008038925323
+"schizophrenia","coronary heart disease",88,0,2.86119183439171
+"schizophrenia","drug dependence",76,0,2.98674331803166
+"schizophrenia","hypertension",82,0,2.87628899621459
+"schizophrenia","multiple sclerosis",35,0,2.93016421145439
+"schizophrenia","obesity",100,0,2.90971475554993
+"schizophrenia","Parkinson's disease",51,0,3.02140892743812
+"schizophrenia","psoriasis",18,0,2.92690622261174
+"schizophrenia","rheumatoid arthritis",10,0,2.90784630287375
+"schizophrenia","schizophrenia",163,0,2.73280891264255
+"schizophrenia","stroke",38,0,3.08113103665251
+"schizophrenia","lupus",72,0,2.71694714920921
+"schizophrenia","type I diabetes",65,0,2.74696145387198
+"schizophrenia","type II diabetes",67,0,2.88235997131703
+"schizophrenia","ulcerative colitis",8,0,2.74449657163479
+"schizophrenia","unipolar depression",52,0,2.94123612026568
+"stroke","allergy",13,0,2.97008547008547
+"stroke","Alzheimers disease",49,0,3.02346278317152
+"stroke","arthritis",46,0,3.007058101473
+"stroke","asthma",20,0,2.9301282051282
+"stroke","bipolar disorder",48,0,3.19850138600139
+"stroke","cardiac arrhythmia",88,0,3.08311603650587
+"stroke","COPD",7,0,3.17561892130858
+"stroke","coronary heart disease",49,0,3.14949767581347
+"stroke","drug dependence",57,0,3.10906401291017
+"stroke","hypertension",52,0,3.15299372613202
+"stroke","multiple sclerosis",74,0,2.90384615384615
+"stroke","obesity",48,0,3.1738699444885
+"stroke","Parkinson's disease",94,0,2.96419098143236
+"stroke","psoriasis",25,0,2.98931623931624
+"stroke","rheumatoid arthritis",7,0,2.97793522267206
+"stroke","schizophrenia",38,0,3.08113103665251
+"stroke","stroke",156,0,2.9465811965812
+"stroke","lupus",7,0,3.12938132204187
+"stroke","type I diabetes",14,0,3.17658442186744
+"stroke","type II diabetes",35,0,3.19384781884782
+"stroke","ulcerative colitis",4,0,2.83861236802413
+"stroke","unipolar depression",62,0,3.00667514303878
+"lupus","allergy",18,0,2.87139868018671
+"lupus","Alzheimers disease",6,0,2.96962679255367
+"lupus","arthritis",41,0,2.9394397813781
+"lupus","asthma",17,0,2.8605504587156
+"lupus","bipolar disorder",55,0,2.82581205058269
+"lupus","cardiac arrhythmia",63,0,2.85165604105116
+"lupus","COPD",60,0,2.65422334704208
+"lupus","coronary heart disease",71,0,2.77514888137776
+"lupus","drug dependence",2,0,3.13248219670238
+"lupus","hypertension",63,0,2.79528596525473
+"lupus","multiple sclerosis",23,0,2.9124869527001
+"lupus","obesity",70,0,2.86626312304928
+"lupus","Parkinson's disease",4,0,3.12350521986713
+"lupus","psoriasis",25,0,2.86404543468764
+"lupus","rheumatoid arthritis",26,0,2.86846933848382
+"lupus","schizophrenia",72,0,2.71694714920921
+"lupus","stroke",7,0,3.12938132204187
+"lupus","lupus",109,0,2.46915242824678
+"lupus","type I diabetes",60,0,2.54145750389476
+"lupus","type II diabetes",59,0,2.80096508995592
+"lupus","ulcerative colitis",20,0,2.67224320921029
+"lupus","unipolar depression",6,0,3.0246417469103
+"type I diabetes","allergy",13,0,2.89192320423701
+"type I diabetes","Alzheimers disease",16,0,3.00439640959883
+"type I diabetes","arthritis",30,0,2.97495985547973
+"type I diabetes","asthma",21,0,2.85884433962264
+"type I diabetes","bipolar disorder",62,0,2.86333503314635
+"type I diabetes","cardiac arrhythmia",60,0,2.9044877944782
+"type I diabetes","COPD",64,0,2.6856701366298
+"type I diabetes","coronary heart disease",66,0,2.82605097649785
+"type I diabetes","drug dependence",18,0,3.13286713286713
+"type I diabetes","hypertension",74,0,2.83691288639101
+"type I diabetes","multiple sclerosis",21,0,2.96525816291944
+"type I diabetes","obesity",70,0,2.90843221163198
+"type I diabetes","Parkinson's disease",17,0,3.14404684450228
+"type I diabetes","psoriasis",26,0,2.9047619047619
+"type I diabetes","rheumatoid arthritis",19,0,2.90873882820258
+"type I diabetes","schizophrenia",65,0,2.74696145387198
+"type I diabetes","stroke",14,0,3.17658442186744
+"type I diabetes","lupus",60,0,2.54145750389476
+"type I diabetes","type I diabetes",106,0,2.57422570309719
+"type I diabetes","type II diabetes",77,0,2.8369884832149
+"type I diabetes","ulcerative colitis",18,0,2.70366259711432
+"type I diabetes","unipolar depression",24,0,3.03547481677842
+"type II diabetes","allergy",14,0,2.98564593301435
+"type II diabetes","Alzheimers disease",32,0,3.0425545328458
+"type II diabetes","arthritis",66,0,3.01581928709588
+"type II diabetes","asthma",27,0,2.93741883116883
+"type II diabetes","bipolar disorder",100,0,2.97937872937873
+"type II diabetes","cardiac arrhythmia",92,0,3.0241397021058
+"type II diabetes","COPD",76,0,2.90226153157188
+"type II diabetes","coronary heart disease",114,0,2.93438140806562
+"type II diabetes","drug dependence",34,0,3.13109617655072
+"type II diabetes","hypertension",108,0,2.96770516717325
+"type II diabetes","multiple sclerosis",11,0,3.03441169608834
+"type II diabetes","obesity",113,0,2.99769045387602
+"type II diabetes","Parkinson's disease",37,0,3.14151365875504
+"type II diabetes","psoriasis",26,0,2.99746444032158
+"type II diabetes","rheumatoid arthritis",39,0,2.98673957621326
+"type II diabetes","schizophrenia",67,0,2.88235997131703
+"type II diabetes","stroke",35,0,3.19384781884782
+"type II diabetes","lupus",59,0,2.80096508995592
+"type II diabetes","type I diabetes",77,0,2.8369884832149
+"type II diabetes","type II diabetes",154,0,2.94813627930511
+"type II diabetes","ulcerative colitis",10,0,2.86185383244207
+"type II diabetes","unipolar depression",37,0,3.05264570140603
+"ulcerative colitis","allergy",18,0,2.48400412796698
+"ulcerative colitis","Alzheimers disease",7,0,2.6963639824862
+"ulcerative colitis","arthritis",24,0,2.67073425114727
+"ulcerative colitis","asthma",19,0,2.44460784313726
+"ulcerative colitis","bipolar disorder",8,0,2.90633280339163
+"ulcerative colitis","cardiac arrhythmia",3,0,2.91381411321591
+"ulcerative colitis","COPD",11,0,2.74442190669371
+"ulcerative colitis","coronary heart disease",10,0,2.82983602797844
+"ulcerative colitis","drug dependence",6,0,2.83902372137666
+"ulcerative colitis","hypertension",13,0,2.7895285773884
+"ulcerative colitis","multiple sclerosis",20,0,2.70059880239521
+"ulcerative colitis","obesity",10,0,2.86456438245401
+"ulcerative colitis","Parkinson's disease",4,0,2.85016903313049
+"ulcerative colitis","psoriasis",36,0,2.53202614379085
+"ulcerative colitis","rheumatoid arthritis",23,0,2.54365325077399
+"ulcerative colitis","schizophrenia",8,0,2.74449657163479
+"ulcerative colitis","stroke",4,0,2.83861236802413
+"ulcerative colitis","lupus",20,0,2.67224320921029
+"ulcerative colitis","type I diabetes",18,0,2.70366259711432
+"ulcerative colitis","type II diabetes",10,0,2.86185383244207
+"ulcerative colitis","ulcerative colitis",51,0,2.22529796232218
+"ulcerative colitis","unipolar depression",8,0,2.71122994652406
+"unipolar depression","allergy",18,0,2.80600260983036
+"unipolar depression","Alzheimers disease",61,0,2.85364679451175
+"unipolar depression","arthritis",49,0,2.88187972569017
+"unipolar depression","asthma",30,0,2.73873966942149
+"unipolar depression","bipolar disorder",65,0,3.05840964931874
+"unipolar depression","cardiac arrhythmia",52,0,3.06845029649344
+"unipolar depression","COPD",25,0,3.04438586491878
+"unipolar depression","coronary heart disease",46,0,3.0230535015224
+"unipolar depression","drug dependence",81,0,2.92706467086632
+"unipolar depression","hypertension",60,0,3.01292421311764
+"unipolar depression","multiple sclerosis",48,0,2.91032810412233
+"unipolar depression","obesity",62,0,3.03497486580898
+"unipolar depression","Parkinson's disease",79,0,2.93650612710174
+"unipolar depression","psoriasis",28,0,2.84478551751279
+"unipolar depression","rheumatoid arthritis",10,0,2.88699434536755
+"unipolar depression","schizophrenia",52,0,2.94123612026568
+"unipolar depression","stroke",62,0,3.00667514303878
+"unipolar depression","lupus",6,0,3.0246417469103
+"unipolar depression","type I diabetes",24,0,3.03547481677842
+"unipolar depression","type II diabetes",37,0,3.05264570140603
+"unipolar depression","ulcerative colitis",8,0,2.71122994652406
+"unipolar depression","unipolar depression",121,0,2.83300321016324
