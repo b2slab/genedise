@@ -131,7 +131,8 @@ df_nets$method <- factor(df_nets$method, levels_method)
 df_nets$cv_scheme <- factor(df_nets$cv_scheme, levels_cv_scheme)
 df_nets$disease <- factor(disease_abbrev[df_nets$disease], disease_abbrev)
 
-df_modularity$disease <- factor(disease_abbrev[df_modularity$disease], disease_abbrev)
+df_modularity$disease <- factor(disease_abbrev[df_modularity$disease], 
+                                disease_abbrev)
 
 # temporary lines (because not everything is run)
 # df_models <- filter(
@@ -814,26 +815,21 @@ df_coef_main$label
 
 # join (there will be one row with NAs: the reference)
 df_modularity$label <- paste0("disease", df_modularity$disease)
-df_modularity <- plyr::join(df_modularity, df_coef_main, by = "label", match = "all")
+df_modularity_join <- plyr::join(df_modularity, 
+                                 df_coef_main, 
+                                 by = "label", 
+                                 match = "all")
 
 # set manually 0 to the baseline
-df_modularity$coef[df_modularity$disease == disease_reference] <- 0
-
+df_modularity_join$coef[df_modularity_join$disease == disease_reference] <- 0
 
 # sort diseases by ascending coef
-df_modularity %<>% mutate(disease = factor(disease, levels = disease[order(coef)]))
+# df_modularity %<>% mutate(disease = factor(disease, levels = disease[order(coef)]))
 
-ggplot(df_modularity, aes(x = disease, y = modularity, size = n_drug)) + 
-  geom_point() + 
-  coord_flip() + 
-  theme_bw() + 
-  xlab("") + 
-  ylab("Modularity")
-
-midpoint <- mean(df_modularity$n_drug)
+midpoint <- mean(df_modularity_join$n_drug)
 
 # using the raw values of modularity/regression coef
-gg <- ggplot(df_modularity, 
+gg <- ggplot(df_modularity_join, 
              aes(x = coef, y = modularity, colour = n_drug, label = disease)) + 
   geom_text(position = "jitter") + 
   # scale_color_distiller(palette = "Spectral") +
@@ -841,8 +837,8 @@ gg <- ggplot(df_modularity,
   theme_bw() + 
   theme(aspect.ratio = 1) + 
   xlim(-.1, 2.7) +
-  xlab("Regression coefficient") + 
-  ylab("Modularity") + 
+  xlab("Regression coefficient (drugs input, top 20 hits)") + 
+  ylab("Modularity (STRING network)") + 
   ggtitle("Disease performance in terms of modularity and gene list size")
 
 ggsave(gg, 
@@ -850,7 +846,7 @@ ggsave(gg,
        width = 16, height = 14, units = "cm")
 
 # using the ranking of such magnitudes (text does not overlay)
-gg <- ggplot(df_modularity, 
+gg <- ggplot(df_modularity_join, 
              aes(x = rank(coef), y = rank(modularity), 
                  colour = n_drug, label = disease)) + 
   geom_text() + 
@@ -859,8 +855,8 @@ gg <- ggplot(df_modularity,
   theme_bw() + 
   theme(aspect.ratio = 1) + 
   xlim(-1, 25) +
-  xlab("Regression coefficient ranking") + 
-  ylab("Modularity ranking") + 
+  xlab("Regression coefficient ranking (drugs input, top 20 hits)") + 
+  ylab("Modularity ranking (STRING network)") + 
   ggtitle("Disease performance in terms of modularity and gene list size", 
           subtitle = "Lowest rankings (left and down) correspond to smallest magnitudes")
 
