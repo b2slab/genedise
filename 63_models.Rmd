@@ -73,6 +73,8 @@ source("60_config.R", local = config)
 # for plots only
 config_cv <- new.env(parent = globalenv())
 source("20_config.R", local = config_cv)
+
+df_modularity <- read.csv("21_topology/modularity_diseases.csv", header = TRUE)
 ```
 
 # Data formatting
@@ -128,6 +130,8 @@ levels_network <- c("string", "omnipath")
 df_nets$method <- factor(df_nets$method, levels_method)
 df_nets$cv_scheme <- factor(df_nets$cv_scheme, levels_cv_scheme)
 df_nets$disease <- factor(disease_abbrev[df_nets$disease], disease_abbrev)
+
+df_modularity$disease <- factor(disease_abbrev[df_modularity$disease], disease_abbrev)
 
 # temporary lines (because not everything is run)
 # df_models <- filter(
@@ -265,6 +269,9 @@ list_mod <- plyr::llply(
               coef = mod$coefficients, 
               lower = df.coef[, 1], 
               upper = df.coef[, 2])
+            write.csv(df.coef, 
+                      file = paste0(dir_mod, "/", file_prefix, "_model.csv"), 
+                      row.names = FALSE)
             
             # in latex formatmet
             sink(file = "/dev/null") # so that stargazer does not flood the terminal
@@ -380,7 +387,8 @@ list_mod <- plyr::llply(
           # make sure the level order is in accordance with the plotting order
           df_all_ci$type <- factor(column_type, levels = (unique(column_type)))
           # rev is needed here
-          df_all_ci$typelabel <- factor(levels_typelabel[as.character(df_all_ci$label)], levels = rev(levels_typelabel))
+          df_all_ci$typelabel <- factor(levels_typelabel[as.character(df_all_ci$label)], 
+                                        levels = rev(levels_typelabel))
           
           # plot models 
           g <- ggplot(filter(df_all_ci, metric %in% list_metrics_main), 
@@ -789,6 +797,76 @@ plyr::d_ply(
   }, 
   .parallel = FALSE
 )
+```
+
+
+# Plots relating topology and performance
+
+```{r}
+# get estimates from main model
+df_coef_main <- read.csv(
+  "63_models/drugs/additive/poisson_top_20_hits_model.csv", header = TRUE)
+# this is the reference factor in the models
+disease_reference <- "allergy"
+
+# need to extract coefficients
+df_coef_main$label
+
+# join (there will be one row with NAs: the reference)
+df_modularity$label <- paste0("disease", df_modularity$disease)
+df_modularity <- plyr::join(df_modularity, df_coef_main, by = "label", match = "all")
+
+# set manually 0 to the baseline
+df_modularity$coef[df_modularity$disease == disease_reference] <- 0
+
+
+# sort diseases by ascending coef
+df_modularity %<>% mutate(disease = factor(disease, levels = disease[order(coef)]))
+
+ggplot(df_modularity, aes(x = disease, y = modularity, size = n_drug)) + 
+  geom_point() + 
+  coord_flip() + 
+  theme_bw() + 
+  xlab("") + 
+  ylab("Modularity")
+
+midpoint <- mean(df_modularity$n_drug)
+
+# using the raw values of modularity/regression coef
+gg <- ggplot(df_modularity, 
+             aes(x = coef, y = modularity, colour = n_drug, label = disease)) + 
+  geom_text(position = "jitter") + 
+  # scale_color_distiller(palette = "Spectral") +
+  scale_color_gradient2(mid = "gray80", midpoint = midpoint, name = "Genes") +
+  theme_bw() + 
+  theme(aspect.ratio = 1) + 
+  xlim(-.1, 2.7) +
+  xlab("Regression coefficient") + 
+  ylab("Modularity") + 
+  ggtitle("Disease performance in terms of modularity and gene list size")
+
+ggsave(gg, 
+       file = paste0(config$dir_boxplots, "/disease_modularity_magnitudes.eps"), 
+       width = 16, height = 14, units = "cm")
+
+# using the ranking of such magnitudes (text does not overlay)
+gg <- ggplot(df_modularity, 
+             aes(x = rank(coef), y = rank(modularity), 
+                 colour = n_drug, label = disease)) + 
+  geom_text() + 
+  # scale_color_distiller(palette = "Spectral") +
+  scale_color_gradient2(mid = "gray80", midpoint = midpoint, name = "Genes") +
+  theme_bw() + 
+  theme(aspect.ratio = 1) + 
+  xlim(-1, 25) +
+  xlab("Regression coefficient ranking") + 
+  ylab("Modularity ranking") + 
+  ggtitle("Disease performance in terms of modularity and gene list size", 
+          subtitle = "Lowest rankings (left and down) correspond to smallest magnitudes")
+
+ggsave(gg, 
+       file = paste0(config$dir_boxplots, "/disease_modularity_rank.eps"), 
+       width = 16, height = 14, units = "cm")
 ```
 
 
