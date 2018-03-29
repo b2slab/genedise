@@ -69,6 +69,10 @@ df_nets <- plyr::ldply(
 # own config files
 config <- new.env(parent = globalenv())
 source("60_config.R", local = config)
+
+# for plots only
+config_cv <- new.env(parent = globalenv())
+source("20_config.R", local = config_cv)
 ```
 
 # Data formatting
@@ -97,6 +101,14 @@ methods_models <- c(
   "knn", "wsld", 
   "COSNet", "bagsvm", "rf", "svm"
 )
+# non-baselines
+methods_proper <- c(
+  "ppr", "raw", "gm", "mc", "z", 
+  "knn", "wsld", 
+  "COSNet", "bagsvm", "rf", "svm"
+)
+
+# this is not used atm
 streams_abbrev <- c(
   "association_score.datatypes.affected_pathway" = "s:ap", 
   "association_score.datatypes.animal_model" = "s:am", 
@@ -108,7 +120,7 @@ streams_abbrev <- c(
 
 # load the disease_abbrev variable
 source(config$file_abbrev)
-stopifnot(exists(disease_abbrev))
+stopifnot(exists("disease_abbrev"))
 
 levels_cv_scheme <- c("classic", "block", "representative")
 levels_network <- c("string", "omnipath")
@@ -673,6 +685,112 @@ local({
   sink()
 })  
 ```
+
+# Boxplots
+
+```{r}
+# df_boxplots <- filter(df_nets_avg, input_type == "drugs" & network == "string")
+
+# palette for methods
+# we have 12 "proper" methods, the rest are left white
+palette <- c(
+  c("white", "white", "white"), 
+  RColorBrewer::brewer.pal(12, name = "Set3")
+)
+# palette for diseases
+palette25 <- readLines(config$file_palette25)
+
+plyr::d_ply(
+  filter(df_nets_avg, input_type != "stream"), 
+  c("input_type", "network"), 
+  function(df) {
+    # browser()
+    # df <- filter(df_nets_avg, input_type == "drugs" & network == "string")
+    input <- df$input_type[1] %>% as.character
+    # scheme <- df$cv_scheme[1] %>% as.character
+    network <- df$network[1] %>% as.character
+    
+    file_prefix <- paste0("input_", input, ",network_", network)
+    
+    df_plot <- tidyr::gather(df, metric, value, -network, -cv_scheme, 
+                             -disease, -input_type, -split_cv, -method)
+    df_plot_main <- filter(df_plot, metric %in% list_metrics_main) %>% 
+      mutate(metric = factor(metric, list_metrics_main))
+    df_plot_main_disease <- filter(df_plot_main, method %in% methods_proper)
+    methods_excluded <- paste(setdiff(methods_models, methods_proper), collapse = ", ")
+      
+    # boxplot method~cvscheme
+    gg <- ggplot(df_plot_main, aes(x = method, y = value)) + 
+      geom_boxplot(aes(fill = method), outlier.size = .05, lwd = .2) +
+      # scale_fill_manual(guide = FALSE) +
+      scale_fill_manual(values = palette, guide = FALSE) +
+      # scale_fill_brewer(palette = "Set3", guide = FALSE) +
+      theme_bw() + 
+      facet_grid(metric~cv_scheme, scales = "free_y") + 
+      xlab("") +
+      ylab("") +
+      ggtitle(paste0("Performance using ", input, "-related data as input and the ", network, " network"), 
+              subtitle = paste0(config_cv$k_cv, "-fold cross-validation (repeated x", 
+                     config_cv$times_cv, "), measures averaged per fold")) + 
+      theme(aspect.ratio = 1, 
+            axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1, size = 6.5), 
+            legend.position = "none")
+    
+    ggsave(filename = paste0(config$dir_boxplots, "/bymethod,", file_prefix, ".svg"), 
+           device = NULL, plot = gg)
+    ggsave(filename = paste0(config$dir_boxplots, "/bymethod,", file_prefix, ".eps"), 
+           device = NULL, plot = gg)
+    
+    
+    # boxplot disease~cvscheme
+    # 
+    # This displays diseases in the y axis
+    # gg <- ggplot(df_plot_main_disease, aes(x = disease, y = value)) + 
+    #   geom_boxplot(aes(fill = disease), outlier.size = .05, lwd = .2) +
+    #   scale_fill_manual(values = palette25, guide = FALSE) +
+    #   theme_bw() + 
+    #   facet_grid(cv_scheme~metric, scales = "free_x") + 
+    #   
+    #   xlab("") + 
+    #   ylab(paste0("Performance (excluding ", methods_excluded, ")")) + 
+    #   ggtitle(paste0("Input data: ", input, ", using ", network, " network"), 
+    #           subtitle = paste0(config_cv$k_cv, "-fold cross-validation (repeated x", 
+    #                  config_cv$times_cv, "), measures averaged per fold")) + 
+    #   theme(aspect.ratio = 1, 
+    #         axis.text.y = element_text(size = 6.5), 
+    #         axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1, size = 7), 
+    #         legend.position = "none") + 
+    #   coord_flip() 
+    
+    #   by now, better leave diseases on the x axis
+    gg <- ggplot(df_plot_main_disease, aes(x = disease, y = value)) + 
+      geom_boxplot(aes(fill = disease), outlier.size = .05, lwd = .2) +
+      scale_fill_manual(values = palette25, guide = FALSE) +
+      theme_bw() + 
+      facet_grid(metric~cv_scheme, scales = "free_y") + 
+      xlab("") + 
+      ylab("") + 
+      ggtitle(paste0("Performance using ", input, "-related data as input and the ", network, " network"), 
+              subtitle = paste0(config_cv$k_cv, "-fold cross-validation (repeated x", 
+                     config_cv$times_cv, "), measures averaged per fold (excluding ", 
+                     methods_excluded, ")")) + 
+      theme(aspect.ratio = 1, 
+            axis.text.x = element_text(angle = 90, vjust = .5, hjust = 1, size = 6.5), 
+            legend.position = "none") 
+
+    ggsave(filename = paste0(config$dir_boxplots, "/bydisease,", file_prefix, ".svg"), 
+           device = NULL, plot = gg, 
+           width = 19, height = 22, units = "cm")
+    ggsave(filename = paste0(config$dir_boxplots, "/bydisease,", file_prefix, ".eps"), 
+           device = NULL, plot = gg, 
+           width = 19, height = 22, units = "cm")
+    
+    
+  }, 
+  .parallel = FALSE
+)
+```
+
 
 # Reproducibility
 

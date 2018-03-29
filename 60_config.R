@@ -7,6 +7,9 @@ dir_metadata <- "00_metadata"
 
 # abbreviations
 file_abbrev <- "60_abbreviations.R"
+# color palettes
+# see http://tools.medialab.sciences-po.fr/iwanthue/
+file_palette25 <- "60_palette25.txt"
 
 #################################
 # output directories
@@ -15,6 +18,7 @@ file_abbrev <- "60_abbreviations.R"
 
 # performance metrics
 dir_models <- "63_models"
+dir_boxplots <- "63_boxplots"
 
 # Analysis of the topology and the positives
 dir_boxplots <- "63_boxplots"
