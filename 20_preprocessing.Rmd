@@ -26,6 +26,10 @@ library(tidyr)
 # have all config variables in a different env
 config <- new.env(parent = globalenv())
 source("20_config.R", local = config)
+
+# abbreviations
+source(config$file_abbrev)
+stopifnot(exists("disease_abbrev"))
 ```
 
 # Build STRING network
@@ -861,6 +865,34 @@ dplyr::group_by(df_stat_complex, disease, cv_scheme) %>%
   summarise(npos_mean = mean(train_pos), 
             npos_sd = sd(train_pos))
 ```
+
+```{r}
+# plot the data imbalance within splits
+df_plot_cvsplits <- mutate(
+  df_stat_complex, 
+  proportion = validation_pos/(train_pos + validation_pos), 
+  disease = factor(disease_abbrev[as.character(disease)], levels = disease_abbrev)) 
+palette25 <- readLines(config$file_palette25)
+
+gg <- ggplot(df_plot_cvsplits, aes(x = disease, y = proportion, fill = disease)) + 
+  geom_hline(yintercept = 1/config$k_cv, lwd = .5, color = "gray50") +
+  geom_boxplot(outlier.size = .05, lwd = .2) + 
+  scale_fill_manual(values = palette25, guide = FALSE) + 
+  facet_wrap(~cv_scheme) + 
+  coord_flip() + 
+  theme_bw() + 
+  xlab("") + 
+  ylab("Proportion of drugs-related genes in the validation fold") + 
+  theme(aspect.ratio = 3, 
+            axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1, size = 6.5), 
+            legend.position = "none")
+
+ggsave(filename = paste0(config$dir_data, "/descriptive_folds_imbalance.svg"), 
+       device = NULL, plot = gg)
+ggsave(filename = paste0(config$dir_data, "/descriptive_folds_imbalance.eps"), 
+       device = NULL, plot = gg)
+```
+
 
 ```{r}
 # Save CV schemes and input data frames

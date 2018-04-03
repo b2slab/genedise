@@ -60,7 +60,7 @@ dir_topology <- "21_topology"
 dir_complexes <- "23_complexes"
 dir_boxplots <- "23_boxplots"
 dir_contrasts <- "23_contrasts"
-
+file_palette25 <- "60_palette25.txt"
 
 # MashUp features
 file_mashup_names <- "05_mashup/node_names.txt"
