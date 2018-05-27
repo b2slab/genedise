@@ -80,6 +80,8 @@ df_modularity <- read.csv("21_topology/modularity_diseases.csv", header = TRUE)
 # Data formatting
 
 ```{r}
+color_cor <- colorRampPalette(colors = c("#EB6767", "white", "#6797EB"))(100)
+
 list_models <- setNames(
   c("binomial", "binomial", "binomial", "binomial", "poisson", "poisson"), 
   c("auroc", "partial_auroc_0.90", "partial_auroc_0.95", "auprc", "top_20_hits", "top_100_hits")
@@ -347,11 +349,12 @@ list_mod <- plyr::llply(
               e.cor <- reshape2::acast(cols, row~col, value.var = "estimate", fill = 0)
               p.cor <- reshape2::acast(cols, row~col, value.var = "pvalue", fill = 0)
               
-              png(filename = paste0(dir_mod, "/", file_prefix, "_contrasts_method.png"),  
-                  width = 1200, height = 1200)
+              # browser()
+              svg(filename = paste0(dir_mod, "/", file_prefix, "_contrasts_method.svg"))
               corrplot::corrplot(
                 corr = e.cor, method = "color", type = "lower", 
-                addCoef.col = "black", 
+                addCoef.col = "black", tl.cex = 1, tl.col = "gray10",
+                number.cex = .8, number.font = 1, col = color_cor, 
                 p.mat = p.cor, diag = TRUE, is.corr = FALSE)
               dev.off()
             }
@@ -605,15 +608,15 @@ local({
       e.cor <- reshape2::acast(cols, row~col, value.var = "estimate", fill = 0)
       p.cor <- reshape2::acast(cols, row~col, value.var = "pvalue", fill = 0)
       
-      png(filename = paste0(dir_mod, "/", file_prefix, "_contrasts_method.png"),  
-          width = 1200, height = 1200)
+      # browser()
+      svg(filename = paste0(dir_mod, "/", file_prefix, "_contrasts_method.svg"))
       corrplot::corrplot(
         corr = e.cor, method = "color", type = "lower", 
-        addCoef.col = "black", 
+        addCoef.col = "black", tl.cex = 1, tl.col = "gray10",
+        number.cex = .8, number.font = 1, col = color_cor,  
         p.mat = p.cor, diag = TRUE, is.corr = FALSE)
       dev.off()
-      
-      
+
       # output things that need to be aggregated in the same tables: 
       # models and predictions
       list(
@@ -847,21 +850,24 @@ ggsave(gg,
 
 # using the ranking of such magnitudes (text does not overlay)
 gg <- ggplot(df_modularity_join, 
-             aes(x = rank(coef), y = rank(modularity), 
+             aes(x = rank(-coef), y = rank(-modularity), 
                  colour = n_drug, label = disease)) + 
   geom_text() + 
   # scale_color_distiller(palette = "Spectral") +
   scale_color_gradient2(mid = "gray80", midpoint = midpoint, name = "Genes") +
   theme_bw() + 
   theme(aspect.ratio = 1) + 
-  xlim(-1, 25) +
-  xlab("Regression coefficient ranking (drugs input, top 20 hits)") + 
-  ylab("Modularity ranking (STRING network)") + 
+  xlim(-2.5, 24) +
+  xlab("Overall performance ranking (drugs input, top 20 hits). Lower is better.") + 
+  ylab("Modularity ranking (STRING network). Lower is better.") + 
   ggtitle("Disease performance in terms of modularity and gene list size", 
-          subtitle = "Lowest rankings (left and down) correspond to smallest magnitudes")
+          subtitle = "Lowest rankings (left and down) correspond to largest magnitudes")
 
 ggsave(gg, 
        file = paste0(config$dir_boxplots, "/disease_modularity_rank.eps"), 
+       width = 16, height = 14, units = "cm")
+ggsave(gg, 
+       file = paste0(config$dir_boxplots, "/disease_modularity_rank.svg"), 
        width = 16, height = 14, units = "cm")
 ```
 
