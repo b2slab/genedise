@@ -1,0 +1,854 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   viewBox="0 0 453.54 396.85"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="disease_modularity_rank_edited.svg">
+  <metadata
+     id="metadata279">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1820"
+     inkscape:window-height="1051"
+     id="namedview277"
+     showgrid="false"
+     inkscape:zoom="1.6820179"
+     inkscape:cx="174.17358"
+     inkscape:cy="232.01488"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg2" />
+  <defs
+     id="defs4">
+    <style
+       type="text/css"
+       id="style6"><![CDATA[
+    line, polyline, path, rect, circle {
+      fill: none;
+      stroke: #000000;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-miterlimit: 10.00;
+    }
+  ]]></style>
+    <clipPath
+       id="cpMHw0NTMuNTQzfDM5Ni44NXww-9">
+      <rect
+         x="0"
+         y="0"
+         width="453.54001"
+         height="396.85001"
+         id="rect20-8" />
+    </clipPath>
+    <clipPath
+       id="cpMHw0NTMuNTQzfDM5Ni44NXww-9-7">
+      <rect
+         x="0"
+         y="0"
+         width="453.54001"
+         height="396.85001"
+         id="rect20-8-7" />
+    </clipPath>
+    <clipPath
+       id="cpMHw0NTMuNTQzfDM5Ni44NXww-9-7-3">
+      <rect
+         x="0"
+         y="0"
+         width="453.54001"
+         height="396.85001"
+         id="rect20-8-7-2" />
+    </clipPath>
+  </defs>
+  <defs
+     id="defs10">
+    <clipPath
+       id="cpMTMuMjE0Nnw0NDAuMzI5fDM5Ni44NXww">
+      <rect
+         x="13.21"
+         y="0.00"
+         width="427.11"
+         height="396.85"
+         id="rect13" />
+    </clipPath>
+  </defs>
+  <defs
+     id="defs17">
+    <clipPath
+       id="cpMHw0NTMuNTQzfDM5Ni44NXww">
+      <rect
+         x="0.00"
+         y="0.00"
+         width="453.54"
+         height="396.85"
+         id="rect20" />
+    </clipPath>
+  </defs>
+  <defs
+     id="defs22">
+    <clipPath
+       id="cpNDguOTM2OHwzNzUuODk1fDM2NC43MjZ8MzcuNzY3Ng==">
+      <rect
+         x="48.94"
+         y="37.77"
+         width="326.96"
+         height="326.96"
+         id="rect25" />
+    </clipPath>
+  </defs>
+  <rect
+     x="48.94"
+     y="37.77"
+     width="326.96"
+     height="326.96"
+     style="stroke-width: 1.07; stroke: none; fill: #FFFFFF;"
+     clip-path="url(#cpNDguOTM2OHwzNzUuODk1fDM2NC43MjZ8MzcuNzY3Ng==)"
+     id="rect27" />
+  <polyline
+     points="48.94,328.63 375.89,328.63 "
+     style="stroke-width: 0.53; stroke: #EBEBEB; stroke-linecap: butt;"
+     clip-path="url(#cpNDguOTM2OHwzNzUuODk1fDM2NC43MjZ8MzcuNzY3Ng==)"
+     id="polyline29" />
+  <polyline
+     points="48.94,257.86 375.89,257.86 "
+     style="stroke-width: 0.53; stroke: #EBEBEB; stroke-linecap: butt;"
+     clip-path="url(#cpNDguOTM2OHwzNzUuODk1fDM2NC43MjZ8MzcuNzY3Ng==)"
+     id="polyline31" />
+  <polyline
+     points="48.94,187.09 375.89,187.09 "
+     style="stroke-width: 0.53; stroke: #EBEBEB; stroke-linecap: butt;"
+     clip-path="url(#cpNDguOTM2OHwzNzUuODk1fDM2NC43MjZ8MzcuNzY3Ng==)"
+     id="polyline33" />
+  <polyline
+     points="48.94,116.32 375.89,116.32 "
+     style="stroke-width: 0.53; stroke: #EBEBEB; stroke-linecap: butt;"
+     clip-path="url(#cpNDguOTM2OHwzNzUuODk1fDM2NC43MjZ8MzcuNzY3Ng==)"
+     id="polyline35" />
+  <polyline
+     points="48.94,45.55 375.89,45.55 "
+     style="stroke-width: 0.53; stroke: #EBEBEB; stroke-linecap: butt;"
+     clip-path="url(#cpNDguOTM2OHwzNzUuODk1fDM2NC43MjZ8MzcuNzY3Ng==)"
+     id="polyline37" />
+  <polyline
+     points="63.80,364.73 63.80,37.77 "
+     style="stroke-width: 0.53; stroke: #EBEBEB; stroke-linecap: butt;"
+     clip-path="url(#cpNDguOTM2OHwzNzUuODk1fDM2NC43MjZ8MzcuNzY3Ng==)"
+     id="polyline39" />
+  <polyline
+     points="119.88,364.73 119.88,37.77 "
+     style="stroke-width: 0.53; stroke: #EBEBEB; stroke-linecap: butt;"
+     clip-path="url(#cpNDguOTM2OHwzNzUuODk1fDM2NC43MjZ8MzcuNzY3Ng==)"
+     id="polyline41" />
+  <polyline
+     points="175.96,364.73 175.96,37.77 "
+     style="stroke-width: 0.53; stroke: #EBEBEB; stroke-linecap: butt;"
+     clip-path="url(#cpNDguOTM2OHwzNzUuODk1fDM2NC43MjZ8MzcuNzY3Ng==)"
+     id="polyline43" />
+  <polyline
+     points="232.04,364.73 232.04,37.77 "
+     style="stroke-width: 0.53; stroke: #EBEBEB; stroke-linecap: butt;"
+     clip-path="url(#cpNDguOTM2OHwzNzUuODk1fDM2NC43MjZ8MzcuNzY3Ng==)"
+     id="polyline45" />
+  <polyline
+     points="288.13,364.73 288.13,37.77 "
+     style="stroke-width: 0.53; stroke: #EBEBEB; stroke-linecap: butt;"
+     clip-path="url(#cpNDguOTM2OHwzNzUuODk1fDM2NC43MjZ8MzcuNzY3Ng==)"
+     id="polyline47" />
+  <polyline
+     points="344.21,364.73 344.21,37.77 "
+     style="stroke-width: 0.53; stroke: #EBEBEB; stroke-linecap: butt;"
+     clip-path="url(#cpNDguOTM2OHwzNzUuODk1fDM2NC43MjZ8MzcuNzY3Ng==)"
+     id="polyline49" />
+  <polyline
+     points="48.94,364.02 375.89,364.02 "
+     style="stroke-width: 1.07; stroke: #EBEBEB; stroke-linecap: butt;"
+     clip-path="url(#cpNDguOTM2OHwzNzUuODk1fDM2NC43MjZ8MzcuNzY3Ng==)"
+     id="polyline51" />
+  <polyline
+     points="48.94,293.25 375.89,293.25 "
+     style="stroke-width: 1.07; stroke: #EBEBEB; stroke-linecap: butt;"
+     clip-path="url(#cpNDguOTM2OHwzNzUuODk1fDM2NC43MjZ8MzcuNzY3Ng==)"
+     id="polyline53" />
+  <polyline
+     points="48.94,222.48 375.89,222.48 "
+     style="stroke-width: 1.07; stroke: #EBEBEB; stroke-linecap: butt;"
+     clip-path="url(#cpNDguOTM2OHwzNzUuODk1fDM2NC43MjZ8MzcuNzY3Ng==)"
+     id="polyline55" />
+  <polyline
+     points="48.94,151.71 375.89,151.71 "
+     style="stroke-width: 1.07; stroke: #EBEBEB; stroke-linecap: butt;"
+     clip-path="url(#cpNDguOTM2OHwzNzUuODk1fDM2NC43MjZ8MzcuNzY3Ng==)"
+     id="polyline57" />
+  <polyline
+     points="48.94,80.94 375.89,80.94 "
+     style="stroke-width: 1.07; stroke: #EBEBEB; stroke-linecap: butt;"
+     clip-path="url(#cpNDguOTM2OHwzNzUuODk1fDM2NC43MjZ8MzcuNzY3Ng==)"
+     id="polyline59" />
+  <polyline
+     points="91.84,364.73 91.84,37.77 "
+     style="stroke-width: 1.07; stroke: #EBEBEB; stroke-linecap: butt;"
+     clip-path="url(#cpNDguOTM2OHwzNzUuODk1fDM2NC43MjZ8MzcuNzY3Ng==)"
+     id="polyline61" />
+  <polyline
+     points="147.92,364.73 147.92,37.77 "
+     style="stroke-width: 1.07; stroke: #EBEBEB; stroke-linecap: butt;"
+     clip-path="url(#cpNDguOTM2OHwzNzUuODk1fDM2NC43MjZ8MzcuNzY3Ng==)"
+     id="polyline63" />
+  <polyline
+     points="204.00,364.73 204.00,37.77 "
+     style="stroke-width: 1.07; stroke: #EBEBEB; stroke-linecap: butt;"
+     clip-path="url(#cpNDguOTM2OHwzNzUuODk1fDM2NC43MjZ8MzcuNzY3Ng==)"
+     id="polyline65" />
+  <polyline
+     points="260.09,364.73 260.09,37.77 "
+     style="stroke-width: 1.07; stroke: #EBEBEB; stroke-linecap: butt;"
+     clip-path="url(#cpNDguOTM2OHwzNzUuODk1fDM2NC43MjZ8MzcuNzY3Ng==)"
+     id="polyline67" />
+  <polyline
+     points="316.17,364.73 316.17,37.77 "
+     style="stroke-width: 1.07; stroke: #EBEBEB; stroke-linecap: butt;"
+     clip-path="url(#cpNDguOTM2OHwzNzUuODk1fDM2NC43MjZ8MzcuNzY3Ng==)"
+     id="polyline69" />
+  <polyline
+     points="372.25,364.73 372.25,37.77 "
+     style="stroke-width: 1.07; stroke: #EBEBEB; stroke-linecap: butt;"
+     clip-path="url(#cpNDguOTM2OHwzNzUuODk1fDM2NC43MjZ8MzcuNzY3Ng==)"
+     id="polyline71" />
+  <g
+     clip-path="url(#cpNDguOTM2OHwzNzUuODk1fDM2NC43MjZ8MzcuNzY3Ng==)"
+     id="g73">
+    <text
+       x="322.33"
+       y="56.41"
+       style="font-size: 11.04px; fill: #8A322F; font-family: Liberation Sans;"
+       textLength="32.54px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text75">allergy</text>
+  </g>
+  <g
+     clip-path="url(#cpNDguOTM2OHwzNzUuODk1fDM2NC43MjZ8MzcuNzY3Ng==)"
+     id="g77">
+    <text
+       x="223.41"
+       y="98.87"
+       style="font-size: 11.04px; fill: #B88E89; font-family: Liberation Sans;"
+       textLength="95.78px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text79">Alzheimers disease</text>
+  </g>
+  <g
+     clip-path="url(#cpNDguOTM2OHwzNzUuODk1fDM2NC43MjZ8MzcuNzY3Ng==)"
+     id="g81">
+    <text
+       x="264.41"
+       y="155.49"
+       style="font-size: 11.04px; fill: #7268AA; font-family: Liberation Sans;"
+       textLength="36.22px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text83">arthritis</text>
+  </g>
+  <g
+     clip-path="url(#cpNDguOTM2OHwzNzUuODk1fDM2NC43MjZ8MzcuNzY3Ng==)"
+     id="g85">
+    <text
+       x="286.84"
+       y="113.03"
+       style="font-size: 11.04px; fill: #A3615A; font-family: Liberation Sans;"
+       textLength="36.23px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text87">asthma</text>
+  </g>
+  <g
+     clip-path="url(#cpNDguOTM2OHwzNzUuODk1fDM2NC43MjZ8MzcuNzY3Ng==)"
+     id="g89">
+    <text
+       x="109.85"
+       y="240.41"
+       style="font-size: 11.04px; fill: #B5B0C3; font-family: Liberation Sans;"
+       textLength="76.14px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text91">bipolar disorder</text>
+  </g>
+  <g
+     clip-path="url(#cpNDguOTM2OHwzNzUuODk1fDM2NC43MjZ8MzcuNzY3Ng==)"
+     id="g93">
+    <text
+       x="57.63"
+       y="353.65"
+       style="font-size: 11.04px; fill: #857CB2; font-family: Liberation Sans;"
+       textLength="90.86px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text95">cardiac arrhythmia</text>
+  </g>
+  <g
+     clip-path="url(#cpNDguOTM2OHwzNzUuODk1fDM2NC43MjZ8MzcuNzY3Ng==)"
+     id="g97">
+    <text
+       x="221.69"
+       y="212.10"
+       style="font-size: 11.04px; fill: #C1A8A5; font-family: Liberation Sans;"
+       textLength="31.92px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text99">COPD</text>
+  </g>
+  <g
+     clip-path="url(#cpNDguOTM2OHwzNzUuODk1fDM2NC43MjZ8MzcuNzY3Ng==)"
+     id="g101">
+    <text
+       x="147.82"
+       y="297.03"
+       style="font-size: 11.04px; fill: #8F86B5; font-family: Liberation Sans;"
+       textLength="112.37px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text103">coronary heart disease</text>
+  </g>
+  <g
+     clip-path="url(#cpNDguOTM2OHwzNzUuODk1fDM2NC43MjZ8MzcuNzY3Ng==)"
+     id="g105">
+    <text
+       x="149.79"
+       y="169.64"
+       style="font-size: 11.04px; fill: #BDBAC6; font-family: Liberation Sans;"
+       textLength="86.00px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text107">drug dependence</text>
+  </g>
+  <g
+     clip-path="url(#cpNDguOTM2OHwzNzUuODk1fDM2NC43MjZ8MzcuNzY3Ng==)"
+     id="g109">
+    <text
+       x="149.94"
+       y="282.87"
+       style="font-size: 11.04px; fill: #7268AA; font-family: Liberation Sans;"
+       textLength="63.26px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text111">hypertension</text>
+  </g>
+  <g
+     clip-path="url(#cpNDguOTM2OHwzNzUuODk1fDM2NC43MjZ8MzcuNzY3Ng==)"
+     id="g113">
+    <text
+       x="141.64"
+       y="325.34"
+       style="font-size: 11.04px; fill: #968DB8; font-family: Liberation Sans;"
+       textLength="35.00px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text115">obesity</text>
+  </g>
+  <g
+     clip-path="url(#cpNDguOTM2OHwzNzUuODk1fDM2NC43MjZ8MzcuNzY3Ng==)"
+     id="g117">
+    <text
+       x="76.54"
+       y="311.18"
+       style="font-size: 11.04px; fill: #675EA7; font-family: Liberation Sans;"
+       textLength="97.90px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text119">Parkinson's disease</text>
+  </g>
+  <g
+     clip-path="url(#cpNDguOTM2OHwzNzUuODk1fDM2NC43MjZ8MzcuNzY3Ng==)"
+     id="g121">
+    <text
+       x="271.94"
+       y="183.80"
+       style="font-size: 11.04px; fill: #BAB6C5; font-family: Liberation Sans;"
+       textLength="43.59px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text123">psoriasis</text>
+  </g>
+  <g
+     clip-path="url(#cpNDguOTM2OHwzNzUuODk1fDM2NC43MjZ8MzcuNzY3Ng==)"
+     id="g125">
+    <text
+       x="268.89"
+       y="127.18"
+       style="font-size: 11.04px; fill: #B9928D; font-family: Liberation Sans;"
+       textLength="94.55px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text127">rheumatoid arthritis</text>
+  </g>
+  <g
+     clip-path="url(#cpNDguOTM2OHwzNzUuODk1fDM2NC43MjZ8MzcuNzY3Ng==)"
+     id="g129">
+    <text
+       x="136.27"
+       y="70.56"
+       style="font-size: 11.04px; fill: #B17E78; font-family: Liberation Sans;"
+       textLength="68.16px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text131">schizophrenia</text>
+  </g>
+  <g
+     clip-path="url(#cpNDguOTM2OHwzNzUuODk1fDM2NC43MjZ8MzcuNzY3Ng==)"
+     id="g133">
+    <text
+       x="121.66"
+       y="339.49"
+       style="font-size: 11.04px; fill: #9C95BA; font-family: Liberation Sans;"
+       textLength="30.08px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text135">stroke</text>
+  </g>
+  <g
+     clip-path="url(#cpNDguOTM2OHwzNzUuODk1fDM2NC43MjZ8MzcuNzY3Ng==)"
+     id="g137">
+    <text
+       x="213.23"
+       y="268.72"
+       style="font-size: 11.04px; fill: #A8A2BF; font-family: Liberation Sans;"
+       textLength="26.41px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text139">lupus</text>
+  </g>
+  <g
+     clip-path="url(#cpNDguOTM2OHwzNzUuODk1fDM2NC43MjZ8MzcuNzY3Ng==)"
+     id="g141">
+    <text
+       x="72.22"
+       y="226.26"
+       style="font-size: 11.04px; fill: #BC9A96; font-family: Liberation Sans;"
+       textLength="84.10px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text143">multiple sclerosis</text>
+  </g>
+  <g
+     clip-path="url(#cpNDguOTM2OHwzNzUuODk1fDM2NC43MjZ8MzcuNzY3Ng==)"
+     id="g145">
+    <text
+       x="212.94"
+       y="197.95"
+       style="font-size: 11.04px; fill: #BA948F; font-family: Liberation Sans;"
+       textLength="71.85px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text147">type I diabetes</text>
+  </g>
+  <g
+     clip-path="url(#cpNDguOTM2OHwzNzUuODk1fDM2NC43MjZ8MzcuNzY3Ng==)"
+     id="g149">
+    <text
+       x="177.76"
+       y="254.57"
+       style="font-size: 11.04px; fill: #ABA5C0; font-family: Liberation Sans;"
+       textLength="74.92px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text151">type II diabetes</text>
+  </g>
+  <g
+     clip-path="url(#cpNDguOTM2OHwzNzUuODk1fDM2NC43MjZ8MzcuNzY3Ng==)"
+     id="g153">
+    <text
+       x="288.40"
+       y="84.72"
+       style="font-size: 11.04px; fill: #832424; font-family: Liberation Sans;"
+       textLength="77.97px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text155">ulcerative colitis</text>
+  </g>
+  <g
+     clip-path="url(#cpNDguOTM2OHwzNzUuODk1fDM2NC43MjZ8MzcuNzY3Ng==)"
+     id="g157">
+    <text
+       x="211.88"
+       y="141.33"
+       style="font-size: 11.04px; fill: #C5B2B0; font-family: Liberation Sans;"
+       textLength="96.42px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text159">unipolar depression</text>
+  </g>
+  <rect
+     x="48.94"
+     y="37.77"
+     width="326.96"
+     height="326.96"
+     style="stroke-width: 1.07; stroke: #333333;"
+     clip-path="url(#cpNDguOTM2OHwzNzUuODk1fDM2NC43MjZ8MzcuNzY3Ng==)"
+     id="rect161" />
+  <defs
+     id="defs163">
+    <clipPath
+       id="clipPath165">
+      <rect
+         x="0.00"
+         y="0.00"
+         width="453.54"
+         height="396.85"
+         id="rect167" />
+    </clipPath>
+  </defs>
+  <g
+     clip-path="url(#cpMHw0NTMuNTQzfDM5Ni44NXww)"
+     id="g169">
+    <text
+       x="39.11"
+       y="367.11"
+       style="font-size: 8.80px; fill: #4D4D4D; font-family: Liberation Sans;"
+       textLength="4.89px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text171">0</text>
+  </g>
+  <g
+     clip-path="url(#cpMHw0NTMuNTQzfDM5Ni44NXww)"
+     id="g173">
+    <text
+       x="39.11"
+       y="296.34"
+       style="font-size: 8.80px; fill: #4D4D4D; font-family: Liberation Sans;"
+       textLength="4.89px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text175">5</text>
+  </g>
+  <g
+     clip-path="url(#cpMHw0NTMuNTQzfDM5Ni44NXww)"
+     id="g177">
+    <text
+       x="34.22"
+       y="225.57"
+       style="font-size: 8.80px; fill: #4D4D4D; font-family: Liberation Sans;"
+       textLength="9.78px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text179">10</text>
+  </g>
+  <g
+     clip-path="url(#cpMHw0NTMuNTQzfDM5Ni44NXww)"
+     id="g181">
+    <text
+       x="34.22"
+       y="154.80"
+       style="font-size: 8.80px; fill: #4D4D4D; font-family: Liberation Sans;"
+       textLength="9.78px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text183">15</text>
+  </g>
+  <g
+     clip-path="url(#cpMHw0NTMuNTQzfDM5Ni44NXww)"
+     id="g185">
+    <text
+       x="34.22"
+       y="84.03"
+       style="font-size: 8.80px; fill: #4D4D4D; font-family: Liberation Sans;"
+       textLength="9.78px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text187">20</text>
+  </g>
+  <polyline
+     points="46.20,364.02 48.94,364.02 "
+     style="stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;"
+     clip-path="url(#cpMHw0NTMuNTQzfDM5Ni44NXww)"
+     id="polyline189" />
+  <polyline
+     points="46.20,293.25 48.94,293.25 "
+     style="stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;"
+     clip-path="url(#cpMHw0NTMuNTQzfDM5Ni44NXww)"
+     id="polyline191" />
+  <polyline
+     points="46.20,222.48 48.94,222.48 "
+     style="stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;"
+     clip-path="url(#cpMHw0NTMuNTQzfDM5Ni44NXww)"
+     id="polyline193" />
+  <polyline
+     points="46.20,151.71 48.94,151.71 "
+     style="stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;"
+     clip-path="url(#cpMHw0NTMuNTQzfDM5Ni44NXww)"
+     id="polyline195" />
+  <polyline
+     points="46.20,80.94 48.94,80.94 "
+     style="stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;"
+     clip-path="url(#cpMHw0NTMuNTQzfDM5Ni44NXww)"
+     id="polyline197" />
+  <polyline
+     points="91.84,367.47 91.84,364.73 "
+     style="stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;"
+     clip-path="url(#cpMHw0NTMuNTQzfDM5Ni44NXww)"
+     id="polyline199" />
+  <polyline
+     points="147.92,367.47 147.92,364.73 "
+     style="stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;"
+     clip-path="url(#cpMHw0NTMuNTQzfDM5Ni44NXww)"
+     id="polyline201" />
+  <polyline
+     points="204.00,367.47 204.00,364.73 "
+     style="stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;"
+     clip-path="url(#cpMHw0NTMuNTQzfDM5Ni44NXww)"
+     id="polyline203" />
+  <polyline
+     points="260.09,367.47 260.09,364.73 "
+     style="stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;"
+     clip-path="url(#cpMHw0NTMuNTQzfDM5Ni44NXww)"
+     id="polyline205" />
+  <polyline
+     points="316.17,367.47 316.17,364.73 "
+     style="stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;"
+     clip-path="url(#cpMHw0NTMuNTQzfDM5Ni44NXww)"
+     id="polyline207" />
+  <polyline
+     points="372.25,367.47 372.25,364.73 "
+     style="stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;"
+     clip-path="url(#cpMHw0NTMuNTQzfDM5Ni44NXww)"
+     id="polyline209" />
+  <g
+     clip-path="url(#cpMHw0NTMuNTQzfDM5Ni44NXww)"
+     id="g211">
+    <text
+       x="89.39"
+       y="375.84"
+       style="font-size: 8.80px; fill: #4D4D4D; font-family: Liberation Sans;"
+       textLength="4.89px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text213">0</text>
+  </g>
+  <g
+     clip-path="url(#cpMHw0NTMuNTQzfDM5Ni44NXww)"
+     id="g215">
+    <text
+       x="145.48"
+       y="375.84"
+       style="font-size: 8.80px; fill: #4D4D4D; font-family: Liberation Sans;"
+       textLength="4.89px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text217">5</text>
+  </g>
+  <g
+     clip-path="url(#cpMHw0NTMuNTQzfDM5Ni44NXww)"
+     id="g219">
+    <text
+       x="199.11"
+       y="375.84"
+       style="font-size: 8.80px; fill: #4D4D4D; font-family: Liberation Sans;"
+       textLength="9.78px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text221">10</text>
+  </g>
+  <g
+     clip-path="url(#cpMHw0NTMuNTQzfDM5Ni44NXww)"
+     id="g223">
+    <text
+       x="255.19"
+       y="375.84"
+       style="font-size: 8.80px; fill: #4D4D4D; font-family: Liberation Sans;"
+       textLength="9.78px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text225">15</text>
+  </g>
+  <g
+     clip-path="url(#cpMHw0NTMuNTQzfDM5Ni44NXww)"
+     id="g227">
+    <text
+       x="311.28"
+       y="375.84"
+       style="font-size: 8.80px; fill: #4D4D4D; font-family: Liberation Sans;"
+       textLength="9.78px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text229">20</text>
+  </g>
+  <g
+     clip-path="url(#cpMHw0NTMuNTQzfDM5Ni44NXww)"
+     id="g231">
+    <text
+       x="367.36"
+       y="375.84"
+       style="font-size: 8.80px; fill: #4D4D4D; font-family: Liberation Sans;"
+       textLength="9.78px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text233">25</text>
+  </g>
+  <g
+     clip-path="url(#cpMHw0NTMuNTQzfDM5Ni44NXww)"
+     id="g235">
+    <text
+       x="41.53"
+       y="388.89"
+       style="font-size: 11.00px; font-family: Liberation Sans;"
+       textLength="341.77px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text237">Overall performance ranking (drugs input, top 20 hits). Lower is better.</text>
+  </g>
+  <g
+     clip-path="url(#cpMHw0NTMuNTQzfDM5Ni44NXww)"
+     id="g239">
+    <text
+       transform="translate(26.26,333.60) rotate(-90)"
+       style="font-size: 11.00px; font-family: Liberation Sans;"
+       textLength="264.70px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text241">Modularity ranking (STRING network). Lower is better.</text>
+  </g>
+  <rect
+     x="387.23"
+     y="146.44"
+     width="47.62"
+     height="109.62"
+     style="stroke-width: 1.07; stroke: none; fill: #FFFFFF;"
+     clip-path="url(#cpMHw0NTMuNTQzfDM5Ni44NXww)"
+     id="rect243" />
+  <g
+     clip-path="url(#cpMHw0NTMuNTQzfDM5Ni44NXww)"
+     id="g245">
+    <image
+       width="17.28"
+       height="86.40"
+       x="392.90"
+       y="163.99"
+       xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAABXCAYAAAAJWxWIAAAABmJLR0QA/wD/AP+gvaeTAAABR0lEQVRYhc2Yy3UFMQxCQVZzKSQnu9dX+kk5tsgieRX4LmYK4CBAn7Ffn9/R7Vf+qGuQNxYF1PY9SCT1qnukROq1CEpRFwBkLYbRSOpV98bVBNKoihIbcs2CXIsh12IqkPW0ZFdKvYBBEothJEpsF9QizoICiQ02QWJbkEZjaIwUlSNP1KuhHDH298NGrSj7Lch+U/bHUQOLVo7UwFXz1/02cEK21NY9kGTw9CugNGfUytxTktU55xrmROrsTTECgAKV5pgpbShG/6XdM3JZnQ3YP4JcM6WRIUamWmQk9QA5whhZkEY7Vg/Sa9AYAXtNTGlVlNgj9QBN6wrDaAbSyAqV7DA52srDSjsphpEy1BahGM1A9huaRxHVa4bsHyyQgcQ+MbPXlIFcw9bRQPeRqS0yBQUyiToD/ELY3As7+FQff92CrNTPL4RH486fxdkEAAAAAElFTkSuQmCC"
+       id="image247" />
+  </g>
+  <g
+     clip-path="url(#cpMHw0NTMuNTQzfDM5Ni44NXww)"
+     id="g249">
+    <text
+       x="414.50"
+       y="226.07"
+       style="font-size: 8.80px; font-family: Liberation Sans;"
+       textLength="14.68px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text251">100</text>
+  </g>
+  <g
+     clip-path="url(#cpMHw0NTMuNTQzfDM5Ni44NXww)"
+     id="g253">
+    <text
+       x="414.50"
+       y="194.50"
+       style="font-size: 8.80px; font-family: Liberation Sans;"
+       textLength="14.68px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text255">150</text>
+  </g>
+  <g
+     clip-path="url(#cpMHw0NTMuNTQzfDM5Ni44NXww)"
+     id="g257">
+    <text
+       x="392.90"
+       y="159.67"
+       style="font-size: 11.00px; font-family: Liberation Sans;"
+       textLength="32.41px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text259">Genes</text>
+  </g>
+  <line
+     x1="392.90"
+     y1="222.97"
+     x2="396.36"
+     y2="222.97"
+     style="stroke-width: 0.38; stroke: #FFFFFF; stroke-linecap: butt;"
+     clip-path="url(#cpMHw0NTMuNTQzfDM5Ni44NXww)"
+     id="line261" />
+  <line
+     x1="392.90"
+     y1="191.40"
+     x2="396.36"
+     y2="191.40"
+     style="stroke-width: 0.38; stroke: #FFFFFF; stroke-linecap: butt;"
+     clip-path="url(#cpMHw0NTMuNTQzfDM5Ni44NXww)"
+     id="line263" />
+  <line
+     x1="406.73"
+     y1="222.97"
+     x2="410.18"
+     y2="222.97"
+     style="stroke-width: 0.38; stroke: #FFFFFF; stroke-linecap: butt;"
+     clip-path="url(#cpMHw0NTMuNTQzfDM5Ni44NXww)"
+     id="line265" />
+  <line
+     x1="406.73"
+     y1="191.40"
+     x2="410.18"
+     y2="191.40"
+     style="stroke-width: 0.38; stroke: #FFFFFF; stroke-linecap: butt;"
+     clip-path="url(#cpMHw0NTMuNTQzfDM5Ni44NXww)"
+     id="line267" />
+  <g
+     clip-path="url(#cpMHw0NTMuNTQzfDM5Ni44NXww)"
+     id="g269">
+    <text
+       x="48.94"
+       y="30.35"
+       style="font-size: 9.90px; font-family: Liberation Sans;"
+       textLength="289.64px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text271">Lowest rankings (left and down) correspond to largest magnitudes</text>
+  </g>
+  <g
+     clip-path="url(#cpMHw0NTMuNTQzfDM5Ni44NXww)"
+     id="g273">
+    <text
+       x="48.94"
+       y="14.42"
+       style="font-size: 13.20px; font-family: Liberation Sans;"
+       textLength="361.05px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text275">Disease performance in terms of modularity and gene list size</text>
+  </g>
+  <g
+     transform="translate(-43.089212,-99.369841)"
+     clip-path="url(#cpMHw0NTMuNTQzfDM5Ni44NXww-9-7)"
+     id="g257-7">
+    <rect
+       style="color:#000000;clip-rule:nonzero;display:inline;overflow:visible;visibility:visible;opacity:1;isolation:auto;mix-blend-mode:normal;color-interpolation:sRGB;color-interpolation-filters:linearRGB;solid-color:#000000;solid-opacity:1;fill:#e5e5e5;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;color-rendering:auto;image-rendering:auto;shape-rendering:auto;text-rendering:auto;enable-background:accumulate"
+       id="rect4431"
+       width="43.090179"
+       height="14.398418"
+       x="397.13046"
+       y="130.16582" />
+    <text
+       x="400.52661"
+       y="140.64523"
+       style="font-size:11px;font-family:'Liberation Sans'"
+       textLength="32.41px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text259-2">
+      <tspan
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:arial;-inkscape-font-specification:arial"
+         id="tspan4433">Group I</tspan>
+    </text>
+  </g>
+  <g
+     transform="translate(-370.9642,227.00967)"
+     clip-path="url(#cpMHw0NTMuNTQzfDM5Ni44NXww-9-7-3)"
+     id="g257-7-7">
+    <rect
+       style="color:#000000;clip-rule:nonzero;display:inline;overflow:visible;visibility:visible;opacity:1;isolation:auto;mix-blend-mode:normal;color-interpolation:sRGB;color-interpolation-filters:linearRGB;solid-color:#000000;solid-opacity:1;fill:#e5e5e5;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;color-rendering:auto;image-rendering:auto;shape-rendering:auto;text-rendering:auto;enable-background:accumulate"
+       id="rect4431-2"
+       width="43.090179"
+       height="14.398418"
+       x="398.65582"
+       y="130.16582" />
+    <text
+       x="400.52661"
+       y="140.64523"
+       style="font-size:11px;font-family:'Liberation Sans'"
+       textLength="32.41px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text259-2-1">
+      <tspan
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:arial;-inkscape-font-specification:arial"
+         id="tspan4433-3">Group II</tspan>
+    </text>
+  </g>
+</svg>
