@@ -116,7 +116,7 @@ print(paste("You are running the CV on the host:", host))
 # appending more options with their hostnames
 if (host == "eko") {
   nslaves <- 12
-  cv_jobs <- list_cv_schemes[3]
+  cv_jobs <- list_cv_schemes[1:3]
 } else if (host == "sun") {
   nslaves <- 32
   cv_jobs <- list_cv_schemes[1:3]

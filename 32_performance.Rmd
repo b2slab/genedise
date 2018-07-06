@@ -1,0 +1,615 @@
+---
+title: "Benchmark of network-based methods on all the diseases"
+author: "Sergio Picart-Armada"
+date: "July 6, 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+# Show the code, but suppress messages and warnings
+# otherwise document gets too long
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+```
+
+# Getting started
+
+## Load libraries and data
+
+```{r}
+# Data handling
+library(plyr)
+library(dplyr)
+library(tidyr)
+library(magrittr)
+
+# ML libraries
+library(kernlab)
+library(caret)
+library(mlr)
+library(parallelMap)
+
+# other
+library(igraph)
+library(ggplot2)
+library(ggsci)
+library(diffuStats)
+
+# state of the art methods
+library(EGAD)
+library(RANKS)
+library(COSNet)
+
+# for models
+library(lsmeans)
+library(multcomp)
+
+# have all config variables in a different env
+config <- new.env(parent = globalenv())
+source("30_config.R", local = config)
+
+# Parallel backend
+# parallelStartMulticore(config$nslaves)
+
+# load network and kernel (heavy, 1Gb)
+load(config$graph_alldiseases)
+load(config$file_kernel)
+
+# load dataset
+tabs <- load(config$file_input)
+stopifnot(all(c("df_input", "list_cv_folds") %in% tabs))
+
+# adjacency matrix (heavy, 1Gb)
+A <- igraph::as_adj(g_filter, sparse = TRUE, attr = "weight") %>% as.matrix
+
+# Load MashUp features
+nm_mashup <- readLines(config$file_mashup_names)
+df_mashup <- data.table::fread(config$file_mashup_features) %>% 
+  t %>% 
+  as.data.frame %>% 
+  set_rownames(nm_mashup)
+
+# A centrality measure
+pr <- page.rank(g_filter)$vector
+```
+
+# Define functions
+
+## Performance measures
+
+```{r}
+# define function top_k to count number of 1s in the 
+# top k entities of a list. 
+# It is assumed that largest scores are best
+top_k <- function(k) {
+  function(actual, predicted) {
+    inds <- head(order(predicted, decreasing = TRUE), k)
+    sum(actual[inds])
+  }
+}
+
+# define a list of metric functions to iterate over
+# partial aurocs are normalised between 0 and 1
+list_metrics <- list(
+  auroc = metric_fun(curve = "ROC"), 
+  partial_auroc_0.90 = metric_fun(curve = "ROC", c(0, .1), standardized = TRUE), 
+  partial_auroc_0.95 = metric_fun(curve = "ROC", c(0, .05), standardized = TRUE), 
+  auprc = metric_fun(curve = "PRC"),
+  top_20_hits = top_k(20), 
+  top_100_hits = top_k(100)
+) 
+```
+
+## Functions for ML-based methods
+
+```{r}
+# C-SVM Bagging wrapper 
+# Assumption: number of positives << number of negatives 
+# Aggregation is at the level of "decision" values!
+# Because if it is on the predicted class, it 
+# does not work well, i.e. too many times the SVM 
+# predicts only positives (or negatives), although the
+# raking of the "decision" values can be meaningful
+# (bootstrap is on the negatives!)
+# ind_train, ind_test: numeric or character vectors with the 
+# ids of the training and the testing samples
+# ytrain binary vector with training labels (+:1, -:0)
+# K graph kernel matrix
+# B number of bootstrapping iterations
+# ... further arguments for ksvm
+bag_svm <- function(ind_train, ind_test, K, ytrain, B = 30, ...) {
+  stopifnot(length(ind_train) == length(ytrain))
+  
+  # SVM bagging
+  ind_pos <- which(ytrain == 1L)
+  ind_neg <- which(ytrain == 0L)
+  npos <- length(ind_pos)
+  nneg <- length(ind_neg)
+  
+  yt <- as.factor(ytrain)
+  mat_bag <- plyr::ldply(
+    1:B, 
+    function(rep) {
+      # browser()
+      ind_bag_neg <- sample(ind_neg, npos, replace = TRUE)
+      ind_bag_all <- c(ind_pos, ind_bag_neg)
+      # this one can contain names:
+      ind_bag_orig <- ind_train[ind_bag_all]
+      
+      # train svms
+      svm_mod <- ksvm(
+        as.kernelMatrix(K[ind_bag_orig, ind_bag_orig]), 
+        yt[ind_bag_all], 
+        kernel = "matrix", 
+        ...
+      )
+      # find support vectors
+      svm_vec <- ind_bag_orig[SVindex(svm_mod)]
+      
+      # predict using precomputed kernel
+      predict(svm_mod, 
+              as.kernelMatrix(K[ind_test, svm_vec]), 
+              type = "decision") %>% as.vector
+    }, 
+    .progress = "none"
+    # this last line will work if ind_test are rownames and if they are 
+    # numeric values
+  ) %>% colMeans %>% setNames(rownames(K[ind_test, 1, drop = FALSE]))
+}
+
+# nu-SVM RBF and random forest wrapper, with data downsampling
+# Assumption: number of positives << number of negatives 
+# ind_train, ind_test: numeric or character vectors with the 
+# ids of the training and the testing samples
+# ytrain binary vector with training labels (+:1, -:0)
+# df_features MashUp features as a data frame
+mlr_svm_rf <- function(ind_train, ind_test, df_features, ytrain) {
+  # levels are 0, 1 (in this order)
+  yclass <- as.factor(ytrain)
+  mean_y <- mean(ytrain)
+  # how many more negatives are there?
+  ratio <- (1 - mean_y)/mean_y
+  
+  # create task
+  # shared by all learners
+  # positives are coded as "1" and negatives as "0"
+  tsk <- makeClassifTask(
+    id = "diffu", 
+    data = data.frame(class = yclass, df_features[ind_train, ]), 
+    target = "class", 
+    positive = "1")
+  tsk <- undersample(tsk, 1/ratio)
+
+  ###### SVM LEARNER ###### 
+  # set.seed(seeds)
+  num_ps <- makeParamSet(
+    # makeNumericParam("C", lower = -5, upper = 5, trafo = function(x) 10^x),
+    makeNumericParam("nu", lower = .1, upper = .9),
+    makeNumericParam("sigma", lower = -6, upper = 2, trafo = function(x) 10^x)
+  )
+  ctrl <- makeTuneControlGrid(resolution = 5L, tune.threshold = FALSE)
+  
+  # define learner
+  lrn <- makeLearner("classif.ksvm", predict.type = "prob")
+  rdesc <- makeResampleDesc("CV", iters = 3L, stratify = TRUE)
+  
+  # Grid search in parallel
+  res <- tuneParams(
+    lrn, 
+    task = tsk, 
+    resampling = rdesc,
+    par.set = num_ps, 
+    measures = list(auc),
+    control = ctrl)
+  
+  # Fit optimal params
+  lrn.optim <- setHyperPars(lrn, par.vals = res$x)
+  m <- train(lrn.optim, tsk)
+  m
+  
+  # predict
+  pred_svm <- predict(m, newdata = df_features[ind_test, ])
+  
+  ###### RandomForest LEARNER ###### 
+  # set.seed(seeds)
+  # set.seed(seeds, kind = "L'Ecuyer")
+  num_ps <- makeParamSet(
+    makeIntegerParam("ntree", lower = 10, upper = 500), 
+    # makeIntegerParam("mtry", lower = 10, upper = 50), 
+    makeIntegerParam("nodesize", lower = 1, upper = 5)
+  )
+  ctrl <- makeTuneControlGrid(resolution = 3L, tune.threshold = TRUE)
+  
+  # define learner
+  lrn <- makeLearner("classif.randomForest", predict.type = "prob")
+  rdesc <- makeResampleDesc("CV", iters = 3L, stratify = TRUE)
+  
+  # Grid search in parallel
+  res <- tuneParams(
+    lrn, 
+    task = tsk, 
+    resampling = rdesc,
+    par.set = num_ps, 
+    measures = list(auc),
+    control = ctrl)
+  
+  # Fit optimal params
+  lrn.optim <- setHyperPars(lrn, par.vals = res$x)
+  m <- train(lrn.optim, tsk)
+  m
+  
+  # Test set
+  pred_rf <- predict(m, newdata = df_features[ind_test, ])
+  
+  list(
+    svm = setNames(pred_svm$data$prob.1, rownames(pred_svm$data)), 
+    rf = setNames(pred_rf$data$prob.1, rownames(pred_rf$data))
+  )
+}
+```
+
+# Predictions on the whole dataset
+
+```{r, eval=FALSE}
+# We estimate the performance later on
+# This gives the actual predictions using current disease data
+# Now this predicts based on drugs and genetic scores
+# This code has slight differences with the cross validation, 
+# be careful with copy-pastes
+# All these scores are reproducible with an error smaller than 
+# 1e-10 except for COSNet
+df_predict <- plyr::ddply(
+  df_input,
+  c("input_type", "disease"), 
+  function(df_in) {
+    name_disease <- as.character(df_in$disease[1])
+    name_input_type <- as.character(df_in$input_type[1])
+    
+    # Ensure reproducibility
+    # See note on the same procedure in the cross validation
+    seed.index <- digest::digest(paste0(name_disease, name_input_type)) %>% 
+      substr(1, 5) %>% strtoi(base = 16)
+    set.seed(seed.index)
+    set.seed(seed.index, kind = "L'Ecuyer")
+    # browser()
+
+    # x: input
+    x <- setNames(df_in$score, df_in$STRING_id)
+    
+    # browser()
+    ######## define input vector in all formats ########
+    # diffuStats + EGAD: positive 1, negative 0, unabelled NULL
+    vec_diffustats <- x
+    # COSnet: positive 1, negative -1, unlabelled 0
+    # THIS IS DIFFERENT THAN IN THE CV!
+    vec_cosnet <- ifelse(x == 1, 1, 0)
+    # RANKS: which(1) - but only for training fold!
+    vec_ranks <- which(vec_cosnet == 1)
+    # EGAD: positive 1, negative/unlabelled 0
+    vec_egad <- ifelse(vec_cosnet == 1, 1, 0)
+    # debug
+    # table(vec_diffustats)
+    # table(vec_cosnet)
+    # length(vec_ranks)
+    # table(vec_egad)
+    
+    # for safety, we will index all the results using the 
+    # names...
+    names_train <- names(vec_diffustats)
+    names_val <- names_train
+
+    ######## diffusion-based approaches ########
+    # diffuStats
+    list_scores <- plyr::llply(
+      setNames(config$list_methods, config$list_methods),
+      function(method) {
+        diffuStats::diffuse(
+          K = K, scores = vec_diffustats,
+          method = method, n.perm = config$mc_nperm)[names_val]
+      }
+    )
+
+    # personalized PageRank
+    list_scores$ppr <- page.rank(
+      g_filter, personalized = vec_egad)$vector[names_val]
+
+    # EGAD (gba)
+    list_scores$EGAD <- EGAD::predictions(
+      genes.labels = vec_egad,
+      network = A
+    )[, 1]
+    list_scores$EGAD <- list_scores$EGAD[names_val]
+
+
+    # RANKS (wsld + knn) kernelized scores
+    list_scores$wsld <- RANKS::WSLD.score(
+      RW = K, x = 1:nrow(K), x.pos = vec_ranks, d = config$wsld_d) %>%
+      setNames(rownames(K))
+    list_scores$wsld <- list_scores$wsld[names_val]
+    list_scores$knn <- RANKS::KNN.score(
+      RW = K, x = 1:nrow(K), x.pos = vec_ranks, k = config$knn_k) %>%
+      setNames(rownames(K))
+    list_scores$knn <- list_scores$knn[names_val]
+    
+    ######## other machine learning approaches ########
+    # based in prodige1: SVM
+    list_scores$bagsvm <- bag_svm(
+      ind_train = names_train, ind_test = names_val,
+      K = K, ytrain = vec_diffustats, B = 30,
+      C = 1, type = "C-svc", scaled = FALSE)
+    
+    # based in MashUp: SVM and RandomForest
+    parallelStartMulticore(config$nslaves)
+    list_mashup <- mlr_svm_rf(
+      ind_train = names_train, ind_test = names_val,
+      df_features = df_mashup, ytrain = vec_diffustats)
+    list_scores <- c(list_scores, list_mashup)
+    parallelStop()
+    
+    # COSNet: neural net
+    # It's important to compute this last, for reproducibility
+    # Set to infinity genes in the input, so they are identifiable 
+    # (they get NA otherwise)
+    scores_COSNet <- COSNet::COSNet(
+      W = A, labeling = vec_cosnet, cost = config$cosnet_cost
+    )$scores
+    list_scores$COSNet <- ifelse(
+      names_val %in% names(scores_COSNet), 
+      scores_COSNet[names_val], 
+      Inf
+    ) %>% setNames(names_val)
+
+    # browser()
+    # return as a long data frame
+    plyr::ldply(
+      list_scores, 
+      function(x) {
+        data.frame(STRING_id = names(x), score = x, stringsAsFactors = TRUE)
+      }, 
+      .id = "method")
+  }, 
+  .progress = "text"
+)
+save(df_predict, 
+     file = paste0(config$dir_performance, "/predictions_final.RData"), 
+     compress = "xz")
+```
+
+# Heavy runs: cross validation schemes
+
+```{r, eval=TRUE}
+# Run only the cv schemes defined for this hostname 
+# (see the 20_config file)
+# 
+# This is the core of the whole analysis
+plyr::l_ply(
+  config$cv_jobs, 
+  function(cv_scheme) {
+    file_name <- paste0(config$dir_performance, 
+                        "/metrics_cvscheme_", cv_scheme, ".csv")
+    file_time <- paste0(config$dir_performance, 
+                        "/time_cvscheme_", cv_scheme, ".txt")
+    
+    # write csv header
+    header_csv <- c("disease", "input_type", "split_cv", 
+                "method", names(list_metrics))
+    write(header_csv, file = file_name, 
+          ncolumns = length(header_csv), sep = "\t")
+    
+    # save the time invested in the run
+    time_run <- system.time({
+      plyr::d_ply(
+        df_input,
+        c("disease", "input_type"),
+        function(df_in) {
+          # browser()
+          name_disease <- as.character(df_in$disease[1])
+          name_input_type <- as.character(df_in$input_type[1])
+
+          # reference streams
+          # EXCLUDED
+          # df_streams_disease <- filter(df_streams, disease == name_disease)
+          # cv folds
+          list_cv <- list_cv_folds[[name_disease]][[cv_scheme]]
+
+          # x: input
+          # y: validation
+          # Both are named vectors
+          x <- setNames(df_in$score, df_in$STRING_id)
+          y <- setNames(df_in$validation, df_in$STRING_id)
+
+          # benchmark all the methods for this disease and cv_scheme
+          list_perf <- plyr::l_ply(
+            names(list_cv),
+            function(split_cv_name) {
+              # browser()
+              # Increase in 1 the seed. Make sure we are not overflowing (substring 1:5)
+              # The idea is: generate a hash using cv_sheme, disease, input type and split number
+              # This is reproducible and will give an initial random state that depends on 
+              # these variables and that can be reproduced later on
+              # This should ensure reproducibility regardless of running all the cv schemes on the same machine or  
+              # split between different machines
+              seed.index <- digest::digest(paste0(cv_scheme, name_disease, name_input_type, split_cv_name)) %>% 
+                substr(1, 5) %>% strtoi(base = 16)
+              set.seed(seed.index)
+              set.seed(seed.index, kind = "L'Ecuyer")
+              
+              ######## define training and validation ########
+              # the next line contains the indices of the training instances
+              split_cv <- list_cv[[split_cv_name]]
+
+              # train vectors, with three formats
+              # diffuStats + EGAD: positive 1, negative 0, unabelled NULL
+              vec_diffustats <- x[split_cv$train]
+              # COSnet: positive 1, negative -1, unlabelled 0
+              # vec_cosnet <- ifelse(x == 1, 1, 0)
+              # vec_cosnet[-split_cv$train] <- 0
+              # treat negatives as unlabelled (see commented lines below)
+              vec_cosnet <- ifelse(x == 1, 1, -1)
+              vec_cosnet[-split_cv$train] <- 0
+
+              # RANKS: which(1) - but only for training fold!
+              vec_ranks <- which(vec_cosnet == 1)
+              # EGAD: positive 1, negative/unlabelled 0
+              vec_egad <- ifelse(vec_cosnet == 1, 1, 0)
+              # debug
+              # table(vec_diffustats)
+              # table(vec_cosnet)
+              # length(vec_ranks)
+              # table(vec_egad)
+
+              # validation labels
+              if (is.null(split_cv$validation)) {
+                vec_val <- y[-split_cv$train]
+              } else {
+                vec_val <- y[split_cv$validation]
+              }
+                
+              # if train/val have no positives, just leave
+              if (sum(vec_diffustats) == 0 | sum(vec_val) == 0) {
+                warning("Repetition ", split_cv_name, " contains ", 
+                        sum(vec_diffustats), " positives in train and ", 
+                        sum(vec_val), " in validation for ", 
+                        name_disease, " with ", name_input_type, " input. Skipping...")
+                return(invisible())
+              }
+              
+              # for safety, we will index all the results using the
+              # names of the validation genes, making sure the order
+              # is kept...
+              names_train <- names(vec_diffustats)
+              names_val <- names(vec_val)
+
+              ######## diffusion-based approaches ########
+              # diffuStats
+              list_scores <- plyr::llply(
+                setNames(config$list_methods, config$list_methods),
+                function(method) {
+                  diffuStats::diffuse(
+                    K = K, scores = vec_diffustats,
+                    method = method, n.perm = config$mc_nperm)[names_val]
+                }
+              )
+
+              # personalized PageRank
+              list_scores$ppr <- page.rank(
+                g_filter, personalized = vec_egad)$vector[names_val]
+
+              # EGAD (gba)
+              list_scores$EGAD <- EGAD::predictions(
+                genes.labels = vec_egad,
+                network = A
+              )[, 1]
+              list_scores$EGAD <- list_scores$EGAD[names_val]
+
+              # RANKS (wsld + knn) kernelized scores
+              list_scores$wsld <- RANKS::WSLD.score(
+                RW = K, x = 1:nrow(K), x.pos = vec_ranks, d = config$wsld_d) %>%
+                setNames(rownames(K))
+              list_scores$wsld <- list_scores$wsld[names_val]
+              list_scores$knn <- RANKS::KNN.score(
+                RW = K, x = 1:nrow(K), x.pos = vec_ranks, k = config$knn_k) %>%
+                setNames(rownames(K))
+              list_scores$knn <- list_scores$knn[names_val]
+              # browser()
+              
+              ######## reference scores ########
+              # random
+              list_scores$random <- setNames(
+                sample(length(names_val)), names_val
+              )
+              # network properties that ignore input
+              list_scores$randomraw <- diffuStats::diffuse(
+                K = K,
+                scores = setNames(sample(vec_diffustats),
+                                  names(vec_diffustats)),
+                method = "raw")[names_val]
+              list_scores$pr <- pr[names_val]
+
+              # reference: other data streams
+              # STREAMS EXCLUDED FROM THIS ANALYSIS
+              # list_streams <- plyr::dlply(
+              #   df_streams_disease,
+              #   "stream",
+              #   function(df) {
+              #     stream_scores <- setNames(df$score, df$STRING_id)
+              #     stream_scores[names_val]
+              #   }
+              # )
+              
+              ######## other machine learning approaches ########
+              # based in prodige1: SVM
+              list_scores$bagsvm <- bag_svm(
+                ind_train = names_train, ind_test = names_val,
+                K = K, ytrain = vec_diffustats, B = 30,
+                C = 1, type = "C-svc", scaled = FALSE)
+              
+              # based in MashUp: SVM and RandomForest
+              parallelStartMulticore(config$nslaves)
+              list_mashup <- mlr_svm_rf(
+                ind_train = names_train, ind_test = names_val,
+                df_features = df_mashup, ytrain = vec_diffustats)
+              list_scores <- c(list_scores, list_mashup)
+              parallelStop()
+              
+              # COSNet: neural net
+              # Setting seeds is pointless, they set an internal seed that 
+              # depends on the system time... This bit its NOT reproducible
+              # It is important to leave it last because it WILL break down 
+              # the reproducibility of the other methods otherwise..!
+              list_scores$COSNet <- COSNet::COSNet(
+                W = A, labeling = vec_cosnet, cost = config$cosnet_cost
+              )$scores
+              list_scores$COSNet <- list_scores$COSNet[names_val]
+              
+              # browser()
+              ######## performance metrics ########
+              # compute metrics
+              df_metrics <- plyr::ldply(
+                list_scores,
+                function(scores) {
+                  perf_eval(
+                    prediction = scores,
+                    validation = vec_val,
+                    metric = list_metrics
+                  )
+                },
+                .id = "method"
+              )
+
+              # Append to file, so that we can keep track on how the file grows
+              # and how advanced the process is
+              df_append <- data.frame(
+                disease = name_disease,
+                input_type = name_input_type,
+                split_cv = split_cv_name,
+                df_metrics
+              )
+              write.table(df_append, file_name, sep = "\t",
+                          append = TRUE, row.names = FALSE, col.names = FALSE)
+#              stop("Stop here now!")
+            }
+          )
+        }
+      )
+    })
+    # save time metadata
+    writeLines(
+      capture.output(print(time_run)), 
+      con = file_time
+    )
+  }, 
+  .progress = "text"
+)
+```
+
+# Reproducibility
+
+```{r}
+out <- capture.output(sessionInfo())
+writeLines(
+  out, 
+  con = paste0(config$dir_metadata, 
+               "/32_sessionInfo_performance_host_", 
+               config$host, ".txt"))
+```
+
