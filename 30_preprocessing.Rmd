@@ -1,0 +1,505 @@
+---
+title: "Data preprocessing"
+author: "Sergio Picart-Armada"
+date: "July 6, 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+# Show the code, but suppress messages and warnings
+# otherwise document gets too long
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+# Getting started
+
+```{r}
+library(STRINGdb)
+library(igraph)
+library(ggplot2)
+library(diffuStats)
+
+library(plyr)
+library(dplyr)
+library(tidyr)
+
+# have all config variables in a different env
+config <- new.env(parent = globalenv())
+source("30_config.R", local = config)
+
+# abbreviations
+source(config$file_abbrev)
+stopifnot(exists("disease_abbrev"))
+```
+
+```{r}
+# all the initial preprocessing is skipped, as it's identical to the one 
+# in 20_preprocessing
+load(config$graph_alldiseases)
+
+df_complex <- g_filter$df_complex
+list_complex <- g_filter$list_complex
+```
+
+
+# Input data
+
+## Input data 
+
+```{r}
+# the dataset from OpenTargets
+df_disease_formatted <- mutate(
+  g_filter$dataset, 
+  disease = as.factor(disease.efo_info.label)) %>% 
+  rename(drugs = known_drug_binary, genetic = known_gene_binary) %>% 
+  mutate(validation = genetic)
+
+n_total <- vcount(g_filter)
+```
+
+```{r}
+# data frame with input scores in long format
+# use drugs and genetic as input streams
+df_input <- plyr::ddply(
+  reshape2::melt(
+    df_disease_formatted, measure.vars = c("drugs", "genetic"), 
+    variable.name = "input_type", value.name = "input"),
+  c("disease", "input_type"), 
+  function(disease) {
+    # browser()
+    nm <- V(g_filter)$name
+    x <- nm %in% (filter(disease, input == 1)$STRING_id)
+    val <- nm %in% (filter(disease, validation == 1)$STRING_id)
+    
+    data.frame(
+      STRING_id = nm, 
+      score = x*1, 
+      validation = val*1
+    )
+  }, 
+  .progress = "text"
+) %>% dplyr::filter(input_type == "genetic")
+
+# Save the genetic data as a long data frame
+df_genetic <- filter(df_input, input_type == "genetic") %>%
+  dplyr::select(disease, STRING_id, validation) %>% 
+  rename(genetic = validation)
+# pairs disease-gene (drugs == 0 not included to save space)
+write.csv(filter(df_genetic, genetic == 1L) %>% dplyr::select(-genetic), 
+          file = paste0(config$dir_data, "/data_disease_genetic.csv"), 
+          row.names = FALSE)
+
+# count in how many diseases genes participate
+# Only write genes in many diseases
+df_ndisease <- plyr::ddply(
+  df_genetic, "STRING_id", 
+  function(df) c(n_disease = sum(df$genetic))) %>% 
+  dplyr::filter(n_disease >= 1) %>%
+  dplyr::arrange(desc(n_disease))
+write.csv(df_ndisease, 
+          file = paste0(config$dir_data, "/descriptive_disease_count_genes.csv"), 
+          row.names = FALSE)
+
+# Small tests
+local({
+  b <- subset(df_input, input_type == "genetic")
+  tr <- all(b$score == b$validation)  
+  stopifnot(tr)
+})
+```
+
+# Complex-aware cross validation
+
+## Precompute cross validation folds
+
+```{r}
+set.seed(1)
+
+# list with validation folds
+# the format is list$disease$cv_scheme${train,validation}
+# train and validation contain the indices of the genes that 
+# should be used for both purposes. 
+# If validation is NULL, then the complementary of train should be used
+list_cv_folds <- plyr::dlply(
+  # filter(df_input, disease %in% c("allergy", "chronic obstructive pulmonary disease")), 
+  filter(df_input, input_type == "genetic"),
+  "disease", 
+  function(df_in) {
+    # browser()
+    ans <- list()
+    
+    name_disease <- as.character(df_in$disease[1])
+
+    # take response only
+    y <- setNames(df_in$validation, df_in$STRING_id)
+    
+    #######################################
+    # First approach: classic stratified CV
+    folds_classic <- caret::createMultiFolds(
+      y = as.factor(y), 
+      k = config$k_cv, 
+      times = config$times_cv)
+    # Rename to be consistent with other schemes
+    names_classic <- names(folds_classic) %>% 
+      strsplit(split = "\\.") %>%  
+      sapply(function(x) paste(rev(x), collapse = "."))  
+    names(folds_classic) <- names_classic
+    
+    ans$classic <- lapply(
+      folds_classic, 
+      function(x) list(train = x)
+    )
+    
+    #######################################
+    # Complex-aware approaches
+     
+    # First step: find complexes relevant to the disease
+    # gene names
+    gene_disease <- names(y)[y == 1L] %>% unique
+    # find their associated complexes
+    df_compl <- filter(df_complex, STRING_id %in% gene_disease)
+    # genes within the disease that belong to complexes
+    gene_compl <- df_compl$STRING_id %>% unique
+    # identifiers of the complexes related to the disease
+    id_compl <- df_compl$complex_id %>% as.character %>% unique
+    # have the complexes as a list
+    list_whole_compl <- list_complex[id_compl]
+    gene_whole_compl <- list_whole_compl %>% unlist %>% unique
+    
+    # Second step: generate graph with genes as nodes for merging complexes
+    # 
+    # union of disease genes and complex genes for that disease
+    # (because some complex genes might not be within the disease - 
+    # this should not happen too often though)
+    gene_union <- union(gene_whole_compl, gene_disease)
+    n <- length(gene_union)
+    # First, an empty graph
+    g <- graph.empty(n)
+    V(g)$name <- gene_union
+    # Modify its adjacency matrix by adding edges between all the 
+    # genes in a complex
+    mat_adj <- get.adjacency(g)
+    for (com in list_whole_compl) {
+      mat_adj[com, com] <- 1
+    }
+    # Redefine the graph with the right adjacency
+    g <- graph_from_adjacency_matrix(mat_adj, mode = "undirected")
+    g_components <- clusters(g)
+    
+    # Get the labels for each gene
+    labels_gene <- g_components$membership
+    labels <- 1:(g_components$no)
+    # Number of genes in each component
+    labels_size <- g_components$csize
+    # Compute the number of disease genes per component
+    # (because some of them might not be fully made of disease genes...)
+    labels_positives <- sapply(
+      labels, 
+      function(lab) {
+        genes <- names(labels_gene)[labels_gene == lab]
+        length(intersect(genes, gene_disease))
+      }
+    )
+    stopifnot(all(labels_size >= labels_positives))
+    
+    # ids of the rest of vertices
+    genes_outside <- V(g_filter)[!(name %in% V(g)$name)] %>% as.numeric
+    
+    # names for repetitions (with trailing 0s if needed)
+    names_rep <- paste0(
+      "Rep", 
+      formatC(1:config$times_cv, 
+              width = ceiling(log10(config$times_cv)), 
+              format = "d", flag = "0"))
+    #######################################
+    # Complex-aware 1st method: block CV
+    # browser()
+    # all the splits in a list
+    # Format: list$RepX$FoldY and list$RepX.FoldY after unlisting
+    ans$block <- plyr::llply(
+      setNames(names_rep, names_rep), 
+      function(rep_number) {
+        # browser()
+        # shuffle the components
+        shuffle_labels <- sample(labels)
+        # cumulative number of disease genes in this ordering
+        shuffle_sum <- labels_positives[shuffle_labels]
+        shuffle_cumsum <- cumsum(shuffle_sum)
+        
+        # Total number of disease genes
+        total_sum <- length(gene_disease)
+        stopifnot(total_sum == tail(shuffle_cumsum, 1))
+        
+        # Theoretical endpoints
+        endpoints <- ((1:config$k_cv - 1)/config$k_cv)*total_sum
+        # Find the closest cuts
+        cuts <- sapply(endpoints, function(x) which.min(abs(shuffle_cumsum - x)))
+        # In which cut is each position?
+        # This leaves the positives (and maybe some negatives) with a defined fold
+        folds_inside <- sapply(seq_along(shuffle_sum), function(x) sum(x >= cuts)) %>% 
+          paste0("Fold", .) %>% 
+          split(x = shuffle_labels, f = .) %>% 
+          llply(function(labels_fold) {
+            # get the ids of the nodes in each fold
+            genes_fold <- V(g)[labels_gene %in% labels_fold]$name
+            V(g_filter)[name %in% genes_fold] %>% as.numeric
+          })
+        
+        # Assuming that the number of negatives in the complexes is small.. 
+        # the remaining negatives will be equally split among folds
+        folds_outside <- caret::createFolds(genes_outside, k = config$k_cv) %>% 
+          llply(function(ids_fold) {
+            genes_outside[ids_fold]
+          })
+
+        # Merge both lists and take the complementary, 
+        # as each fold contains the training data.
+        lapply(
+          setNames(names(folds_inside), names(folds_inside)), 
+          function(fold) {
+            list(train = setdiff(
+              1:vcount(g_filter), 
+              c(folds_inside[[fold]], folds_outside[[fold]])
+              )
+            )
+          }
+        )
+      }
+    ) %>% unlist(recursive = FALSE, use.names = TRUE)
+    
+    #######################################
+    # Complex-aware 2nd method: pick one representative per block
+    ans$representative <- plyr::llply(
+      setNames(names_rep, names_rep), 
+      function(rep_number) {
+        # for each merged complex, pick one representative
+        # the rest of genes belong to "excluded"
+        
+        # representatives (by string id)
+        # This will change between repetitions!
+        list_repr <- lapply(
+          labels, 
+          function(lab) {
+            # find genes and permute them
+            genes <- names(labels_gene)[labels_gene == lab]
+            genes_disease <- intersect(genes, gene_disease) %>% sample
+            
+            # pick the first gene as representative and the rest as excluded
+            genes_disease[1]
+          }
+        ) %>% unlist
+        
+        # new vector of labels
+        y_new <- setNames(V(g_filter)$name %in% list_repr, names(V(g_filter)))*1L
+        
+        # list of excluded genes
+        list_excluded <- setdiff(V(g)$name, list_repr)
+        id_excluded <- which(V(g_filter)$name %in% list_excluded)
+        
+        # browser()
+        # stratified partition of the new training vector
+        folds <- caret::createFolds(as.factor(y_new), 
+                                    k = config$k_cv, 
+                                    returnTrain = TRUE) 
+        
+        # return 
+        list_folds <- lapply(
+          setNames(names(folds), names(folds)), 
+          function(fold) {
+            list(
+              train = setdiff(folds[[fold]], id_excluded), 
+              validation = setdiff(1:n_total, c(folds[[fold]], id_excluded))
+            )
+          }
+        )
+        
+        list_folds
+      }
+    ) %>% unlist(recursive = FALSE, use.names = TRUE)
+    
+    ans
+  }, 
+  .progress = "text"
+)
+```
+
+
+## Sanity check of folds
+
+
+```{r}
+df_stat_complex <- plyr::ldply(
+  setNames(names(list_cv_folds), names(list_cv_folds)), 
+  function(disease_name) {
+    # binary drugs data
+    df_dis <- filter(df_input, disease == disease_name & 
+                       input_type == "genetic" & score == 1L)
+    vec_dis <- setNames(
+      V(g_filter)$name %in% df_dis$STRING_id, 
+      V(g_filter)$name)
+    gene_dis <- names(vec_dis)[vec_dis == 1L]
+    
+    df_complex_in_disease <- filter(df_complex, STRING_id %in% gene_dis)
+    
+    # check all the cross validation schemes
+    plyr::ldply(
+      list_cv_folds[[disease_name]], 
+      function(scheme) {
+        # and all the folds within it
+        plyr::ldply(
+          scheme, 
+          function(rep_fold) {
+            # browser()
+            
+            id_train <- unique(rep_fold$train)
+            id_val <- unique(rep_fold$validation)
+            if(is.null(id_val)) id_val <- -id_train
+            
+            vec_train <- vec_dis[id_train]
+            vec_val <- vec_dis[id_val]
+            
+            # breaks any complex?
+            # see if all the complex genes involved with the disease
+            # are inside or outside
+            # the training set
+            # i.e. either 0% or 100% of their genes map to it within 
+            # the training set
+            complex_mapped <- plyr::daply(
+              df_complex_in_disease, 
+              "complex_id", 
+              function(df_comp) {
+                # browser()
+                genes_comp <- df_comp$STRING_id %>% as.character
+                in_train <- any(genes_comp %in% names(vec_train))
+                in_val <- any(genes_comp %in% names(vec_val))
+                # complexes are split if and only if we have 
+                # positives on training and on validation
+                in_train & in_val
+              }
+            ) 
+            # NAs are complexes that have no members 
+            complex_split <- sum(complex_mapped, na.rm = TRUE)
+            
+            data.frame(
+              train_all = length(vec_train), 
+              train_pos = sum(vec_train), 
+              validation_all = length(vec_val), 
+              validation_pos = sum(vec_val), 
+              split_complexes = complex_split
+            )
+          }, 
+          .id = "fold"
+        )
+      }, 
+      .id = "cv_scheme"
+    )
+  }, 
+  .id = "disease", 
+  .progress = "text"
+)
+
+# make sure there are always 
+stopifnot(all(df_stat_complex$train_pos > 0))
+stopifnot(all(df_stat_complex$train_val > 0))
+
+# we can see that block cv discarded some folds
+# due to empty train or val
+table(df_stat_complex$cv_scheme)
+summary(df_stat_complex)
+
+# generate tex tables
+# summary of the npositives and split complexes
+df_stat_cvschemes <- dplyr::group_by(df_stat_complex, disease, cv_scheme) %>% 
+  summarise_if(
+    is.numeric, 
+    function(x) {
+      paste0(
+        format(mean(x), digits = 0, nsmall = 1), "(", 
+        format(sd(x), digits = 0, nsmall = 2), ")"
+      )
+    }) %>% 
+  select(disease, cv_scheme, train_pos, validation_pos, split_complexes) %>% 
+  reshape2::melt(id.vars = c("disease", "cv_scheme")) %>% 
+  reshape2::dcast(disease ~ variable + cv_scheme) 
+tex_stat_cvschemes <- knitr::kable(
+  df_stat_cvschemes, 
+  format = "latex", booktabs = TRUE, escape = TRUE) %>% 
+  kableExtra::kable_styling(latex_options = c("striped", "scale_down")) %>% 
+  kableExtra::add_header_above(c(" " = 1, "train_pos" = 3, "validation_pos" = 3, "split_complexes" = 3))
+writeLines(tex_stat_cvschemes, con = paste0(config$dir_data, "/descriptive_cvsplits.tex"))
+
+tex_count_cvschemes <- knitr::kable(
+  dplyr::group_by(df_stat_complex, cv_scheme) %>% summarise(count = length(train_pos)), 
+  format = "latex", booktabs = TRUE, escape = TRUE) %>% 
+  kableExtra::kable_styling(latex_options = c("striped", "scale_down"))
+writeLines(tex_count_cvschemes, con = paste0(config$dir_data, "/descriptive_cvsplits_counts.tex"))
+
+# check that "classic" and "representative" are balanced
+# we substract the maximum and the minimum amount of genes 
+# in training and validation
+# If this is 1 or less, it is balanced. 
+# If not,
+df_check <- dplyr::group_by(df_stat_complex, disease, cv_scheme) %>% 
+  summarise(range_train = max(train_pos) - min(train_pos), 
+            range_val = max(validation_pos) - min(validation_pos))
+
+# Check balance (meaning that cv is stratified as expected)
+stopifnot(all(filter(df_check, cv_scheme != "block")$range_train <= 1))
+stopifnot(all(filter(df_check, cv_scheme != "block")$range_val <= 1))
+
+# check number of split complexes by cv scheme
+dplyr::group_by(df_stat_complex, cv_scheme) %>% 
+  summarise(split_complexes_total = sum(split_complexes))
+
+
+dplyr::group_by(df_stat_complex, disease, cv_scheme) %>% 
+  summarise(npos_mean = mean(train_pos), 
+            npos_sd = sd(train_pos))
+```
+
+```{r}
+# plot the data imbalance within splits
+df_plot_cvsplits <- mutate(
+  df_stat_complex, 
+  proportion = validation_pos/(train_pos + validation_pos), 
+  disease = factor(disease_abbrev[as.character(disease)], levels = disease_abbrev)) 
+palette25 <- readLines(config$file_palette25)
+
+gg <- ggplot(df_plot_cvsplits, aes(x = disease, y = proportion, fill = disease)) + 
+  geom_hline(yintercept = 1/config$k_cv, lwd = .5, color = "gray50") +
+  geom_boxplot(outlier.size = .05, lwd = .2) + 
+  scale_fill_manual(values = palette25, guide = FALSE) + 
+  facet_wrap(~cv_scheme) + 
+  coord_flip() + 
+  theme_bw() + 
+  xlab("") + 
+  ylab("Proportion of drugs-related genes in the validation fold") + 
+  theme(aspect.ratio = 3, 
+            axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1, size = 6.5), 
+            legend.position = "none")
+
+ggsave(filename = paste0(config$dir_data, "/descriptive_folds_imbalance.svg"), 
+       device = NULL, plot = gg)
+ggsave(filename = paste0(config$dir_data, "/descriptive_folds_imbalance.eps"), 
+       device = NULL, plot = gg)
+```
+
+
+```{r}
+# Save CV schemes and input data frames
+save(df_input, list_cv_folds, 
+     file = config$file_input, 
+     compress = "xz")
+
+write.csv(df_stat_complex, 
+          file = paste0(config$dir_data, "/descriptive_cv_splits.csv"), 
+          row.names = FALSE)
+```
+
+# Reproducibility
+
+```{r}
+out <- capture.output(sessionInfo())
+writeLines(out, con = paste0(config$dir_metadata, "/30_sessionInfo_preprocessing.txt"))
+```
+
