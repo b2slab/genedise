@@ -11,6 +11,12 @@ dir_kernel <- "~/all/devel/big/diffusion/gsk/"
 # reproducibility
 dir_metadata <- "00_metadata"
 
+# abbreviations
+file_abbrev <- "60_abbreviations.R"
+# color palettes
+# see http://tools.medialab.sciences-po.fr/iwanthue/
+file_palette25 <- "60_palette25.txt"
+
 # raw data
 dir_raw <- "00_rawdata"
 file_alldiseases <- paste0(dir_raw, "/17.06_ot_commondisease_associations_filtered.csv")
@@ -115,8 +121,8 @@ print(paste("You are running the CV on the host:", host))
 # If you want to add your own machines, you can do so by 
 # appending more options with their hostnames
 if (host == "eko") {
-  nslaves <- 12
-  cv_jobs <- list_cv_schemes[1:3]
+  nslaves <- 11
+  cv_jobs <- list_cv_schemes[3]
 } else if (host == "sun") {
   nslaves <- 32
   cv_jobs <- list_cv_schemes[1:3]
