@@ -858,8 +858,8 @@ gg <- ggplot(df_modularity_join,
   theme_bw() + 
   theme(aspect.ratio = 1) + 
   xlim(-2.5, 24) +
-  xlab("Overall performance ranking (drugs input, top 20 hits). Lower is better.") + 
-  ylab("Modularity ranking (STRING network). Lower is better.") + 
+  xlab("Ranking by overall performance (drugs input, top 20 hits). Lower is better.") + 
+  ylab("Ranking by decreasing modularity (STRING network).") + 
   ggtitle("Disease performance in terms of modularity and gene list size", 
           subtitle = "Lowest rankings (left and down) correspond to largest magnitudes")
 
@@ -869,6 +869,22 @@ ggsave(gg,
 ggsave(gg, 
        file = paste0(config$dir_boxplots, "/disease_modularity_rank.svg"), 
        width = 16, height = 14, units = "cm")
+
+# Plot the three magnitudes in a pairs plot
+gg <- GGally::ggpairs(
+  dplyr::select(df_modularity_join, modularity, n_drug, coef), 
+  columnLabels = c("Modularity", "Known drug targets", "Performance (coefficient)"), 
+  lower = list(continuous = GGally::wrap("smooth", color = "gray20", pch = 1)), 
+  diag = list(continuous = GGally::wrap("densityDiag", fill = "gray92"))) + 
+  theme_bw() + 
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))
+
+ggsave(gg, 
+       file = paste0(config$dir_boxplots, "/disease_modularity_pairs.eps"), 
+       width = 16, height = 16, units = "cm")
+ggsave(gg, 
+       file = paste0(config$dir_boxplots, "/disease_modularity_pairs.svg"), 
+       width = 14, height = 14, units = "cm")
 ```
 
 
