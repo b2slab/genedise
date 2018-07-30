@@ -1,6 +1,6 @@
 PackratFormat: 1.4
 PackratVersion: 0.4.8.1
-RVersion: 3.4.3
+RVersion: 3.4.4
 Repos: BioCsoft=https://bioconductor.org/packages/3.5/bioc,
     BioCann=https://bioconductor.org/packages/3.5/data/annotation,
     BioCexp=https://bioconductor.org/packages/3.5/data/experiment,
@@ -100,6 +100,12 @@ Source: Bioconductor
 Version: 2.42.0
 Hash: e74418374f9054a5d50b7c99a14cf816
 Requires: Biobase, RCurl, XML, httr
+
+Package: GGally
+Source: CRAN
+Version: 1.4.0
+Hash: ddfba619da7507c82edd1ad963c8dc3f
+Requires: RColorBrewer, ggplot2, gtable, plyr, progress, reshape, rlang
 
 Package: GenomeInfoDb
 Source: Bioconductor
@@ -270,8 +276,8 @@ Requires: Hmisc, gplots
 
 Package: XML
 Source: CRAN
-Version: 3.98-1.9
-Hash: 02079c4025bbfa0f63400cc0bb414952
+Version: 3.98-1.12
+Hash: 492cbdb2bce62ac726ede3b75f3fefbc
 
 Package: XVector
 Source: Bioconductor
@@ -400,6 +406,11 @@ Package: corrplot
 Source: CRAN
 Version: 0.84
 Hash: 0eba3aea7183e45bdec590a11376801e
+
+Package: crayon
+Source: CRAN
+Version: 1.3.4
+Hash: ff2840dd9b0d563fc80377a5a45510cd
 
 Package: curl
 Source: CRAN
@@ -674,7 +685,7 @@ Requires: prodlim
 Package: irlba
 Source: CRAN
 Version: 2.2.1
-Hash: 35437a4fd43dbefef9d8b1fd457b3a5f
+Hash: 8ad83546a332b93e6edaf5c44d932c2c
 
 Package: irr
 Source: CRAN
@@ -869,11 +880,23 @@ Source: Bioconductor
 Version: 1.38.1
 Hash: a985dbeface311b8da9c9981c84257ff
 
+Package: prettyunits
+Source: CRAN
+Version: 1.0.2
+Hash: 49286102a855640daaa38eafe8b1ec30
+Requires: assertthat, magrittr
+
 Package: prodlim
 Source: CRAN
 Version: 1.6.1
 Hash: 85a64de359fd42aeccf4090713197232
 Requires: Rcpp, lava
+
+Package: progress
+Source: CRAN
+Version: 1.2.0
+Hash: 0ff5f631b66daf57857f28062f3e6f30
+Requires: R6, crayon, hms, prettyunits
 
 Package: proto
 Source: CRAN
@@ -909,6 +932,12 @@ Version: 0.1.1
 Hash: 14c05a96da97c12ff93c3e18c3918d45
 Requires: RcppRoll, broom, ddalpha, dimRed, dplyr, gower, ipred,
     lubridate, magrittr, purrr, rlang, tibble, tidyselect, timeDate
+
+Package: reshape
+Source: CRAN
+Version: 0.8.7
+Hash: f026a2928c05063a8d0b2e29a129f9a0
+Requires: plyr
 
 Package: reshape2
 Source: CRAN
