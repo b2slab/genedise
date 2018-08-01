@@ -16,7 +16,7 @@ association_score.datatypes.rna_expression - association_score.datatypes.affecte
 association_score.datatypes.somatic_mutation - association_score.datatypes.affected_pathway == 0    -0.017967   0.014097   -1.275   0.7889    
 association_score.datatypes.genetic_association - association_score.datatypes.animal_model == 0      0.366509   0.010137   36.154   <0.001 ***
 association_score.datatypes.literature - association_score.datatypes.animal_model == 0               1.724679   0.008675  198.805   <0.001 ***
-association_score.datatypes.rna_expression - association_score.datatypes.animal_model == 0          -0.029000   0.011000   -2.636   0.0836 .  
+association_score.datatypes.rna_expression - association_score.datatypes.animal_model == 0          -0.029000   0.011000   -2.636   0.0835 .  
 association_score.datatypes.somatic_mutation - association_score.datatypes.animal_model == 0        -0.557583   0.012645  -44.094   <0.001 ***
 association_score.datatypes.literature - association_score.datatypes.genetic_association == 0        1.358170   0.007656  177.394   <0.001 ***
 association_score.datatypes.rna_expression - association_score.datatypes.genetic_association == 0   -0.395509   0.010216  -38.715   <0.001 ***

@@ -87,6 +87,14 @@ list_models <- setNames(
   c("auroc", "partial_auroc_0.90", "partial_auroc_0.95", "auprc", "top_20_hits", "top_100_hits")
 )
 
+list_metrics_names <- c(
+  auroc = "AUROC", auprc = "AUPRC", top_20_hits = "Top 20 hits", top_100_hits = "Top 100 hits", 
+  partial_auroc_0.90 = "pAUROC(0.1)", partial_auroc_0.95 = "pAUROC(0.05)"
+)
+list_cv_colours <- c(
+  classic = "#F7865C", block = "#163949", representative = "#4889AE"
+)
+
 levels_method <- c(
   "pr", "randomraw", "random", "EGAD", 
   "association_score.datatypes.affected_pathway", 
@@ -377,7 +385,7 @@ list_mod <- plyr::llply(
         
         # plot for the main body with the model coefficients with error bars
         if (hypothesis$plot) {
-          # browser()
+          # if (input=="genetic") browser()
           df_all_ci <- plyr::ldply(list_ans_metric, function(x) x$ci, .id = "metric")
           # this assumes all the models have the same formulation!
           list_reference_levels <- sapply(list_all_models[[1]]$xlevels, function(l) l[1])
@@ -488,6 +496,48 @@ list_mod <- plyr::llply(
                          " using the ", input, " input"), 
           out = paste0(dir_mod, "/tex_suppl_model.tex"))
         sink()
+        
+        ### Plot table with predictions, similarly to df_out_cast
+        # browser()
+        df_out_plot <- plyr::ldply(
+          names(list_ans_metric), 
+          function(metric) {
+            # Retrieve lsmeans table with predictions by method
+            df <- list_ans_metric[[metric]]$predictions[[paste(list_strat_main, collapse = "_")]]
+            df$metric <- metric
+            
+            df
+          },
+          .id = "metric"
+        ) %>% filter(metric %in% list_metrics_main) %>% 
+          mutate(metric_name = factor(list_metrics_names[metric], list_metrics_names), 
+             method = factor(method, levels_method), 
+             cv_scheme = factor(cv_scheme, levels_cv_scheme), 
+             network = factor(network, levels_network))
+        
+        n.methods <- length(unique(df_out_plot$method))
+        gg <- ggplot(df_out_plot, aes(x = method, ymin = asymp.LCL, ymax = asymp.UCL, 
+                                      colour = cv_scheme, group = cv_scheme)) + 
+          geom_errorbar(position = "dodge") + 
+          facet_grid(metric_name~network, scales = "free_y") +
+          scale_colour_manual(values = list_cv_colours, name = "Cross validation strategy") + 
+          geom_vline(xintercept = seq_len(n.methods - 1) + .5, colour = "gray85", lty = 1) + 
+          theme_bw() + 
+          theme(aspect.ratio = 1, legend.position = "top", 
+                axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1), 
+                panel.grid.major.x = element_blank(),
+                panel.grid.minor.x = element_blank(), 
+                panel.grid.major.y = element_line(colour = "grey90", linetype = "solid"), 
+                panel.grid.minor.y = element_line(colour = "grey95", linetype = "solid")) + 
+          xlab("Method") + 
+          ylab("Performance")  
+          # coord_flip()
+        ggsave(gg, 
+                 file = paste0(dir_mod, "/svg_main_predictions.svg"), 
+                 width = 19, height = 24, units = "cm")
+        ggsave(gg, 
+                 file = paste0(dir_mod, "/svg_main_predictions.eps"), 
+                 width = 19, height = 24, units = "cm")
         
         # return list with results
         list_ans_metric
