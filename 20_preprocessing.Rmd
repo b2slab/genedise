@@ -45,6 +45,24 @@ df_disease <- read.table(
   stringsAsFactors = FALSE, quote = "") 
 df_disease$known_gene_binary <- (df_disease[[config$col_genetic]] >= config$threshold_genetic)*1
 
+# histogram of the genetic associations (justifying threshold)
+v.hist <- df_disease[[config$col_genetic]] %>% subset(. > 0)
+gg.hist <- ggplot(
+  data.frame(genetic = v.hist), 
+  aes(x = genetic)) + 
+  geom_histogram(binwidth = .02) + 
+  geom_vline(xintercept = config$threshold_genetic, lty = 2) + 
+  theme_bw() + 
+  theme(aspect.ratio = 1) + 
+  xlab("Genetic association score from OpenTargets") + 
+  ylab("Number of non-zero associations") + 
+  ggtitle("Cutoff for higher confidence genetic associations", 
+          subtitle = paste0("Threshold: score >= ", config$threshold_genetic))
+ggsave(filename = paste0(config$dir_data, "/descriptive_genetic_scores.svg"), 
+       device = NULL, plot = gg.hist)
+ggsave(filename = paste0(config$dir_data, "/descriptive_genetic_scores.eps"), 
+       device = NULL, plot = gg.hist)
+
 # summary as tex file
 sink("/dev/null")
 stargazer::stargazer(
