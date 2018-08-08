@@ -548,12 +548,16 @@ list_mod <- plyr::llply(
   .parallel = FALSE
 )
 # models are too heavy to save (compressed file: ~50MB)
+# save(list_mod, file = "list_mod.RData")
 ```
 
 # Model on main CV scheme, network and input
 
 ```{r}
-local({
+# environment to save the reduced models (not to mess up the globalenv)
+envir.reduced <- new.env()
+
+with(envir.reduced, {
   filt_mod <- "input_type == 'drugs' & cv_scheme == 'block' & network == 'string'"
   dir_mod <- paste0(config$dir_models, "/drugs/reduced")
   input <- "drugs"
@@ -747,6 +751,85 @@ local({
   sink()
 })  
 ```
+
+# Plot method ranking by the main and the reduced models
+
+
+```{r}
+# extract the predictions
+# for the big models, it has to be stratified by cv_scheme and network 
+# in order to select string and block cv
+df_string_block_additive <- plyr::ldply(
+  list_mod$drugs$additive, 
+  function(metric) {
+    # browser()
+    df_pred <- metric$predictions$cv_scheme_network %>% 
+      filter(cv_scheme == "block" & network == "string") %>% 
+      as.data.frame %>% 
+      dplyr::select(1, 4) %>% 
+      setNames(c("method", "prediction")) %>% 
+      dplyr::mutate( 
+      z = (prediction - mean(prediction))/sd(prediction), 
+      rank = rank(-prediction))
+    
+  }, .id = "metric")
+
+# in the reduced models, the network=string and cv_scheme=block by definition
+# so the stratification has to be "none"
+df_string_block_reduced <- plyr::ldply(
+  envir.reduced$list_ans_metric, 
+  function(metric) {
+    # browser()
+    df_pred <- metric$predictions$none %>% 
+      as.data.frame %>% 
+      dplyr::select(1, 2) %>% 
+      setNames(c("method", "prediction")) %>% 
+      dplyr::mutate( 
+      z = (prediction - mean(prediction))/sd(prediction), 
+      rank = rank(-prediction))
+    
+  }, .id = "metric")
+
+# sort from less to more similar to AUROC
+# (looks good and makes a point)
+metrics_order <- c("top_20_hits", "auprc", "top_100_hits", 
+  "partial_auroc_0.95", "partial_auroc_0.90", "auroc"
+)
+
+# combine both data frames for a single plot
+df_string_block_plot <- rbind(
+  mutate(df_string_block_additive, model = "Main model"), 
+  mutate(df_string_block_reduced, model = "Reduced model")
+) %>% mutate(
+  label = paste0(rank, "(", signif(prediction, 2), ")"), 
+  metric_name = factor(list_metrics_names[as.character(metric)], levels = list_metrics_names[metrics_order]))
+
+# palette_ranking <- grDevices::colorRampPalette(
+  # colors = c("#67B8DB", "#6DD48C", "#DB9667", "#D46D6D"))(nlevels(k$method))
+
+gg <- ggplot(df_string_block_plot, 
+       aes(x = metric_name, y = method, fill = z, label = label)) + 
+  geom_tile(color = "white") + 
+  geom_text(size = 2.75) + 
+  scale_fill_distiller(palette = "Spectral", direction = 1, name = "z-score") + 
+  facet_grid(~model) + 
+  theme_bw() + 
+  theme(aspect.ratio = 1, 
+        axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1), 
+        legend.position = "bottom") + 
+  xlab("Performance metric") + 
+  ylab("Method") + 
+  ggtitle("Method ranking by their predicted performance, averaged over diseases", 
+          subtitle = "Lower ranks are better. In brackets, predicions on drugs input, STRING network and block validation.")
+
+ggsave(filename = paste0(config$dir_boxplots, "/method_ranking_drugs.svg"), 
+       width = 19, height = 15, units = "cm", 
+       device = NULL, plot = gg)
+ggsave(filename = paste0(config$dir_boxplots, "/method_ranking_drugs.eps"), 
+       width = 19, height = 15, units = "cm", 
+       device = NULL, plot = gg)
+```
+
 
 # Boxplots
 
