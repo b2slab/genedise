@@ -811,7 +811,7 @@ gg <- ggplot(df_string_block_plot,
        aes(x = metric_name, y = method, fill = z, label = label)) + 
   geom_tile(color = "white") + 
   geom_text(size = 2.75) + 
-  scale_fill_distiller(palette = "Spectral", direction = 1, name = "z-score") + 
+  scale_fill_distiller(palette = "Spectral", direction = -1, name = "z-score") + 
   facet_grid(~model) + 
   theme_bw() + 
   theme(aspect.ratio = 1, 
