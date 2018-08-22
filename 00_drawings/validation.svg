@@ -10,9 +10,9 @@
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="180mm"
+   width="170mm"
    height="90mm"
-   viewBox="0 0 637.79528 318.89764"
+   viewBox="0 0 602.36221 318.89764"
    id="svg2"
    version="1.1"
    inkscape:version="0.91 r13725"
@@ -21,17 +21,18 @@
      id="defs4">
     <marker
        inkscape:isstock="true"
-       style="overflow:visible;"
+       style="overflow:visible"
        id="marker6835"
-       refX="0.0"
-       refY="0.0"
+       refX="0"
+       refY="0"
        orient="auto"
        inkscape:stockid="Arrow2Send">
       <path
-         transform="scale(0.3) rotate(180) translate(-2.3,0)"
-         d="M 8.7185878,4.0337352 L -2.2072895,0.016013256 L 8.7185884,-4.0017078 C 6.9730900,-1.6296469 6.9831476,1.6157441 8.7185878,4.0337352 z "
-         style="fill-rule:evenodd;stroke-width:0.625;stroke-linejoin:round;stroke:#636363;stroke-opacity:1;fill:#636363;fill-opacity:1"
-         id="path6837" />
+         transform="matrix(-0.3,0,0,-0.3,0.69,0)"
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         style="fill:#636363;fill-opacity:1;fill-rule:evenodd;stroke:#636363;stroke-width:0.625;stroke-linejoin:round;stroke-opacity:1"
+         id="path6837"
+         inkscape:connector-curvature="0" />
     </marker>
     <linearGradient
        id="linearGradient4790"
@@ -1287,7 +1288,7 @@
     <linearGradient
        inkscape:collect="always"
        xlink:href="#linearGradient4720"
-       id="linearGradient5527"
+       id="linearGradient4645"
        gradientUnits="userSpaceOnUse"
        gradientTransform="translate(131.1707,24.186359)"
        x1="-209.81514"
@@ -1297,7 +1298,7 @@
     <linearGradient
        inkscape:collect="always"
        xlink:href="#linearGradient4790"
-       id="linearGradient5529"
+       id="linearGradient4647"
        gradientUnits="userSpaceOnUse"
        gradientTransform="translate(131.17064,-36.947471)"
        x1="-206.41556"
@@ -1313,8 +1314,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1.28"
-     inkscape:cx="423.78064"
-     inkscape:cy="186.35301"
+     inkscape:cx="47.816401"
+     inkscape:cy="149.3439"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -1442,36 +1443,39 @@
     <text
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.5px;line-height:100%;font-family:Arial;-inkscape-font-specification:'Arial, Normal';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="8.9285698"
-       y="748.18152"
+       x="4.9285698"
+       y="752.18152"
        id="text4215"
        sodipodi:linespacing="100%"><tspan
          sodipodi:role="line"
          id="tspan4217"
-         x="8.9285698"
-         y="748.18152">(A)</tspan></text>
+         x="4.9285698"
+         y="752.18152"
+         style="font-size:15px">(A)</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.5px;line-height:100%;font-family:Arial;-inkscape-font-specification:'Arial, Normal';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="231.45247"
-       y="748.18152"
+       x="215.45247"
+       y="752.18152"
        id="text4219"
        sodipodi:linespacing="100%"><tspan
          sodipodi:role="line"
          id="tspan4221"
-         x="231.45247"
-         y="748.18152">(B)</tspan></text>
+         x="215.45247"
+         y="752.18152"
+         style="font-size:15px">(B)</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.5px;line-height:100%;font-family:Arial;-inkscape-font-specification:'Arial, Normal';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="446.21936"
-       y="748.18152"
+       x="418.21936"
+       y="752.18152"
        id="text4223"
        sodipodi:linespacing="100%"><tspan
          sodipodi:role="line"
          id="tspan4225"
-         x="446.21936"
-         y="748.18152">(C)</tspan></text>
+         x="418.21936"
+         y="752.18152"
+         style="font-size:15px">(C)</tspan></text>
     <use
        x="0"
        y="0"
@@ -1638,7 +1642,7 @@
        r="5.9976201"
        transform="scale(-1,-1)" />
     <circle
-       style="color:#000000;clip-rule:nonzero;display:inline;overflow:visible;visibility:visible;opacity:1;isolation:auto;mix-blend-mode:normal;color-interpolation:sRGB;color-interpolation-filters:linearRGB;solid-color:#000000;solid-opacity:1;fill:url(#linearGradient5527);fill-opacity:1;fill-rule:nonzero;stroke:#b7b7b7;stroke-width:0.55977786;stroke-opacity:1;marker:none;color-rendering:auto;image-rendering:auto;shape-rendering:auto;text-rendering:auto;enable-background:accumulate"
+       style="color:#000000;clip-rule:nonzero;display:inline;overflow:visible;visibility:visible;opacity:1;isolation:auto;mix-blend-mode:normal;color-interpolation:sRGB;color-interpolation-filters:linearRGB;solid-color:#000000;solid-opacity:1;fill:url(#linearGradient4645);fill-opacity:1;fill-rule:nonzero;stroke:#b7b7b7;stroke-width:0.55977786;stroke-opacity:1;marker:none;color-rendering:auto;image-rendering:auto;shape-rendering:auto;text-rendering:auto;enable-background:accumulate"
        id="path4151-5-6"
        cx="-72.366989"
        cy="679.11902"
@@ -1655,7 +1659,7 @@
        cx="-72.366989"
        cy="617.98523"
        id="use4865"
-       style="color:#000000;clip-rule:nonzero;display:inline;overflow:visible;visibility:visible;opacity:1;isolation:auto;mix-blend-mode:normal;color-interpolation:sRGB;color-interpolation-filters:linearRGB;solid-color:#000000;solid-opacity:1;fill:url(#linearGradient5529);fill-opacity:1;fill-rule:nonzero;stroke:#b7b7b7;stroke-width:0.55977786;stroke-opacity:1;marker:none;color-rendering:auto;image-rendering:auto;shape-rendering:auto;text-rendering:auto;enable-background:accumulate" />
+       style="color:#000000;clip-rule:nonzero;display:inline;overflow:visible;visibility:visible;opacity:1;isolation:auto;mix-blend-mode:normal;color-interpolation:sRGB;color-interpolation-filters:linearRGB;solid-color:#000000;solid-opacity:1;fill:url(#linearGradient4647);fill-opacity:1;fill-rule:nonzero;stroke:#b7b7b7;stroke-width:0.55977786;stroke-opacity:1;marker:none;color-rendering:auto;image-rendering:auto;shape-rendering:auto;text-rendering:auto;enable-background:accumulate" />
     <circle
        style="color:#000000;clip-rule:nonzero;display:inline;overflow:visible;visibility:visible;opacity:1;isolation:auto;mix-blend-mode:normal;color-interpolation:sRGB;color-interpolation-filters:linearRGB;solid-color:#000000;solid-opacity:1;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#b7b7b7;stroke-width:0.55977786;stroke-opacity:1;marker:none;color-rendering:auto;image-rendering:auto;shape-rendering:auto;text-rendering:auto;enable-background:accumulate"
        id="path4151-5-9"
@@ -1730,7 +1734,7 @@
        height="100%" />
     <g
        id="g5310"
-       transform="translate(0,237.7514)">
+       transform="translate(-24,237.7514)">
       <use
          style="fill:#2b1100"
          height="100%"
@@ -1865,7 +1869,7 @@
        y="0"
        xlink:href="#path5531"
        id="use6355"
-       transform="translate(383.25158,0.30465445)"
+       transform="translate(371.25158,0.30465445)"
        width="100%"
        height="100%" />
     <rect
@@ -1873,18 +1877,18 @@
        id="rect5353-2"
        width="92.360962"
        height="17.867371"
-       x="273.68082"
+       x="261.68082"
        y="810.30981"
        ry="1.1589482" />
     <text
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;line-height:100%;font-family:Arial;-inkscape-font-specification:'Arial, Normal';text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="319.82956"
+       x="307.82956"
        y="821.89001"
        id="text5052-0"
        sodipodi:linespacing="100%"><tspan
          sodipodi:role="line"
-         x="319.82956"
+         x="307.82956"
          y="821.89001"
          id="tspan5166">Shuffle complexes</tspan></text>
     <use
@@ -1892,7 +1896,7 @@
        y="0"
        xlink:href="#path5531"
        id="use6649"
-       transform="translate(383.25158,83.736352)"
+       transform="translate(371.25158,83.736352)"
        width="100%"
        height="100%" />
     <rect
@@ -1900,18 +1904,18 @@
        id="rect5353-26"
        width="147.43906"
        height="17.867371"
-       x="246.14175"
+       x="234.14175"
        y="894.13593"
        ry="1.1589482" />
     <text
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;line-height:100%;font-family:Arial;-inkscape-font-specification:'Arial, Normal';text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="319.82953"
+       x="307.82953"
        y="905.65747"
        id="text5056-3"
        sodipodi:linespacing="100%"><tspan
          sodipodi:role="line"
-         x="319.82953"
+         x="307.82953"
          y="905.65747"
          id="tspan5100"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;line-height:100%;font-family:Arial;-inkscape-font-specification:'Arial, Normal';text-align:center;writing-mode:lr-tb;text-anchor:middle">Split evenly, respect complexes</tspan></text>
@@ -1931,7 +1935,7 @@
        y="0"
        xlink:href="#path5531"
        id="use6845"
-       transform="translate(599.10267,170.87789)"
+       transform="translate(575.10267,170.87789)"
        width="100%"
        height="100%" />
     <rect
@@ -1939,18 +1943,18 @@
        id="rect5353-1"
        width="61.97073"
        height="17.867371"
-       x="504.72702"
+       x="480.72702"
        y="980.68585"
        ry="1.1589482" />
     <text
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;line-height:100%;font-family:Arial;-inkscape-font-specification:'Arial, Normal';text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#2b1100;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="535.53174"
+       x="511.53174"
        y="992.20746"
        id="text5056-2"
        sodipodi:linespacing="100%"><tspan
          sodipodi:role="line"
-         x="535.53174"
+         x="511.53174"
          y="992.20746"
          id="tspan5407">Split evenly</tspan></text>
     <use
@@ -1958,7 +1962,7 @@
        y="0"
        xlink:href="#path5531"
        id="use6453"
-       transform="translate(599.10267,0.30465445)"
+       transform="translate(575.10267,0.30465445)"
        width="100%"
        height="100%" />
     <rect
@@ -1966,18 +1970,18 @@
        id="rect5353-8"
        width="69.704697"
        height="17.867378"
-       x="500.86005"
+       x="476.86005"
        y="810.30981"
        ry="1.1589482" />
     <text
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;line-height:100%;font-family:Arial;-inkscape-font-specification:'Arial, Normal';text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="535.53662"
+       x="511.53662"
        y="821.77039"
        id="text5052-0-8"
        sodipodi:linespacing="100%"><tspan
          sodipodi:role="line"
-         x="535.53662"
+         x="511.53662"
          y="821.77039"
          id="tspan5221">Pick prototype</tspan></text>
     <use
@@ -1985,7 +1989,7 @@
        y="0"
        xlink:href="#path5531"
        id="use6761"
-       transform="translate(599.10267,83.736352)"
+       transform="translate(575.10267,83.736352)"
        width="100%"
        height="100%" />
     <rect
@@ -1993,18 +1997,18 @@
        id="rect5353-28"
        width="69.704697"
        height="17.867378"
-       x="500.86005"
+       x="476.86005"
        y="894.13593"
        ry="1.1589482" />
     <text
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;line-height:100%;font-family:Arial;-inkscape-font-specification:'Arial, Normal';text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#2b1100;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="535.68066"
+       x="511.68066"
        y="905.65747"
        id="text5052-0-3"
        sodipodi:linespacing="100%"><tspan
          sodipodi:role="line"
-         x="535.68066"
+         x="511.68066"
          y="905.65747"
          id="tspan5166-1">Shuffle genes</tspan></text>
     <rect
@@ -2057,7 +2061,7 @@
        ry="2.1030052" />
     <g
        id="g5324"
-       transform="translate(0,289.15223)">
+       transform="translate(-24,289.15223)">
       <use
          style="fill:#2b1100"
          height="100%"
@@ -2389,7 +2393,7 @@
     </g>
     <g
        id="g5280"
-       transform="translate(0,200.52027)">
+       transform="translate(-12,200.52027)">
       <use
          height="100%"
          width="100%"
@@ -2497,7 +2501,7 @@
     </g>
     <g
        id="g5265"
-       transform="translate(-6.2499998e-7,194.6529)">
+       transform="translate(-12.000001,194.6529)">
       <use
          height="100%"
          width="100%"
@@ -2605,7 +2609,7 @@
     </g>
     <g
        id="g5247"
-       transform="translate(0.19133666,200.36825)">
+       transform="translate(-11.808663,200.36825)">
       <use
          height="100%"
          width="100%"
@@ -2737,7 +2741,7 @@
     </g>
     <g
        id="g5295"
-       transform="translate(0,203.98107)">
+       transform="translate(-24,203.98107)">
       <use
          height="100%"
          width="100%"
@@ -2845,7 +2849,7 @@
     </g>
     <g
        id="g5317"
-       transform="translate(0,258.79769)">
+       transform="translate(-24,258.79769)">
       <use
          style="fill:#2b1100"
          height="100%"
@@ -2897,27 +2901,27 @@
        id="rect5353-4-9"
        width="360.17511"
        height="66.48101"
-       x="28.38669"
+       x="24.089815"
        y="973.44275"
        ry="1.1589482" />
     <text
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;line-height:100%;font-family:Arial;-inkscape-font-specification:'Arial, Normal';text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="208.47119"
-       y="985.25146"
+       x="204.17432"
+       y="987.79053"
        id="text5056-28"
        sodipodi:linespacing="100%"><tspan
          sodipodi:role="line"
-         x="208.47119"
-         y="985.25146"
+         x="204.17432"
+         y="987.79053"
          id="tspan5405-8"
-         style="font-size:12.5px">Legend</tspan></text>
+         style="font-size:15px">Legend</tspan></text>
     <use
        x="0"
        y="0"
        xlink:href="#path4151-5-4"
        id="use5449"
-       transform="translate(257.78946,427.8786)"
+       transform="translate(253.49253,427.8786)"
        width="100%"
        height="100%" />
     <use
@@ -2932,7 +2936,7 @@
        y="0"
        xlink:href="#path4151-5-7"
        id="use5455"
-       transform="translate(308.89049,387.12274)"
+       transform="translate(304.59356,387.12274)"
        width="100%"
        height="100%" />
     <use
@@ -2940,7 +2944,7 @@
        y="0"
        xlink:href="#path4151-5-6-5-4"
        id="use5457"
-       transform="translate(291.85681,346.36688)"
+       transform="translate(287.55988,346.36688)"
        width="100%"
        height="100%" />
     <use
@@ -2948,7 +2952,7 @@
        y="0"
        xlink:href="#path4151-5-6-8"
        id="use5459"
-       transform="translate(274.82314,325.98895)"
+       transform="translate(270.52621,325.98895)"
        width="100%"
        height="100%" />
     <use
@@ -2956,7 +2960,7 @@
        y="0"
        xlink:href="#path4151-5-9"
        id="use5461"
-       transform="translate(274.82314,284.35934)"
+       transform="translate(270.52621,284.35934)"
        width="100%"
        height="100%" />
     <use
@@ -2964,7 +2968,7 @@
        y="0"
        xlink:href="#rect7223-5-2-2-3"
        id="use5463"
-       transform="matrix(0,1,-1,0,1033.0496,1076.601)"
+       transform="matrix(0,1,-1,0,1028.753,1076.601)"
        width="100%"
        height="100%" />
     <use
@@ -2972,18 +2976,18 @@
        y="0"
        xlink:href="#rect7223-5-2-7"
        id="use5465"
-       transform="matrix(0,1,-1,0,1033.1288,1097.8529)"
+       transform="matrix(0,1,-1,0,1028.8322,1097.8529)"
        width="100%"
        height="100%" />
     <text
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;line-height:100%;font-family:Arial;-inkscape-font-specification:'Arial, Normal';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="32.264549"
+       x="27.967674"
        y="1007.0603"
        id="text5056-28-8"
        sodipodi:linespacing="100%"><tspan
          sodipodi:role="line"
-         x="32.264549"
+         x="27.967674"
          y="1007.0603"
          id="tspan5405-8-6">Gene not belonging to any complex</tspan></text>
     <text
@@ -3000,34 +3004,34 @@
     <text
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;line-height:100%;font-family:Arial;-inkscape-font-specification:'Arial, Normal';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="32.264549"
+       x="27.967674"
        y="1028.4927"
        id="text5056-28-8-8"
        sodipodi:linespacing="100%"><tspan
          sodipodi:role="line"
-         x="32.264549"
+         x="27.967674"
          y="1028.4927"
          id="tspan5405-8-6-3">Genes belonging to complexes</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;line-height:100%;font-family:Arial;-inkscape-font-specification:'Arial, Normal';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="274.4093"
+       x="270.11243"
        y="1007.0603"
        id="text5056-28-8-83"
        sodipodi:linespacing="100%"><tspan
          sodipodi:role="line"
-         x="274.4093"
+         x="270.11243"
          y="1007.0603"
          id="tspan5405-8-6-33">Complex</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;line-height:100%;font-family:Arial;-inkscape-font-specification:'Arial, Normal';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="274.4093"
+       x="270.11243"
        y="1028.4927"
        id="text5056-28-8-80"
        sodipodi:linespacing="100%"><tspan
          sodipodi:role="line"
-         x="274.4093"
+         x="270.11243"
          y="1028.4927"
          id="tspan5405-8-6-4">Validation fold</tspan></text>
     <text
@@ -3044,24 +3048,24 @@
     <text
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.5px;line-height:100%;font-family:Arial;-inkscape-font-specification:'Arial, Normal';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="304.13254"
+       x="292.13254"
        y="756.18152"
        id="text4215-3-6"
        sodipodi:linespacing="100%"><tspan
          sodipodi:role="line"
          id="tspan4217-9-9"
-         x="304.13254"
+         x="292.13254"
          y="756.18152">Block</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.5px;line-height:100%;font-family:Arial;-inkscape-font-specification:'Arial, Normal';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="493.41809"
+       x="469.41809"
        y="756.18152"
        id="text4215-3-9"
        sodipodi:linespacing="100%"><tspan
          sodipodi:role="line"
          id="tspan4217-9-6"
-         x="493.41809"
+         x="469.41809"
          y="756.18152">Representative</tspan></text>
   </g>
 </svg>
