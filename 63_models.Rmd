@@ -216,7 +216,7 @@ list_metrics <- c("auroc" = 3, "partial_auroc_0.90" = 3,
                   "partial_auroc_0.95" = 3, "auprc" = 3, 
                   "top_20_hits" = 2, "top_100_hits" = 2)
 # where to show the models
-list_metrics_main <- c("auroc", "auprc", "top_20_hits")
+list_metrics_main <- c("auroc", "top_20_hits")
 list_metrics_suppl <- c("partial_auroc_0.90", "partial_auroc_0.95", "top_100_hits")
 # Columns to include 
 list_columns_main <- c("asymp.LCL", "asymp.UCL")
@@ -807,26 +807,26 @@ df_string_block_plot <- rbind(
 # palette_ranking <- grDevices::colorRampPalette(
   # colors = c("#67B8DB", "#6DD48C", "#DB9667", "#D46D6D"))(nlevels(k$method))
 
-gg <- ggplot(df_string_block_plot, 
+gg <- ggplot(filter(df_string_block_plot, metric %in% c("auroc", "top_20_hits", "auprc")), 
        aes(x = metric_name, y = method, fill = z, label = label)) + 
   geom_tile(color = "white") + 
   geom_text(size = 2.75) + 
-  scale_fill_distiller(palette = "Spectral", direction = -1, name = "z-score") + 
+  scale_fill_distiller(palette = "Spectral", direction = -1, name = "Performance\nz-score\n(by metric)") + 
   facet_grid(~model) + 
   theme_bw() + 
   theme(aspect.ratio = 1, 
         axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1), 
-        legend.position = "bottom") + 
+        legend.position = "right") + 
   xlab("Performance metric") + 
   ylab("Method") + 
   ggtitle("Method ranking by their predicted performance, averaged over diseases", 
-          subtitle = "Lower ranks are better. In brackets, predicions on drugs input, STRING network and block validation.")
+          subtitle = "Lower ranks are better. Predictions in brackets (drugs input, STRING, block CV).")
 
 ggsave(filename = paste0(config$dir_boxplots, "/method_ranking_drugs.svg"), 
-       width = 19, height = 15, units = "cm", 
+       width = 17, height = 11, units = "cm", 
        device = NULL, plot = gg)
 ggsave(filename = paste0(config$dir_boxplots, "/method_ranking_drugs.eps"), 
-       width = 19, height = 15, units = "cm", 
+       width = 17, height = 11, units = "cm", 
        device = NULL, plot = gg)
 ```
 
