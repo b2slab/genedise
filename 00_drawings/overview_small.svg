@@ -2133,15 +2133,15 @@
      borderopacity="1.0"
      inkscape:pageopacity="1"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.8101934"
-     inkscape:cx="10.621581"
-     inkscape:cy="296.78618"
+     inkscape:zoom="4"
+     inkscape:cx="39.902801"
+     inkscape:cy="391.0884"
      inkscape:document-units="px"
      inkscape:current-layer="layer2"
      showgrid="true"
-     inkscape:window-width="1820"
+     inkscape:window-width="1812"
      inkscape:window-height="1051"
-     inkscape:window-x="0"
+     inkscape:window-x="1920"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
      inkscape:snap-bbox="true"
@@ -2262,7 +2262,7 @@
        y="1001.8794"
        ry="6.0905762" />
     <g
-       transform="matrix(1.1658544,0,0,1.1658544,-57.540599,-451.29603)"
+       transform="matrix(1.1658544,0,0,1.1658544,-57.048809,-451.29603)"
        id="g15156">
       <use
          height="100%"
@@ -2285,7 +2285,7 @@
            sodipodi:role="line">Disease</tspan></text>
     </g>
     <g
-       transform="matrix(1.1658544,0,0,1.1658544,-369.09807,-461.47477)"
+       transform="matrix(1.1658544,0,0,1.1658544,-368.60625,-461.47477)"
        id="g15222">
       <use
          height="100%"
@@ -2309,7 +2309,7 @@
     </g>
     <g
        id="g8544"
-       transform="matrix(1.1658544,0,0,1.1658544,-11.020273,-213.80746)">
+       transform="matrix(1.1658544,0,0,1.1658544,-10.528486,-213.80746)">
       <g
          id="g15202"
          transform="translate(-41.007204,-235.36358)">
@@ -2452,7 +2452,7 @@
            sodipodi:role="line">Validation ids</tspan></text>
     </g>
     <g
-       transform="matrix(1.1658544,0,0,1.1658544,-61.732267,-453.58629)"
+       transform="matrix(1.1658544,0,0,1.1658544,-61.732276,-453.58629)"
        id="g15236">
       <use
          height="100%"
@@ -2498,7 +2498,7 @@
            sodipodi:role="line">Gene ranking</tspan></text>
     </g>
     <g
-       transform="matrix(1.1658544,0,0,1.1658544,-54.189965,-458.94259)"
+       transform="matrix(1.1658544,0,0,1.1658544,-54.189973,-458.94259)"
        id="g15273">
       <use
          height="100%"
@@ -2606,76 +2606,89 @@
            sodipodi:role="line">models</tspan></text>
     </g>
     <g
-       id="g10031"
-       transform="matrix(1.1658544,0,0,1.1658544,-18.015398,-196.12533)">
+       id="g5028"
+       transform="translate(-1.4701781,0)">
       <g
-         id="g15162"
-         transform="translate(-33.884946,-220.49831)">
-        <use
-           x="0"
-           y="0"
-           xlink:href="#rect5353-8-3-9-0"
-           id="use15143"
-           transform="translate(235.83895,-199.80534)"
-           width="100%"
-           height="100%" />
-        <text
-           xml:space="preserve"
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;line-height:100%;font-family:Arial;-inkscape-font-specification:'Arial, Normal';text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-           x="84.496483"
-           y="702.16998"
-           id="text5052-0-8"
-           sodipodi:linespacing="100%"><tspan
-             sodipodi:role="line"
-             x="84.496483"
+         transform="matrix(1.1658544,0,0,1.1658544,-16.015398,-196.12533)"
+         id="g10031">
+        <g
+           transform="translate(-33.884946,-220.49831)"
+           id="g15162">
+          <use
+             height="100%"
+             width="100%"
+             transform="translate(235.83895,-199.80534)"
+             id="use15143"
+             xlink:href="#rect5353-8-3-9-0"
+             y="0"
+             x="0" />
+          <text
+             sodipodi:linespacing="100%"
+             id="text5052-0-8"
              y="702.16998"
-             id="tspan5221">CV Repetition</tspan></text>
-      </g>
-      <g
-         id="g15168"
-         transform="translate(-32.245064,-220.36611)">
-        <use
-           x="0"
-           y="0"
-           xlink:href="#rect5353-8-3-9-3"
-           id="use15145"
-           transform="translate(234.31978,-145.73652)"
-           width="100%"
-           height="100%" />
-        <text
-           xml:space="preserve"
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;line-height:100%;font-family:Arial;-inkscape-font-specification:'Arial, Normal';text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-           x="82.553864"
-           y="720.49976"
-           id="text5052-0-8-56"
-           sodipodi:linespacing="100%"><tspan
-             sodipodi:role="line"
-             x="82.553864"
+             x="84.496483"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;line-height:100%;font-family:Arial;-inkscape-font-specification:'Arial, Normal';text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+             xml:space="preserve"><tspan
+               id="tspan5221"
+               y="702.16998"
+               x="84.496483"
+               sodipodi:role="line">CV Repetition</tspan></text>
+        </g>
+        <g
+           transform="translate(-32.245064,-220.36611)"
+           id="g15168">
+          <use
+             height="100%"
+             width="100%"
+             transform="translate(234.31978,-145.73652)"
+             id="use15145"
+             xlink:href="#rect5353-8-3-9-3"
+             y="0"
+             x="0" />
+          <text
+             sodipodi:linespacing="100%"
+             id="text5052-0-8-56"
              y="720.49976"
-             id="tspan5221-2">CV strategy</tspan></text>
-      </g>
-      <g
-         id="g10022">
-        <use
-           x="0"
-           y="0"
-           xlink:href="#rect5353-8-3-9-0"
-           id="use10020"
-           transform="translate(201.95401,-383.65308)"
-           width="100%"
-           height="100%" />
-        <text
-           xml:space="preserve"
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;line-height:100%;font-family:Arial;-inkscape-font-specification:'Arial, Normal';text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-           x="50.479698"
-           y="518.3222"
-           id="text5052-0-8-6"
-           sodipodi:linespacing="100%"><tspan
-             sodipodi:role="line"
-             x="50.479698"
+             x="82.553864"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;line-height:100%;font-family:Arial;-inkscape-font-specification:'Arial, Normal';text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+             xml:space="preserve"><tspan
+               id="tspan5221-2"
+               y="720.49976"
+               x="82.553864"
+               sodipodi:role="line">CV strategy</tspan></text>
+        </g>
+        <g
+           id="g10022">
+          <use
+             height="100%"
+             width="100%"
+             transform="translate(201.95401,-383.65308)"
+             id="use10020"
+             xlink:href="#rect5353-8-3-9-0"
+             y="0"
+             x="0" />
+          <text
+             sodipodi:linespacing="100%"
+             id="text5052-0-8-6"
              y="518.3222"
-             id="tspan5221-7">Complex data</tspan></text>
+             x="50.479698"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;line-height:100%;font-family:Arial;-inkscape-font-specification:'Arial, Normal';text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+             xml:space="preserve"><tspan
+               id="tspan5221-7"
+               y="518.3222"
+               x="50.479698"
+               sodipodi:role="line">Complex data</tspan></text>
+        </g>
       </g>
+      <rect
+         rx="3.987376"
+         ry="3.987376"
+         y="371.86169"
+         x="1.7201781"
+         height="43.238708"
+         width="82.23645"
+         id="rect5353-8-3-3"
+         style="color:#000000;clip-rule:nonzero;display:inline;overflow:visible;visibility:visible;opacity:1;isolation:auto;mix-blend-mode:normal;color-interpolation:sRGB;color-interpolation-filters:linearRGB;solid-color:#000000;solid-opacity:1;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#1d1d1d;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;color-rendering:auto;image-rendering:auto;shape-rendering:auto;text-rendering:auto;enable-background:accumulate" />
     </g>
   </g>
   <g
@@ -3038,7 +3051,7 @@
        y="0"
        xlink:href="#path5531-4"
        id="use4761"
-       transform="matrix(1.1658544,0,0,1.1658544,198.84848,-335.85995)"
+       transform="matrix(1.1658544,0,0,1.1658544,199.32629,-335.85995)"
        width="100%"
        height="100%" />
     <use
@@ -3054,7 +3067,7 @@
        y="0"
        xlink:href="#path5531"
        id="use8575"
-       transform="matrix(0,-1.1658544,1.1658544,0,-903.62065,613.79218)"
+       transform="matrix(0,-1.1658544,1.1658544,0,-903.3747,613.79218)"
        width="100%"
        height="100%" />
     <use
@@ -3086,7 +3099,7 @@
        y="0"
        xlink:href="#path5531-4"
        id="use3941"
-       transform="matrix(1.1658544,0,0,1.1658544,198.84848,-382.41956)"
+       transform="matrix(1.1658544,0,0,1.1658544,199.09434,-382.41956)"
        width="100%"
        height="100%" />
     <use
@@ -3183,15 +3196,15 @@
          style="font-style:italic;font-size:10.20122623px;fill:#5e5e5e;fill-opacity:1">CV repeated 25 times</tspan></text>
     <g
        id="g10051"
-       transform="translate(-258.66003,220.78485)">
+       transform="translate(-258.42711,220.78485)">
       <rect
-         ry="1.1589482"
-         y="768.33899"
-         x="258.66003"
-         height="63.005489"
-         width="301.18109"
+         ry="1.1589547"
+         y="768.33881"
+         x="258.65985"
+         height="63.005848"
+         width="300.71564"
          id="rect5353-4-9"
-         style="color:#000000;clip-rule:nonzero;display:inline;overflow:visible;visibility:visible;opacity:1;isolation:auto;mix-blend-mode:normal;color-interpolation:sRGB;color-interpolation-filters:linearRGB;solid-color:#000000;solid-opacity:1;fill:#fffefd;fill-opacity:1;fill-rule:nonzero;stroke:#636363;stroke-width:0.46583694;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;color-rendering:auto;image-rendering:auto;shape-rendering:auto;text-rendering:auto;enable-background:accumulate" />
+         style="color:#000000;clip-rule:nonzero;display:inline;overflow:visible;visibility:visible;opacity:1;isolation:auto;mix-blend-mode:normal;color-interpolation:sRGB;color-interpolation-filters:linearRGB;solid-color:#000000;solid-opacity:1;fill:#fffefd;fill-opacity:1;fill-rule:nonzero;stroke:#636363;stroke-width:0.46547815;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;color-rendering:auto;image-rendering:auto;shape-rendering:auto;text-rendering:auto;enable-background:accumulate" />
       <rect
          ry="0.17547667"
          y="791.99542"
@@ -3305,7 +3318,7 @@
        y="0"
        xlink:href="#path5531-4"
        id="use8078"
-       transform="matrix(1.1658544,0,0,1.1658544,200.01433,-149.62164)"
+       transform="matrix(1.1658544,0,0,1.1658544,199.09434,-149.62164)"
        width="100%"
        height="100%" />
   </g>
