@@ -1,6 +1,6 @@
 # Introduction
 
-The **genease** project aims at finding druggable genes for a specific disease based on previously essayed targets. 
+The **genedise** project aims at finding druggable genes for a specific disease based on previously essayed targets. 
 Whether these targets were successful or not is not the primary concern - the fact that there was enough evidence to try them is enough for us. 
 In this way, we aim at mimicking the time-consuming task of proposing new reasonable targets. 
 
@@ -14,6 +14,11 @@ Some [Matlab](https://www.mathworks.com/products/matlab.html) code has been nece
 The files and directories of this project are proceded by a number that indicates the chronological order of their execution. 
 Scripts are stored in `Rmd` files. 
 Their outputs are saved in folders sharing their prefix. 
+The most relevant prefixes are: 
+
+* 2X_: analysis on the STRING network
+* 4X_: analysis on the OmniPath network
+* 6X_: plots and models combining both networks (depends on the execution of the 2X an 4X scripts)
 
 # Reproducibility
 
@@ -99,6 +104,10 @@ The runs have been executed on the following hardware from the [UPC](http://www.
 Running the script is *barely* possible with 16GB of RAM. 
 We recommend using 32GB to avoid spikes with swapping.
 
-For reference, executing all the diseases under a single repeated CV scheme (25 repetitions, 3 folds per repetition) on *eko* takes **one week**.
-
+For reference, executing all the diseases under a single repeated CV scheme (25 repetitions, 3 folds per repetition) on *eko* takes **one week**. 
+Likewise, *sun* is twice as fast. 
 The code is a mixture between serial and parallel executions because not all the methods run in parallel.
+
+On the other hand, the computationally intensive code was run on a torque-based cluster, but the `parallel` R package -part of the R base- was unable to clean up the child processes.
+This led to memory exhaustion and proved to be infeasible. 
+Alternatives to tackle this while **keeping reproducibility** might be added in the future. 
